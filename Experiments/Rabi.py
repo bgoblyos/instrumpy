@@ -223,7 +223,7 @@ class Rabi():
         }
 
     def iterateRabi(self, taus, inner_halft = 100e3, laser_duty_cycle = 0.9, loops = 100,
-                    mw_freq = None, savedir = None, savename = "T1", shuffle = False, **kwargs):
+                    mw_freq = None, savedir = None, savename = "Rabi", shuffle = False, **kwargs):
         """
         Iterate over an array of taus and measure Rabi signal at them.
 
