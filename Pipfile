@@ -13,6 +13,7 @@ pyserial = "*"
 tqdm = "*"
 pyvisa-py = "*"
 jupyter = "*"
+pyusb = "*"
 
 [dev-packages]
 spyder-terminal = "*"

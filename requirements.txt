@@ -6,3 +6,4 @@ pandas
 pyserial
 tqdm
 pyvisa-py
+pyusb
