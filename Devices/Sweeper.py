@@ -59,3 +59,5 @@ class HP83752A():
         return float(resp)
 
     model = "HP83752A"
+
+# TODO: implement the other models we have as well with inheritance

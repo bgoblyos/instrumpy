@@ -36,6 +36,9 @@ class PicoPulse():
         None.
 
         """
+
+        # TODO: move pin assignments to a config file
+        
         self.device = rm.open_resource(addr)
         self.assignments = assignments
 

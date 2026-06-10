@@ -24,7 +24,7 @@ Kuhne MKU LO 8-13 PLL
 class KuhnePLL():
     def __init__(self, port, timeout = 1.0, legacy = False):
         # Set up logger
-        self.logger = logging.getLogger('TR-ODMR.KuhnePLL')
+        self.logger = logging.getLogger('instrumpy.KuhnePLL')
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")

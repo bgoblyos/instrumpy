@@ -22,7 +22,7 @@ import logging
 class SR830M():
     def __init__(self, rm, address):
         # Set up logger
-        self.logger = logging.getLogger('TR-ODMR.SR830M')
+        self.logger = logging.getLogger('instrumpy.SR830M')
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
