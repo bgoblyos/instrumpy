@@ -1,4 +1,17 @@
-# time-resolved-odmr
-Measurement code for controlling a time resolved optically detected magnetic resonance setup. Developed for the "Nanotechnology and Quantum Applications Specialization Laboratory 2" course at the Budapest University of Technology and Economics.
+# instrumpy
 
-Device drivers are provided for every device used in the lab exercise (SRS SR830M, Kuhne MKU LO 8-13 PLL and [pico-pulse](https://github.com/bgoblyos/pico-pulse)). Fully scripted experiments are also included for reference.
+Collection of python scripts for interfacing with scientific instrumentation. Intended for use with IPython.
+
+Supported devices:
+ - SR830(M) lock-in amplifier
+ - HP83752A (and similar) analog microwave sweeper
+ - Kuhne MKU LO 8-13 PLL micorwave oscillator
+ - [pico-pulse](https://github.com/bgoblyos/pico-pulse) sequence synthesizer
+ - Phase Matrix 25B frequency counter
+
+Preprogrammed experiments:
+ - Optically detected magnetic resonance (ODMR):
+   - Continous wave frequency sweep
+   - T<sub>1</sub> relaxation measurement
+   - Rabi oscillation measurement
+   - Ramsey experiment
