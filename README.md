@@ -8,6 +8,9 @@ Supported devices:
  - Kuhne MKU LO 8-13 PLL micorwave oscillator
  - [pico-pulse](https://github.com/bgoblyos/pico-pulse) sequence synthesizer
  - Phase Matrix 25B frequency counter
+ - Avenir ARIS compact spectrometer
+ - ORIEL Luminator monochromated light source
+ - Coherent CUBE laser (serial link only)
 
 Preprogrammed experiments:
  - Optically detected magnetic resonance (ODMR):
@@ -15,3 +18,5 @@ Preprogrammed experiments:
    - T<sub>1</sub> relaxation measurement
    - Rabi oscillation measurement
    - Ramsey experiment
+ - Instrument calibration:
+   - Calibration routine for Luminator using the ARIS spectrometer
