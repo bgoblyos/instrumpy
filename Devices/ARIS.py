@@ -149,7 +149,7 @@ class ARIS():
         readout_noise = struct.unpack("<f", rawdata[60:64])[0]
 
         if load_level >= 0.95:
-            self.logger.warning(f'High spectrometer load ({round(100*results["load_level"])}%)')
+            self.logger.warning(f'High spectrometer load ({"{:.2f}".format(100*load_level)}%)')
         
         return {
             "wavelengths": self.wavelengths,
