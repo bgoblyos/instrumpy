@@ -23,14 +23,14 @@ from Devices.Luminator import Luminator
 
 class LuminatorCalibration():
     def __init__(self, sourceAddr):
-        self.rm = pyvisa.resourceManager()
+        self.rm = pyvisa.ResourceManager()
         self.spec = ARIS()
         self.source = Luminator(self.rm, sourceAddr, None)
 
     def captureSingle(self, target, speed = 50):
         
-        prev = self.source.readWavelength(transform = false)
-        self.source.setWavelegth(target, transform = False)
+        prev = self.source.readWavelength(convert = False)
+        self.source.setWavelength(target, convert = False)
         
         # Calculate waiting time based on distance to move and sweep (nm/s)
         time.sleep(np.abs(prev - target)/speed + 0.5)
@@ -42,15 +42,15 @@ class LuminatorCalibration():
         # Run it again with 10 averages
         self.spec.setExposure(exposure_us = exposure, average = 10)
         results = self.spec.capture()
-        reached = self.source.readWavelength(transform = False)
+        reached = self.source.readWavelength(convert = False)
 
         peakind = np.argmax(results["spectrum"])
         peakval = results["spectrum"][peakind]
         peakloc = results["wavelengths"][peakind]
 
-        mask = results["spectrum"] >= (peakval/2)
-        lower = np.minimum(results["wavelength"][mask])
-        upper = np.maximum(results["wavelength"][mask])
+        mask = np.array(results["spectrum"]) >= (peakval/2)
+        lower = np.min(np.array(results["wavelengths"])[mask])
+        upper = np.max(np.array(results["wavelengths"])[mask])
         fwhm = upper - lower
 
         return {

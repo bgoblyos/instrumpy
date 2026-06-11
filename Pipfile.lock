@@ -1096,14 +1096,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==5.10.4"
         },
-        "nest-asyncio": {
-            "hashes": [
-                "sha256:6f172d5449aca15afd6c646851f4e31e02c598d553a667e38cafa997cfec55fe",
-                "sha256:87af6efd6b5e897c81050477ef65c62e2b2f35d51703cae01aff2905b1852e1c"
-            ],
-            "markers": "python_version >= '3.5'",
-            "version": "==1.6.0"
-        },
         "notebook": {
             "hashes": [
                 "sha256:860e31782b3d3a25ca0819ff039f5cf77845d1bf30c78ef9528b88b25e0a9850",
@@ -1278,14 +1270,6 @@
             "markers": "python_version >= '3.6'",
             "version": "==0.8.6"
         },
-        "pexpect": {
-            "hashes": [
-                "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523",
-                "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f"
-            ],
-            "markers": "sys_platform != 'win32' and sys_platform != 'emscripten'",
-            "version": "==4.9.0"
-        },
         "pillow": {
             "hashes": [
                 "sha256:02f84dfad02693676692746df05b89cf25597560db2857363a208e393429f5e9",
@@ -1433,13 +1417,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==7.2.2"
-        },
-        "ptyprocess": {
-            "hashes": [
-                "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35",
-                "sha256:5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"
-            ],
-            "version": "==0.7.0"
         },
         "pure-eval": {
             "hashes": [

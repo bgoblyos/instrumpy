@@ -147,6 +147,9 @@ class ARIS():
         spectrum = [struct.unpack("<f", rawdata[p * 4 + 64:p * 4 + 68])[0] for p in range(self.pixels)]
         dark_avg = struct.unpack("<f", rawdata[56:60])[0]
         readout_noise = struct.unpack("<f", rawdata[60:64])[0]
+
+        if load_level >= 0.95:
+            self.logger.warning(f'High spectrometer load ({round(100*results["load_level"])}%)')
         
         return {
             "wavelengths": self.wavelengths,

@@ -15,6 +15,7 @@ this program. If not, see https://www.gnu.org/licenses/.
 
 import numpy as np
 import pandas as pd
+import logging
 
 """
 ORIEL Luminator monochromated light source
@@ -48,10 +49,10 @@ class Luminator():
         return (actual - self.b)/self.a
 
     def setWavelength(self, target, convert = True):
-        target = actual2internal(target) if convert else target
+        target = self.actual2internal(target) if convert else target
         cmd = "GOWAVE " + "{:.3f}".format(target)
         self.device.write(cmd)
 
     def readWavelength(self, convert = True):
         result = float(self.device.query("WAVE?"))
-        return internal2actual(result) if convert else result
+        return self.internal2actual(result) if convert else result

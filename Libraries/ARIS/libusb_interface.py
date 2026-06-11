@@ -3,6 +3,12 @@ import usb.util
 import usb.backend.libusb1 as libusb1
 import platform
 
+# If on Windows, load the included libusb1 DLL
+import os
+if os.name == 'nt':
+    import pathlib
+    libsearch = str(pathlib.Path(__file__).parent.absolute())
+    os.environ['PATH'] = libsearch + os.pathsep + os.environ['PATH']
 
 class LibusbInterface:
 
