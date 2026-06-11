@@ -27,9 +27,13 @@ class LuminatorCalibration():
         self.spec = ARIS()
         self.source = Luminator(self.rm, sourceAddr, None)
 
-    def captureSingle(self, target):
+    def captureSingle(self, target, speed = 50):
+        
+        prev = self.source.readWavelength(transform = false)
         self.source.setWavelegth(target, transform = False)
-        time.sleep(3) # Wait a few seconds for it to move
+        
+        # Calculate waiting time based on distance to move and sweep (nm/s)
+        time.sleep(np.abs(prev - target)/speed + 0.5)
         
         # Get exposure time from autoexposure
         self.spec.setExposure()
@@ -44,7 +48,7 @@ class LuminatorCalibration():
         peakval = results["spectrum"][peakind]
         peakloc = results["wavelengths"][peakind]
 
-        mask = results["spectrum"] <= peakval
+        mask = results["spectrum"] >= (peakval/2)
         lower = np.minimum(results["wavelength"][mask])
         upper = np.maximum(results["wavelength"][mask])
         fwhm = upper - lower
