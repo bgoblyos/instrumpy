@@ -1,0 +1,12 @@
+{
+	"ppms-tap": {
+		"c0": -1.30700751e+02,
+		"c1": 8.55655598e-01,
+		"c2": -1.92271412e-03,
+		"c3": 1.96321129e-06,
+		"c4": -7.57392479e-10,
+		"cal_lower": 400,
+		"cal_upper": 800,
+		"description": "PPMS measurement head to tap ratio"
+	}
+}
