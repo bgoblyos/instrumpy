@@ -1,0 +1,17 @@
+{
+	"studentlab-v1": {
+		"description": "ODMR student lab setup, first generation",
+		"mapping": {
+			"lockin": "ch1",
+			"ref": "ch1",
+			"Q": "ch2",
+			"q": "ch2",
+			"I": "ch3",
+			"i": "ch3",
+			"mw": "ch3",
+			"L": "ch4",
+			"l": "ch4",
+			"laser": "ch4"
+		}
+	}
+}

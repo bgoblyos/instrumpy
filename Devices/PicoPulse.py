@@ -17,7 +17,7 @@ this program. If not, see https://www.gnu.org/licenses/.
 pico-pulse sequence synthesizer
 """
 class PicoPulse():
-    def __init__(self, rm , addr, assignments = None):
+    def __init__(self, rm , addr, pinoutName = None, configFile = "Config/PicoPulse.json"):
         """
         Initialize pico-pulse device.
 
@@ -37,10 +37,38 @@ class PicoPulse():
 
         """
 
-        # TODO: move pin assignments to a config file
+        # Set up logger
+        self.logger = logging.getLogger('instrumpy.PicoPulse')
+        self.logger.propagate = True
+        self.logger.setLevel(logging.NOTSET)
+        self.logger.debug("Logger initialized.")
+
+        # Try to read in pin assignments
+        self.assignments = None
+
+        if pinoutName is not None:
+            conf = None
+            try:
+                with open(configFile, "r") as file:
+                    conf = json.load(file)
+
+            except Exception:
+                self.logger.warning("Could not open config file. Pin mapping is disabled.")
+                conf = None
+
+            if conf is not None:
+                entry = conf.get(pinoutName, None)
+
+                if entry is not None:
+                    self.assignments = entry.get("mapping", None)
+                    if self.assignments is None:
+                        self.logger.warning("Config entry does not contain a mapping key. Pin mapping is disabled.")
+
+                else:
+                    self.logger.warning("Config does not contain the given entry. Pin mapping is disabled.")
+
         
         self.device = rm.open_resource(addr)
-        self.assignments = assignments
 
     def encodeSequence(self, seq, cycle = False, innerLoop = 0, outerLoop = None):
         cmd = ""
