@@ -18,6 +18,8 @@ import time        # Timeout handling
 import numpy as np # Math
 import logging
 
+# TODO: split into two parts. The legacy should use serial, while the new one should be reimplemented with pyvisa for graceful failures.
+
 """
 Kuhne MKU LO 8-13 PLL
 """
@@ -51,6 +53,7 @@ class KuhnePLL():
             return True
         except serial.SerialException as err:
             self.logger.error(f"Failed to connect to oscillator with reason: {err}")
+            self.device = None
             return False
 
     def sendCommand(self, cmd, timeout = 1.0, capture_output = True):
@@ -71,7 +74,10 @@ class KuhnePLL():
             return -1, err
 
     def setHz(self, val, retries = 3):
-        # TODO: Soft fail if device is None
+        if self.device is None:
+            self.logger.error("Device is not open, cannot set frequency.")
+            return False
+
         hz = str(round((np.floor(val) % 1000))).zfill(3)
         khz = str(round(np.floor(val*1e-3) % 1000)).zfill(3)
         mhz = str(round(np.floor(val*1e-6) % 1000)).zfill(3)
@@ -84,6 +90,7 @@ class KuhnePLL():
             else:
                 cmd = f"{prefix}FR{freq}\r\n"
             
+            # Attempt transmission multiple times
             successful = True
             for attempt in range(retries + 1):
                 if attempt != 0:
