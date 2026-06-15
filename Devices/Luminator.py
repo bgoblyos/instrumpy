@@ -53,6 +53,8 @@ class Luminator():
         cmd = "GOWAVE " + "{:.3f}".format(target)
         self.device.write(cmd)
 
-    def readWavelength(self, convert = True):
+    def getWavelength(self, convert = True):
         result = float(self.device.query("WAVE?"))
         return self.internal2actual(result) if convert else result
+
+    wavelength = property(fget=getWavelength, fset=setWavelength)
