@@ -15,7 +15,7 @@ this program. If not, see https://www.gnu.org/licenses/.
 
 import logging
 import time
-import pandas as pd
+import json
 
 class CUBE():
     """
@@ -24,7 +24,7 @@ class CUBE():
     Manages serial communication, state control, and power clamping based on
     hardware limits and user-defined configurations.
     """
-    def __init__(self, rm, address, config = "Config/CUBE_limits.csv", maxOverride = None):
+    def __init__(self, rm, address, config = "Config/CUBE.json", maxOverride = None):
         """
         Initializes the laser connection and configures power limits.
 
@@ -56,20 +56,33 @@ class CUBE():
         self.minPower = self.getMinPower()
         self.id = self.getID()
 
+        # Read user limits from config
+        self.userLimit = None
+
         if maxOverride is not None:
             self.userLimit = maxOverride
         else:
+            if pinoutName is not None:
+            conf = None
             try:
-                df = pd.read_csv(config)
-                mask = df.serial == self.id
-                if len(mask) > 1:
-                    self.logger.warning("Duplicate config entry found. Using first match.")
-                lim = df.limit[mask][0]
-            except:
-                self.logger.error("Could not load limits, user limiting is disabled.")
-                lim = None
-            finally:
-                self.userLimit = lim
+                with open(configFile, "r") as file:
+                    conf = json.load(file)
+
+            except Exception:
+                self.logger.warning("Could not open config file. User limits are disabled.")
+                conf = None
+
+            if conf is not None:
+                entry = conf.get(self.id, None)
+
+                if entry is not None:
+                    self.assignments = entry.get("limit", None)
+                    if self.assignments is None:
+                        self.logger.warning("Config entry does not contain a limit key. User limits are disabled.")
+
+                else:
+                    self.logger.warning("Config has no entry for the current laser. User limits are disabled.")
+
 
 
     def getWavelength(self):
