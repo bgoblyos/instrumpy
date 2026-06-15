@@ -27,6 +27,19 @@ from Libraries.ARIS.libusb_interface import LibusbInterface
 from Libraries.ARIS.ziolink_protocol import ZioLinkProtocol
 
 def enum(**enums):
+    """
+    Creates a simple enumeration type from keyword arguments.
+
+    Parameters
+    ----------
+    **enums: dict
+        Keyword arguments representing the enumeration keys and values.
+
+    Returns
+    -------
+    Enum: type
+        A new class acting as an enumeration.
+    """
     return type('Enum', (), enums)
 
 
@@ -42,6 +55,19 @@ SpectrStatus = enum(
 )
 
 def find_address(**kwargs):
+    """
+    Finds and returns the first compatible Avenir USB spectrometer device.
+
+    Parameters
+    ----------
+    **kwargs: dict
+        Arguments to pass to LibusbInterface.find_interfaces.
+
+    Returns
+    -------
+    device: object or None
+        The first matching USB device interface, or None if no device is found.
+    """
     # Find all interfaces
     devices = LibusbInterface.find_interfaces(**kwargs)
     devices = [d for d in devices if d.idVendor == 0x354F and 0x0100 <= d.idProduct <= 0x01FF]
@@ -51,17 +77,27 @@ def find_address(**kwargs):
     else:
         return None
 
-"""
-Avenir ARIS compact spectrometer
-"""
 class ARIS():
+    """
+    Driver class for Avenir ARIS compact spectrometers.
+
+    Manages USB connection, device configuration, and spectrum capture.
+    """
     def __init__(self, **kwargs):
+        """
+        Initializes the spectrometer, opens communication, and reads basic properties.
+
+        Parameters
+        ----------
+        **kwargs: dict
+            Keyword arguments passed to find_address() to discover the USB device.
+        """
         # Set up logger
         self.logger = logging.getLogger('instrumpy.ARIS')
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
-        
+
         self.device = find_address(**kwargs)
 
         if self.device is not None:
@@ -103,10 +139,23 @@ class ARIS():
           "{:.2f}".format(self.wavelengths[-1]) + " nm")
 
     def __del__(self):
+        """
+        Closes the USB connection when the object is destroyed.
+        """
         if self.ziolink is not None:
             self.ziolink.close()
 
     def setExposure(self, exposure_us = None, average = 1):
+        """
+        Sets the exposure time and number of averages for spectral capture.
+
+        Parameters
+        ----------
+        exposure_us: int, optional
+            Exposure time in microseconds. If None, auto-exposure is enabled.
+        average: int, default: 1
+            Number of spectra to average.
+        """
         if exposure_us is None:
             # Enable automatic exposure
             self.ziolink.send_receive_message(0x1109, 1)                 # 0x1109 = Set Parameter: AutoExposureEnabled
@@ -118,9 +167,19 @@ class ARIS():
             self.ziolink.send_receive_message(0x1109, 0)                 # 0x1109 = Set Parameter: AutoExposureEnabled
 
     def capture(self):
+        """
+        Captures a single spectrum and retrieves associated metadata.
+
+        Returns
+        -------
+        result: dict or None
+            A dictionary containing the wavelength array, spectrum intensities,
+            exposure settings, device temperature, and other capture metadata.
+            Returns None if the received data stream is invalid.
+        """
         self.ziolink.send_receive_message(0x0004, 1) # Start capture with a single spectrum
         # TODO: implement multiple spectrum capture
-        
+
         # Wait for completion
         status = SpectrStatus.TakingSpectrum
         available_spectra = 0
@@ -148,7 +207,7 @@ class ARIS():
 
         if load_level >= 0.95:
             self.logger.warning(f'High spectrometer load ({"{:.2f}".format(100*load_level)}%)')
-        
+
         return {
             "wavelengths": self.wavelengths,
             "spectrum": spectrum,
@@ -161,5 +220,5 @@ class ARIS():
             "applied_processing": applied_processing,
             "dark_avg": dark_avg,
             "readout_noise": readout_noise,
-            "timestamp_unix_ns": time.time_ns(),  
+            "timestamp_unix_ns": time.time_ns(),
         }
