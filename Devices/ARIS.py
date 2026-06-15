@@ -62,9 +62,7 @@ class ARIS():
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
         
-        # Filter arguments to idVendor and idProduct
-        usb_args = foodict = {k: v for k, v in kwargs.items() if k in ["idVendor", "idProduct"]}
-        self.device = find_address(**usb_args)
+        self.device = find_address(**kwargs)
 
         if self.device is not None:
             self.ziolink = ZioLinkProtocol(self.device)
