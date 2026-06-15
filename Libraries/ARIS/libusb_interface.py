@@ -17,7 +17,8 @@ class LibusbInterface:
         libusb1backend = libusb1.get_backend()
         if libusb1backend is None:
             print('No libusb1 backend found.')
-        devs_gen = usb.core.find(find_all=True, backend=libusb1backend, **kwargs)
+        usb_args = {k: v for k, v in kwargs.items() if k in ["idVendor", "idProduct"]}
+        devs_gen = usb.core.find(find_all=True, backend=libusb1backend, **usb_args)
 
         devs = list(devs_gen)  # get list from returned generator object
 

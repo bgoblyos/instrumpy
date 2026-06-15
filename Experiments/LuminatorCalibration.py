@@ -29,7 +29,7 @@ class LuminatorCalibration():
 
     def captureSingle(self, target, speed = 50):
         
-        prev = self.source.readWavelength(convert = False)
+        prev = self.source.getWavelength(convert = False)
         self.source.setWavelength(target, convert = False)
         
         # Calculate waiting time based on distance to move and sweep (nm/s)
@@ -42,7 +42,7 @@ class LuminatorCalibration():
         # Run it again with 10 averages
         self.spec.setExposure(exposure_us = exposure, average = 10)
         results = self.spec.capture()
-        reached = self.source.readWavelength(convert = False)
+        reached = self.source.getWavelength(convert = False)
 
         peakind = np.argmax(results["spectrum"])
         peakval = results["spectrum"][peakind]
