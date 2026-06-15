@@ -59,13 +59,6 @@ class CUBE():
         resp = self.device.query("?WAVE")
         return float(resp.split('=')[1])
 
-    def getPower(self):
-        resp = self.device.query("?P")
-        return float(resp.split('=')[1])
-
-    def getPowerSetpoint(self):
-        resp = self.device.query("?SP")
-        return float(resp.split('=')[1])
 
     def getMinPower(self):
         resp = self.device.query("?MINLP")
@@ -91,6 +84,12 @@ class CUBE():
         resp = self.device.query("?CDRH")
         return int(resp.split('=')[1]) == 1
 
+    def setSafety(self, val : bool):
+        cmd = "CDRH=1" if val else "CDRH=0"
+        self.device.query(cmd)
+
+    safety = property(fget=getSafety, fset=setSafety)
+
     def getExternal(self):
         resp = self.device.query("?EXT")
         return int(resp.split('=')[1]) == 1
@@ -112,9 +111,13 @@ class CUBE():
             while state ^ self.getState():
                 time.sleep(0.1)
 
-    def setSafety(self, val):
-        cmd = "CDRH=1" if val else "CDRH=0"
-        self.device.query(cmd)
+    def getPowerSetpoint(self):
+        resp = self.device.query("?SP")
+        return float(resp.split('=')[1])
+
+    def getPower(self):
+        resp = self.device.query("?P")
+        return float(resp.split('=')[1])
 
     def setPower(self, target, feedbackDelay=0.25):
         if target < 0:
@@ -135,6 +138,8 @@ class CUBE():
         self.device.query(cmd)
         time.sleep(feedbackDelay)
         return self.getPower()
+
+    power = property(fget=getPower, fset=setPower)
 
     
         
