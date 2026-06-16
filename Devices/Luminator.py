@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 import logging
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 class Luminator():
     """
     Driver class for the ORIEL Luminator monochromated light source.
@@ -24,7 +26,7 @@ class Luminator():
     Handles instrument communication via PyVISA and applies an optional
     linear wavelength calibration based on a provided configuration file.
     """
-    def __init__(self, rm, address, config = "Config/Luminator_cal.csv"):
+    def __init__(self, rm, address, config = (PROJECT_ROOT / "Config" / "Luminator.csv")):
         """
         Initializes the monochromator connection and loads calibration data.
 

@@ -18,6 +18,8 @@ import pandas as pd
 import logging
 import json
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 class PM100():
     """
     Driver class for ThorLabs PM100x power meter head units.
@@ -26,7 +28,7 @@ class PM100():
     polynomial wavelength-dependent attenuation calibration. Provides explicit
     getters and property accessors for core SCPI functionality.
     """
-    def __init__(self, rm, address, attName=None, attConfig="Config/PM100_attenuation.json"):
+    def __init__(self, rm, address, attName=None, attConfig=(PROJECT_ROOT / "Config" / "PM100.json")):
         """
         Initializes the power meter connection and loads optional calibration data.
 
