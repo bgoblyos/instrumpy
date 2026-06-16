@@ -14,6 +14,7 @@ tqdm = "*"
 pyvisa-py = "*"
 jupyter = "*"
 pyusb = "*"
+multipyvu = "*"
 
 [dev-packages]
 spyder-terminal = "*"
