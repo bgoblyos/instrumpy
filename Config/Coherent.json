@@ -1,8 +1,11 @@
 {
     "CUBE-115700601-1130757-406": {
-        "limit": 17
+        "limit": 100
     },
 	"Sapphire-LP-527675": {
 		"limit": 400
+	},
+	"Sapphire-LP-520687": {
+		"limit": 70
 	}
 }

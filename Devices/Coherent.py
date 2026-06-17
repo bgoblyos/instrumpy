@@ -187,7 +187,8 @@ class CUBE(CoherentLaser):
         self.device.query(cmd)
 
     def query(self, cmd):
-        return self.device.query(cmd).split('=')[1]
+        resp = self.device.query(cmd)
+        return resp.split('=')[-1]
 
     def getID(self):
         resp = self.query("?HID")
