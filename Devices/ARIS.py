@@ -145,26 +145,32 @@ class ARIS():
         if self.ziolink is not None:
             self.ziolink.close()
 
-    def setExposure(self, exposure_us = None, average = 1):
+    def setExposure(self, exposure_us = 1000, average = 1):
         """
         Sets the exposure time and number of averages for spectral capture.
 
         Parameters
         ----------
-        exposure_us: int, optional
-            Exposure time in microseconds. If None, auto-exposure is enabled.
+        exposure_us: int, default: 1000
+            Exposure time in microseconds.
         average: int, default: 1
             Number of spectra to average.
         """
-        if exposure_us is None:
-            # Enable automatic exposure
-            self.ziolink.send_receive_message(0x1109, 1)                 # 0x1109 = Set Parameter: AutoExposureEnabled
-            self.ziolink.send_receive_message(0x1101, int(average))      # 0x1101 = Set Parameter: Averaging
+        self.ziolink.send_receive_message(0x1109, 0)                # 0x1109 = Set Parameter: AutoExposureEnabled
+        self.ziolink.send_receive_message(0x1100, int(exposure_us)) # 0x1100 = Set Parameter: ExposureTime (in microseconds)
+        self.ziolink.send_receive_message(0x1101, int(average))     # 0x1101 = Set Parameter: Averaging
 
-        else:
-            self.ziolink.send_receive_message(0x1100, int(exposure_us))  # 0x1100 = Set Parameter: ExposureTime (in microseconds)
-            self.ziolink.send_receive_message(0x1101, int(average))      # 0x1101 = Set Parameter: Averaging
-            self.ziolink.send_receive_message(0x1109, 0)                 # 0x1109 = Set Parameter: AutoExposureEnabled
+    def setAutoExposure(self, target_us = 200000):
+        """
+        Enables automatic exposure and specifies target integration time.
+
+        Parameters
+        ----------
+        exposure_us: int, default: 200000
+            Target integration time in microseconds.
+        """
+        self.ziolink.send_receive_message(0x1109, 1)              # 0x1109 = Set Parameter: AutoExposureEnabled
+        self.ziolink.send_receive_message(0x110A, int(target_us)) # 0x110A = Set Parameter: AutoExposureTime
 
     def capture(self):
         """
