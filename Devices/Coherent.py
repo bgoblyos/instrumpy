@@ -56,6 +56,7 @@ class CoherentLaser():
 
         # Disable prompt
         self.write(">=0")
+        self.flushBuffer()
 
         self.maxPower = self.getMaxPower()
         self.minPower = self.getMinPower()
@@ -153,7 +154,7 @@ class CoherentLaser():
         if target < 0:
             self.logger.error("Cannot set negative power.")
             return None
-        elif target <= self.minPower:
+        elif target < self.minPower:
             if self.allowUnderpower:
                 self.logger.info(f"Power below minimum level. Laser might not start.")
             else:
