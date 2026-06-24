@@ -13,55 +13,28 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see https://www.gnu.org/licenses/.
 """
 
+# TODO: unfuck logger after every call
+# TODO: use static methods for all the enums
+
 import MultiPyVu
 import numpy as np
 import time
 import logging
+import sys
 from IPython.utils.io import capture_output
 
-def oe2apm(oe):
-    """
-    Converts Oersted units (CGS) to A/m (SI)
+from Utilities.SetupLogging import unfuckLogger
 
-    Parameters
-    ----------
-    oe: float
-        H-field strength in Oersted
+mu0 = 1.25663706127e-6 # in SI units
 
-    Returns
-    -------
-    apm: float
-        H-field strength in A/m
-    """
-    return oe * 1000 / (4*np.pi)
-
-def apm2oe(apm):
-    """
-    Converts A/m units (SI) to Oersted (CGS)
-
-    Parameters
-    ----------
-    apm: float
-        H-field strength in A/m
-
-    Returns
-    -------
-    oe: float
-        H-field strength in Oersted
-    """
-    return apm * (4*np.pi) / 1000
-
-def oe2tesla(oe):
-    return oe2apm(oe) * 1.25663706127e-6
-
-def apm2tesla(apm):
-    return apm * 1.25663706127e-6
-
-def tesla2apm(tesla):
-    return tesla / 1.25663706127e-6
-
-def tesla2oe(tesla):
-    return apm2oe(tesla / 1.25663706127e-6)
+oeConversion = {
+    'oe': 1.0,
+    'oersted': 1.0,
+    'apm': 1000 / (4*np.pi),
+    'a/m': 1000 / (4*np.pi),
+    't': mu0 * 1000 / (4*np.pi),
+    'tesla': 1.25663706127e-6 * 1000 / (4*np.pi),
+}
 
 class PPMS():
     """
@@ -91,6 +64,36 @@ class PPMS():
 
         self.addr = address
 
+    def convertMagUnits(self, value, startingUnit, targetUnit):
+        """
+        Magnetic unit conversion.
+
+        Parameters
+        ----------
+        value: float
+            Numerical value to be converted.
+        startingUnit: str
+            Unit in which the value is specified. One of "Oe", "A/m" or "T".
+        targetUnit: str
+            Unit to which the value should be converted. One of "Oe", "A/m" or "T".
+        
+        Returns
+        -------
+        converted: float
+            The converted value.
+        """
+        startingUnit = startingUnit.lower()
+        targetUnit = targetUnit.lower()
+
+        if startingUnit not in oeConversion:
+            self.logger.error(f'Starting unit \"{startingUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
+        
+        if targetUnit not in oeConversion:
+            self.logger.error(f'Target unit \"{targetUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
+
+        factor = oeConversion.get(targetUnit, float('nan')) / oeConversion.get(startingUnit, float('nan'))
+        return value * factor
+
     def setTemperature(self, setpoint : float, rate = 10.0, fast = False):
         """
         Sets the temperature of the cryostat.
@@ -109,6 +112,8 @@ class PPMS():
                 mode = client.temperature.approach_mode.fast_settle if fast else client.temperature.approach_mode.no_overshoot
                 client.set_temperature(setpoint, rate, mode)
 
+        unfuckLogger()
+
     def getTemperature(self):
         """
         Reads back cryostat temperature from PPMS.
@@ -123,7 +128,9 @@ class PPMS():
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 temp, status = client.get_temperature()
-                return temp, status
+        
+        unfuckLogger()
+        return temp, status
 
     def getTemperatureSetpoint(self):
         """
@@ -143,9 +150,10 @@ class PPMS():
                 temp, rate, approach = client.get_temperature_setpoints()
                 fast = approach == client.temperature.approach_mode.fast_settle
 
+        unfuckLogger()
         return temp, rate, fast
 
-    def setField(self, setpoint, rate, mode = "linear", driven = False, si = False):
+    def setField(self, setpoint, rate, mode = "linear", driven = False, unit = 'T'):
         """
         Sets magnetic field inside the PPMS.
 
@@ -159,37 +167,38 @@ class PPMS():
             Approach mode. Possible values are: "linear", "no_overshoot" or "oscillate".
         driven: bool, default: False
             Sets whether or not the magnet should be in driven mode. False corresponds to persistent mode.
-        si: bool, default: False
-            Indicates whether the setpoint and rate are given in the CGS (False) or SI (True) unit system.
+        unit: str, default: 'T'
+            Indicates the units in which the setpoint is given. One of "Oe", "A/m" or "T".
         """
+        approachMode = getattr(MultiPyVu.Client.field.approach_mode, mode, None)
+        if approachMode is None:
+            self.logger.error(f"The entered mode \"{mode}\" is not valid. Please use one of: \"linear\", \"no_overshoot\" or \"oscillate\"")
+            return
+                    
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                approachMode = getattr(client.field.approach_mode, mode, None)
-                if approachMode is None:
-                    self.logger.error(f"The entered mode \"{mode}\" is not valid. Please use one of: \"linear\", \"no_overshoot\" or \"oscillate\"")
-                    return
-
                 driveMode = client.field.driven_mode.driven if driven else client.field.driven_mode.persistent
 
-                if si:
-                    setpoint = apm2oe(setpoint)
-                    rate = apm2oe(setpoint)
+                setpoint = self.convertMagUnits(setpoint, startingUnit=unit, targetUnit='Oe')
+                rate = self.convertMagUnits(rate, startingUnit=unit, targetUnit='Oe')
 
                 client.set_field(setpoint, rate, approachMode, driveMode)
 
-    def getField(self, si = False):
+        unfuckLogger()
+
+    def getField(self, unit = 'T'):
         """
-        Reads back H-field from PPMS.
+        Reads back the magnetic field from the PPMS.
 
         Parameters
         ----------
-        si: bool, default: False
-            Indicates whether the H-field strength should be returned in Oersted (False) or A/m (True).
+        unit: str, default: 'T'
+            Indicates the units in which the response should be given. One of "Oe", "A/m" or "T".
 
         Returns
         -------
         field: float
-            Current H-field strength in Oersted or A/m.
+            Current magnetic field strength in the selected units.
         status: str
             Status string.
         """
@@ -197,19 +206,18 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 field, status = client.get_field()
 
-                if si:
-                    field = oe2apm(field)
-
+        unfuckLogger()
+        field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
         return field, status
 
-    def getFieldSetpoint(self, si = False):
+    def getFieldSetpoint(self, unit = 'T'):
         """
-        Reads back H-field setpoint from PPMS.
+        Reads back magnetic field setpoint from PPMS.
 
         Parameters
         ----------
-        si: bool, default: False
-            Indicates whether the H-field strength should be returned in Oersted (False) or A/m (True)
+        unit: str, default: 'T'
+            Indicates the units in which the response should be given. One of "Oe", "A/m" or "T".
 
         Returns
         -------
@@ -226,12 +234,11 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 field, rate, approach, driven = client.get_field_setpoints()
 
-
-        if si:
-            field = oe2apm(field)
-            rate = oe2apm(rate)
-
+        unfuckLogger()
+        field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
+        rate = self.convertMagUnits(rate, startingUnit='Oe', targetUnit=unit)
         driven = driven == "driven"
+        
         return field, rate, approach, driven
 
     def setChamber(self, state):
@@ -301,8 +308,9 @@ class PPMS():
                 fieldWait = client.field.waitfor if field else 0
                 chamberWait = client.chamber.waitfor if chamber else 0
 
-                # TODO: Check if this actually gives back a bool, and add in a call to isSteady if it doesn't.
-                return client.wait_for(delay, timeout, tempWait | fieldWait | chamberWait)
+                client.wait_for(delay, timeout, tempWait | fieldWait | chamberWait)
+
+        return self.isSteady(temp = temp, field = field, chamber = chamber)
 
     def isSteady(self, temp = False, field = False, chamber = False):
         """
@@ -316,8 +324,13 @@ class PPMS():
             Whether or not to check if H-field setpoint has been reached.
         chamber: bool, default: False
             Whether or not to check if the chamber has completes its last operation.
-        """
 
+        Returns
+        -------
+        result: bool
+            Whether or not the system is in a steady state.
+        """
+        
         if not (temp or field or chamber):
             self.logger.warning("At least one of temp, field or chamber must be enabled.")
             return False
@@ -327,8 +340,15 @@ class PPMS():
                 tempWait = client.temperature.waitfor if temp else 0
                 fieldWait = client.field.waitfor if field else 0
                 chamberWait = client.chamber.waitfor if chamber else 0
+        
+                res = client.is_steady(tempWait | fieldWait | chamberWait)
 
-                return client.wait_for(tempWait | fieldWait | chamberWait)
+        unfuckLogger()
+        
+        if res is not None:
+            return res
+        else:
+            return False
 
     def setupBridge(self, bridge, channelOn, currentLimit, powerLimit, voltageLimit, delay = 5.0):
         """
