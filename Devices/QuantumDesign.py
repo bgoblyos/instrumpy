@@ -13,9 +13,6 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see https://www.gnu.org/licenses/.
 """
 
-# TODO: unfuck logger after every call
-# TODO: use static methods for all the enums
-
 import MultiPyVu
 import numpy as np
 import time
@@ -23,9 +20,9 @@ import logging
 import sys
 from IPython.utils.io import capture_output
 
-from Utilities.SetupLogging import unfuckLogger
+from Utilities.SetupLogging import fixLogger
 
-mu0 = 1.25663706127e-6 # in SI units
+mu0 = 1.25663706127e-6 # in N/A^2
 
 oeConversion = {
     'oe': 1.0,
@@ -33,7 +30,7 @@ oeConversion = {
     'apm': 1000 / (4*np.pi),
     'a/m': 1000 / (4*np.pi),
     't': mu0 * 1000 / (4*np.pi),
-    'tesla': 1.25663706127e-6 * 1000 / (4*np.pi),
+    'tesla': mu0 * 1000 / (4*np.pi),
 }
 
 class PPMS():
@@ -94,7 +91,7 @@ class PPMS():
         factor = oeConversion.get(targetUnit, float('nan')) / oeConversion.get(startingUnit, float('nan'))
         return value * factor
 
-    def setTemperature(self, setpoint : float, rate = 10.0, fast = False):
+    def setTemperature(self, setpoint : float, rate = 2.0, fast = False):
         """
         Sets the temperature of the cryostat.
 
@@ -102,17 +99,17 @@ class PPMS():
         ----------
         setpoint: float
             Setpoint temperature in Kelvin.
-        rate: float, default: 10
+        rate: float, default: 2
             Approach rate in Kelvin per minute.
         fast: bool, default: False
             Whether to enable fast settle mode. If false, the no overshoot approach mode will be used.
         """
+        mode = MultiPyVu.Client.temperature.approach_mode.fast_settle if fast else MultiPyVu.Client.temperature.approach_mode.no_overshoot
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                mode = client.temperature.approach_mode.fast_settle if fast else client.temperature.approach_mode.no_overshoot
                 client.set_temperature(setpoint, rate, mode)
 
-        unfuckLogger()
+        fixLogger()
 
     def getTemperature(self):
         """
@@ -129,7 +126,7 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 temp, status = client.get_temperature()
         
-        unfuckLogger()
+        fixLogger()
         return temp, status
 
     def getTemperatureSetpoint(self):
@@ -148,9 +145,10 @@ class PPMS():
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 temp, rate, approach = client.get_temperature_setpoints()
-                fast = approach == client.temperature.approach_mode.fast_settle
 
-        unfuckLogger()
+        fixLogger()
+
+        fast = approach == MultiPyVu.Client.temperature.approach_mode.fast_settle
         return temp, rate, fast
 
     def setField(self, setpoint, rate, mode = "linear", driven = False, unit = 'T'):
@@ -174,17 +172,16 @@ class PPMS():
         if approachMode is None:
             self.logger.error(f"The entered mode \"{mode}\" is not valid. Please use one of: \"linear\", \"no_overshoot\" or \"oscillate\"")
             return
+
+        driveMode = MultiPyVu.Client.field.driven_mode.driven if driven else MultiPyVu.Client.field.driven_mode.persistent
+        setpoint = self.convertMagUnits(setpoint, startingUnit=unit, targetUnit='Oe')
+        rate = self.convertMagUnits(rate, startingUnit=unit, targetUnit='Oe')
                     
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                driveMode = client.field.driven_mode.driven if driven else client.field.driven_mode.persistent
-
-                setpoint = self.convertMagUnits(setpoint, startingUnit=unit, targetUnit='Oe')
-                rate = self.convertMagUnits(rate, startingUnit=unit, targetUnit='Oe')
-
                 client.set_field(setpoint, rate, approachMode, driveMode)
 
-        unfuckLogger()
+        fixLogger()
 
     def getField(self, unit = 'T'):
         """
@@ -206,7 +203,7 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 field, status = client.get_field()
 
-        unfuckLogger()
+        fixLogger()
         field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
         return field, status
 
@@ -234,7 +231,7 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 field, rate, approach, driven = client.get_field_setpoints()
 
-        unfuckLogger()
+        fixLogger()
         field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
         rate = self.convertMagUnits(rate, startingUnit='Oe', targetUnit=unit)
         driven = driven == "driven"
@@ -250,14 +247,16 @@ class PPMS():
         state: str
             Chamber state. Possible values are: "seal", "purge_seal", "vent_seal", "pump_continuous", "vent_continous" or "high_vacuum".
         """
+        mode = getattr(MultiPyVu.Client.chamber.mode, state, None)
+        if mode is None:
+            self.logger.error(f"The entered state \"{mode}\" is not valid. Please use one of: \"seal\", \"purge_seal\", \"vent_seal\", \"pump_continuous\", \"vent_continous\" or \"high_vacuum\"")
+            return
+
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                mode = getattr(client.chamber.mode, state, None)
-                if mode is None:
-                    self.logger.error(f"The entered state \"{mode}\" is not valid. Please use one of: \"seal\", \"purge_seal\", \"vent_seal\", \"pump_continuous\", \"vent_continous\" or \"high_vacuum\"")
-                    return
-
                 client.set_chamber(mode)
+
+        fixLogger()
 
     def getChamber(self):
         """
@@ -273,6 +272,7 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 resp = client.get_chamber()
 
+        fixLogger()
         return resp
 
     def waitFor(self, timeout = 120, delay = 0, temp = False, field = False, chamber = False):
@@ -302,14 +302,15 @@ class PPMS():
             self.logger.warning("At least one of temp, field or chamber must be enabled.")
             return False
 
+        tempWait = MultiPyVu.Client.temperature.waitfor if temp else 0
+        fieldWait = MultiPyVu.Client.field.waitfor if field else 0
+        chamberWait = MultiPyVu.Client.chamber.waitfor if chamber else 0
+
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                tempWait = client.temperature.waitfor if temp else 0
-                fieldWait = client.field.waitfor if field else 0
-                chamberWait = client.chamber.waitfor if chamber else 0
-
                 client.wait_for(delay, timeout, tempWait | fieldWait | chamberWait)
 
+        fixLogger()
         return self.isSteady(temp = temp, field = field, chamber = chamber)
 
     def isSteady(self, temp = False, field = False, chamber = False):
@@ -335,15 +336,15 @@ class PPMS():
             self.logger.warning("At least one of temp, field or chamber must be enabled.")
             return False
 
+        tempWait = MultiPyVu.Client.temperature.waitfor if temp else 0
+        fieldWait = MultiPyVu.Client.field.waitfor if field else 0
+        chamberWait = MultiPyVu.Client.chamber.waitfor if chamber else 0
+
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                tempWait = client.temperature.waitfor if temp else 0
-                fieldWait = client.field.waitfor if field else 0
-                chamberWait = client.chamber.waitfor if chamber else 0
-        
                 res = client.is_steady(tempWait | fieldWait | chamberWait)
 
-        unfuckLogger()
+        fixLogger()
         
         if res is not None:
             return res
@@ -380,6 +381,7 @@ class PPMS():
                     voltage_limit_mV = voltageLimit
                 )
 
+        fixLogger()
         time.sleep(delay)
 
     def setCC(self, bridge, current):
@@ -396,6 +398,8 @@ class PPMS():
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 client.resistivity.set_current(bridge_number, current)
+
+        fixLogger()
 
     def getResistance(self, bridge : int):
         """
@@ -414,7 +418,10 @@ class PPMS():
 
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                return client.resistivity.get_resistance(bridge)
+                res = client.resistivity.get_resistance(bridge)
+
+        fixLogger()
+        return res
 
     def getCurrent(self, bridge : int):
         """
@@ -433,7 +440,10 @@ class PPMS():
 
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                return client.resistivity.get_current(bridge)
+                res = client.resistivity.get_current(bridge)
+
+        fixLogger()
+        return res
 
     def setRotatorPosition(self, position : float, rate = 100.0):
         """
@@ -450,6 +460,8 @@ class PPMS():
             with MultiPyVu.Client(host=self.addr) as client:
                 client.set_position(position, rate)
 
+        fixLogger()
+
     def getRotatorPosition(self):
         """
         Reads back rotator position from PPMS.
@@ -463,4 +475,7 @@ class PPMS():
         """
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
-                return client.get_position()
+                res = client.get_position()
+
+        fixLogger()
+        return res

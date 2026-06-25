@@ -14,7 +14,7 @@ def setupLogging():
         logger.handlers.clear()
 
     # Attach a dedicated StreamHandler
-    handler = logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(sys.stderr)
     formatter = logging.Formatter('%(levelname)s\t- %(name)s - %(message)s')
     handler.setFormatter(formatter)
 
@@ -22,7 +22,7 @@ def setupLogging():
 
     return logger
 
-def unfuckLogger():
+def fixLogger():
     for logger_name in logging.root.manager.loggerDict:
         if logger_name.startswith('instrumpy'):
             logging.getLogger(logger_name).disabled = False
