@@ -15,6 +15,9 @@ pyvisa-py = "*"
 jupyter = "*"
 pyusb = "*"
 multipyvu = "*"
+ipympl = "*"
+plotly = "*"
+nicegui = "*"
 
 [dev-packages]
 spyder-terminal = "*"
