@@ -215,7 +215,7 @@ class SapphireLP(CoherentLaser):
                 return
             except pyvisa.VisaIOError as err:
                 if err.error_code == -1073807253:
-                    self.logger.warning(f"Serial communication issue encountered during write, retrying (attempt {i+1}/{retries+1}).")
+                    self.logger.warning(f"Serial communication issue encountered during write, retrying (attempt {i+1}/{retries}).")
                     self.flushBuffer()
                 else:
                     raise err
