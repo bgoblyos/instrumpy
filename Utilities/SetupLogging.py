@@ -4,7 +4,7 @@ import sys
 def setupLogging():
     # 1. Grab your master logger
     logger = logging.getLogger('instrumpy')
-    logger.setLevel(logging.WARNING)
+    logger.setLevel(logging.INFO)
 
     # Prevent submodules from messing with the logger
     logger.propagate = False
