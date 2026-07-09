@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import logging
 import json
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -137,11 +138,12 @@ class PM100():
         val : float
             Wavelength in nm.
         """
-        if self.poly is not None and convert:
--            if self.lower != 0 and val < self.lower:
--                self.logger.warning(f"The set wavelength ({val} nm) is below the calibrated minimum ({self.lower} nm). Attenuation calculations may be erroneous.")
--            if self.upper != 0 and val > self.upper:
--                self.logger.warning(f"The set wavelength ({val} nm) is above the calibrated maximum ({self.upper} nm). Attenuation calculations may be erroneous.")
+        if self.poly is not None:
+            if self.lower != 0 and val < self.lower:
+                self.logger.warning(f"The set wavelength ({val} nm) is below the calibrated minimum ({self.lower} nm). Attenuation calculations may be erroneous.")
+            if self.upper != 0 and val > self.upper:
+                self.logger.warning(f"The set wavelength ({val} nm) is above the calibrated maximum ({self.upper} nm). Attenuation calculations may be erroneous.")
+        
         self.device.write(f"SENS:CORR:WAV {int(val)}")
 
     wavelength = property(fget=getWavelength, fset=setWavelength)
