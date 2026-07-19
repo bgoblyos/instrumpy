@@ -85,11 +85,16 @@ class SourceMeter2400():
             self.device = None
             self.logger.error(f'No valid address could be found, device will not be opened.')
 
+        self.device.read_termination = '\n'
+
     def beep(self, f, t):
-        if f == 0:
-            time.sleep(t)
-        else:
+        start = time.time()
+        if f > 0:
             self.device.write(f'SYST:BEEP {f}, {t}')
+
+        # wait however long it takes to play the note
+        while (time.time() - start) < t:
+            pass
 
     def chime(self, name):
         if self.config is None:
@@ -115,3 +120,59 @@ class SourceMeter2400():
                 note.get('f', 0),
                 note.get('t', 0)
             )
+
+    # Output toggle
+    def getOutput(self):
+        resp = self.device.query('OUTP:STAT?')
+        return int(resp) == 1
+
+    def setOutput(self, output):
+        cmd = f'OUTP:STAT {'1' if output else '0'}'
+        self.device.write(cmd)
+
+    output = property(fget=getOutput, fset=setOutput)
+
+    def on(self):
+        self.setOutput(True)
+
+    def off(self):
+        self.setOutput(False)
+
+    # Select front or back terminals
+    def getFront(self):
+        resp = self.device.query('ROUT:TERM?')
+        return resp == 'FRON'
+
+    def setFront(front = True):
+        cmd = f'ROUT:TERM {'FRON' if front else 'REAR'}'
+        self.device.write(cmd)
+
+    front = property(fget=getFront, fset=setFront)
+
+    # CV and CC modes
+    def setCV(self, V, I_lim = None):
+        self.device.write('SOUR:FUNC VOLT')
+        self.device.write(f'SOUR:VOLT {V}')
+        if I_lim is not None:
+            self.device.write(f'SOUR:VOLT:ILIM {I_lim}')
+
+    def setCC(self, I, V_lim = None):
+        self.device.write('SOUR:FUNC CURR')
+        self.device.write(f'SOUR:CURR {I}')
+        if V_lim is not None:
+            self.device.write(f'SOUR:CURR:VLIM {V_lim}')
+
+    def getV(self):
+        return float(self.device.query('MEAS:VOLT?'))
+
+    V = property(fget=getV)
+
+    def getI(self):
+        return float(self.device.query('MEAS:CURR?'))
+
+    I = property(fget=getI)
+
+    def getR(self):
+        return float(self.device.query('MEAS:RES?'))
+
+    R = property(fget=getR)
