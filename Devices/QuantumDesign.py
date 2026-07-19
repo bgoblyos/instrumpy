@@ -416,6 +416,7 @@ class PPMS():
             Measured resistance, presumably in Ohms.
         """
 
+        res = None
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 res = client.resistivity.get_resistance(bridge)
@@ -438,6 +439,7 @@ class PPMS():
             Measured current, presumably in uA.
         """
 
+        res = None
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 res = client.resistivity.get_current(bridge)

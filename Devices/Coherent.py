@@ -86,6 +86,9 @@ class CoherentLaser():
     def query(self, cmd):
         raise NotImplementedError("Subclasses must implement custom query logic.")
 
+    def flushBuffer(self):
+        pass
+
     def getID(self):
         raise NotImplementedError("Subclasses must implement custom query logic.")
 
