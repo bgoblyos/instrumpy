@@ -31,6 +31,7 @@ autoclass_content = 'both'
 autodoc_mock_imports = [
     "Libraries", 
     "libusb",
+    "pyvisa",
     "Utilities",
     "Experiments",
     "Devices"

@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: '3.14'  
         cache: 'pipenv'         # Cache venv
@@ -24,14 +24,17 @@ jobs:
     - name: Install Pipenv
       run: pip install pipenv
 
+    - name: Install System Dependencies for PyVISA
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libusb-1.0-0-dev build-essential
+
     - name: Install Dependencies
       run: |
         pipenv install --deploy --categories="packages docs"
 
-    # NOTE: If you prefer to have the workflow auto-generate fresh .rst files 
-    # every time, uncomment the line below and adjust the paths:
-    # - name: Auto-generate API Skeleton
-    #   run: pipenv run sphinx-apidoc -o docs/source/ ./your_package_folder/ --force
+    - name: Auto-generate API Skeleton
+      run: pipenv run sphinx-apidoc -o Docs/source/ ./Devices/ --force
 
     - name: Build HTML Documentation
       run: |
