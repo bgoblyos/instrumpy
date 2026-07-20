@@ -1,16 +1,40 @@
+# Copyright (C) 2026 Bence Göblyös
+#
+# This program is free software: you can redistribute it and/or modify it under
+#  terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see https://www.gnu.org/licenses/.
+
 """
-Copyright (C) 2026 Bence Göblyös
+This module contains a driver class for Quantum Design instruments, wrapping MultiPyVu.
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3.
+Examples
+--------
+Below is a minimum working example showing how to use a PM100D power meter.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+.. code-block:: python
 
-You should have received a copy of the GNU General Public License along with
-this program. If not, see https://www.gnu.org/licenses/.
+    from Devices.QD import PPMS
+
+    device = PPMS("8fvfvd3.dhcp.nd.edu")
+
+    # Go to 77 K at a rate of 2 K/min using the fast settle mode
+    device.setTemperature(77.0, 2.0, True)
+    # Wait until the temperature is reached (or a maximum of 4 hours),
+    # plus another 10 minutes for sample thermalization
+    device.waitFor(timeout = 4*3600, delay = 600, temp = True)
+
+    # Set up a resistance measurement on bridge 1 with a limit of 100 uA, 100 uW and 95 mV,
+    # and a built-in waiting period of 5 seconds to allow the bridge to configure itself
+    device.setupBridge(1, channelOn = True, currentLimit = 100, powerLimit = 100, voltageLimit = 95, delay = 5.0):
+    # Measure resistance
+    print(f'Sample resistance: {device.getResistance(2)[0]} Ohm')
 """
 
 import MultiPyVu
@@ -22,15 +46,15 @@ from IPython.utils.io import capture_output
 
 from Utilities.SetupLogging import fixLogger
 
-mu0 = 1.25663706127e-6 # in N/A^2
+_mu0 = 1.25663706127e-6 # in N/A^2
 
-oeConversion = {
+_oeConversion = {
     'oe': 1.0,
     'oersted': 1.0,
     'apm': 1000 / (4*np.pi),
     'a/m': 1000 / (4*np.pi),
-    't': mu0 * 1000 / (4*np.pi),
-    'tesla': mu0 * 1000 / (4*np.pi),
+    't': _mu0 * 1000 / (4*np.pi),
+    'tesla': _mu0 * 1000 / (4*np.pi),
 }
 
 class PPMS():
@@ -50,7 +74,7 @@ class PPMS():
         Parameters
         ----------
         address : str
-            The IP address of the server.
+            The IP address or hostname of the server.
         """
 
         # Set up logger
@@ -82,13 +106,13 @@ class PPMS():
         startingUnit = startingUnit.lower()
         targetUnit = targetUnit.lower()
 
-        if startingUnit not in oeConversion:
+        if startingUnit not in _oeConversion:
             self.logger.error(f'Starting unit \"{startingUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
         
-        if targetUnit not in oeConversion:
+        if targetUnit not in _oeConversion:
             self.logger.error(f'Target unit \"{targetUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
 
-        factor = oeConversion.get(targetUnit, float('nan')) / oeConversion.get(startingUnit, float('nan'))
+        factor = _oeConversion.get(targetUnit, float('nan')) / _oeConversion.get(startingUnit, float('nan'))
         return value * factor
 
     def setTemperature(self, setpoint : float, rate = 2.0, fast = False):

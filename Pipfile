@@ -25,3 +25,6 @@ spyder = "*"
 
 [requires]
 python_version = "3.14"
+
+[docs]
+sphinx-simplepdf = "*"

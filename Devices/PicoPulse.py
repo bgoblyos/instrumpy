@@ -1,40 +1,44 @@
-"""
-Copyright (C) 2025-2026 Bence Göblyös
+# Copyright (C) 2025-2026 Bence Göblyös
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-this program. If not, see https://www.gnu.org/licenses/.
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see https://www.gnu.org/licenses/.
+
+
+"""
+This module interfaces with the pico-pulse sequence synthesizer device.
 """
 
-"""
-pico-pulse sequence synthesizer
-"""
+import sys
+from pathlib import Path
+
+if "sphinx" in sys.modules:
+    PROJECT_ROOT = Path(".")
+else:
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 class PicoPulse():
-    def __init__(self, rm , addr, pinoutName = None, configFile = "Config/PicoPulse.json"):
+    """
+    Driver for the pico-pulse sequence synthesizer.
+    """
+    def __init__(self, rm , addr, pinoutName = None, configFile = (PROJECT_ROOT / "Config" / "PicoPulse.json")):
         """
-        Initialize pico-pulse device.
-
         Parameters
         ----------
         rm : pyvisa.ResourceManager
             Pass a pyvisa ResourceManager object to use for opening the device.
         addr : str
             VISA address of the pico-pulse device.
-        assignments : dict, optional
-            Dictinary defining channel assignments in the form of {'lockin': 'ch1'}.
-            The default is None.
-
-        Returns
-        -------
-        None.
-
+        pinoutName : str, optional
+            Name of the config file entry for the device's pin layout.
+        configFile: Path, default: Config/PicoPulse.json
         """
 
         # Set up logger
@@ -70,7 +74,29 @@ class PicoPulse():
         
         self.device = rm.open_resource(addr)
 
-    def encodeSequence(self, seq, cycle = False, innerLoop = 0, outerLoop = None):
+    def _encodeSequence(self, seq, cycle = False, innerLoop = 0, outerLoop = None):
+        """
+        Encode a sequence for transmission.
+
+        Parameters
+        ----------
+        seq : pandas.DataFrame
+            Sequence to be encoded. Should have at least one column from 'ch1' to 'ch5', or the mapped pins.
+        cycle : bool, default : False
+            Whther the timing is given in CPU cycles rather than ns.
+            True is CPU cycles, False is ns.
+        innerLoop : int, default : 0
+            Numer of times the sequence should be copied into the transmit buffer. Helps with short sequences.
+            A value of 0 will instruct the pico-pulse device to fill the entire buffer with copies.
+        outerLoop : int, default: None
+            Numer of times the pico-pulse should repeat the sequence.
+            A value of None will instruct it to repeat the sequence indefinitely.
+
+        Returns
+        -------
+        cmd: str
+            Encoded command
+        """
         cmd = ""
         if cycle:
             cmd += "CPULSE"
@@ -120,6 +146,23 @@ class PicoPulse():
         return cmd
 
     def sendSequence(self, seq, **kwargs):
-        cmd = self.encodeSequence(seq, **kwargs)
+        """
+        Encode a sequence and transmit it to the pico-pulse.
+
+        Parameters
+        ----------
+        seq : pandas.DataFrame
+            Sequence to be encoded. Should have at least one column from 'ch1' to 'ch5', or the mapped pins.
+        cycle : bool, default : False
+            Whther the timing is given in CPU cycles rather than ns.
+            True is CPU cycles, False is ns.
+        innerLoop : int, default : 0
+            Numer of times the sequence should be copied into the transmit buffer. Helps with short sequences.
+            A value of 0 will instruct the pico-pulse device to fill the entire buffer with copies.
+        outerLoop : int, default: None
+            Numer of times the pico-pulse should repeat the sequence.
+            A value of None will instruct it to repeat the sequence indefinitely.
+        """
+        cmd = self._encodeSequence(seq, **kwargs)
         res = self.device.query(cmd)
         return res

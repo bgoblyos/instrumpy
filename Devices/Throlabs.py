@@ -1,25 +1,51 @@
+# Copyright (C) 2026 Bence Göblyös
+#
+# This program is free software: you can redistribute it and/or modify it under
+#  terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see https://www.gnu.org/licenses/.
+
 """
-Copyright (C) 2026 Bence Göblyös
+This module contains drivers for Thorlabs devices.
+At the moment, this includes the PM100-series power meters.
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3.
+Examples
+--------
+Below is a minimum working example showing how to use a PM100D power meter.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+.. code-block:: python
 
-You should have received a copy of the GNU General Public License along with
-this program. If not, see https://www.gnu.org/licenses/.
+    import pyvisa
+    from Devices.Throlabs import PM100
+
+    rm = pyvisa.ResourceManager()
+    # Instantiate the PM100D with a predefined attenuation curve
+    pm = PM100(rm, 'USB0::0x1313::0x8078::P0017770::INSTR', attName='ppms-tap')
+
+    pm.wavelength = 530 # Set wavelength for an accurate reading
+
+    # When reading the power, the wavelength-dependent attenuation
+    # characteristics are automatically taken into account
+    print(f'Power: {pm.power * 1e3} mW')
 """
 
 import numpy as np
 import pandas as pd
 import logging
 import json
+import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if "sphinx" in sys.modules:
+    PROJECT_ROOT = Path(".")
+else:
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 class PM100():
     """

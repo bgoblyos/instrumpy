@@ -1,18 +1,48 @@
+# Based on basic_spectrometer from the Avenir SDK, Copyright 2023 by Avenir Photonics GmbH & Co. KG
+#
+# All added code is copyright (C) 2026 Bence Göblyös
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see https://www.gnu.org/licenses/.
+
+
 """
-Based on basic_spectrometer from the Avenir SDK, Copyright 2023 by Avenir Photonics GmbH & Co. KG
+This module provides the high-level object-oriented interface to control and
+stream data from Avenir ARIS compact spectrometers. It handles the low-level
+USB polling, handles exposure adjustment, and parses raw metadata.
 
-All added code is copyright (C) 2026 Bence Göblyös
+Examples
+--------
+Below is a minimum working example showing how to initialize the spectrometer,
+set up automatic exposure and capture a single spectrum:
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3.
+.. code-block:: python
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+    import matplotlib.pyplot as plt
+    from Devices.Avenir import ARIS
 
-You should have received a copy of the GNU General Public License along with
-this program. If not, see https://www.gnu.org/licenses/.
+    # Initialize the device (automatically searches for the USB interface)
+    spec = ARIS()
+
+    if spec.device is not None:
+        # Set automatic exposure. This will set the exposure time and averaging automatically
+        # such that the total integration time is 20 ms.
+        spec.setAutoExposure(exposure_us=200000)
+
+        # Capture the data
+        data = spec.capture()
+
+        if data:
+            print(f"Captured spectrum at {data['temperature_c']}°C")
+            plt.plot(data['wavelengths'], data['spectrum']")
 """
 
 import sys
@@ -26,7 +56,7 @@ import pandas as pd
 from Libraries.ARIS.libusb_interface import LibusbInterface
 from Libraries.ARIS.ziolink_protocol import ZioLinkProtocol
 
-def enum(**enums):
+def _enum(**enums):
     """
     Creates a simple enumeration type from keyword arguments.
 
@@ -44,7 +74,7 @@ def enum(**enums):
 
 
 # Values of Spectrometer Status
-SpectrStatus = enum(
+_SpectrStatus = _enum(
     Idle=0x00,
     WaitingForTrigger=0x01,
     TakingSpectrum=0x02,
@@ -54,7 +84,7 @@ SpectrStatus = enum(
     NotConnected=0x0A
 )
 
-def find_address(**kwargs):
+def _find_address(**kwargs):
     """
     Finds and returns the first compatible Avenir USB spectrometer device.
 
@@ -85,12 +115,12 @@ class ARIS():
     """
     def __init__(self, **kwargs):
         """
-        Initializes the spectrometer, opens communication, and reads basic properties.
-
         Parameters
         ----------
         **kwargs: dict
-            Keyword arguments passed to find_address() to discover the USB device.
+            Keyword arguments passed to _find_address() to manually select a USB device.
+            Valid keywords are "idVendor" and "idProduct", corresponding to the vendor
+            and product ID of the manually defined USB device.
         """
         # Set up logger
         self.logger = logging.getLogger('instrumpy.ARIS')
@@ -98,7 +128,7 @@ class ARIS():
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
 
-        self.device = find_address(**kwargs)
+        self.device = _find_address(**kwargs)
 
         if self.device is not None:
             self.ziolink = ZioLinkProtocol(self.device)
@@ -187,9 +217,9 @@ class ARIS():
         # TODO: implement multiple spectrum capture
 
         # Wait for completion
-        status = SpectrStatus.TakingSpectrum
+        status = _SpectrStatus.TakingSpectrum
         available_spectra = 0
-        while status == SpectrStatus.TakingSpectrum or status == SpectrStatus.WaitingForTrigger:
+        while status == _SpectrStatus.TakingSpectrum or status == _SpectrStatus.WaitingForTrigger:
             st_bytes = self.ziolink.send_receive_message(0x3000)  # 0x3000 = Get Measured Value: Status
             status = st_bytes[0]  # byte 0 of returned value
             available_spectra = st_bytes[1] + 256 * st_bytes[2]  # //byte 1 and 2 of returned value

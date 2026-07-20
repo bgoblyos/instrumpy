@@ -1,16 +1,21 @@
+# Copyright (C) 2025-2026 Bence Göblyös
+#
+# This program is free software: you can redistribute it and/or modify it under
+#  terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see https://www.gnu.org/licenses/.
+
 """
-Copyright (C) 2025 Bence Göblyös
+This module contains drivers for Stanford Research Systems devices.
+Currently, this includes the SR830 and SR850 lock-in amplifier models.
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see https://www.gnu.org/licenses/.
+The SR8x0 class contains common API elements, while the SR830 and SR850 classes implement device-specific functions.
 """
 
 import pandas as pd
@@ -21,9 +26,23 @@ import logging
 import datetime
 
 class SR8x0():
-    def setSamplerateHz(self, target):
-        row = np.argmin(np.abs(self.srateDF.srate - target))
-        i = self.srateDF.i[row]
+    def _setSamplerateHz(self, target):
+        """
+        Sets the sample rate for automatic acquisition.
+
+        Parameters
+        ----------
+        target: float
+            Target sampling frequence is Hz.
+
+        Returns
+        -------
+        achieved: int
+            Index of closest achievable sampling frequency in Hz.
+            This is the one that was set on the device.
+        """
+        row = np.argmin(np.abs(self._srateDF.srate - target))
+        i = self._srateDF.i[row]
         self.device.write(f"SRAT {i}")
         return i
 
@@ -33,14 +52,25 @@ class SR8x0():
 
         Returns
         -------
-        (i, f): index and frequency in Hz
+        i: int
+            Index of frequency setting
+        f: float
+            Sampling frequency in Hz.
         """
         resp = int(self.device.query("SRAT?"))
-        i = np.argwhere(self.srateDF.i == resp)[0,0]
-        f = self.srateDF.srate[i]
+        i = np.argwhere(self._srateDF.i == resp)[0,0]
+        f = self._srateDF.srate[i]
         return resp, f
 
-    sensDF = pd.DataFrame(
+    def _getSamplerateHz(self):
+        resp, f = self.getSamplerate
+        return f
+
+    #: float: Gets or sets the sample rate in Hz.
+    sampleRate = property(fget=_getSamplerateHz,fset=_setSamplerateHz)
+
+    #: pandas.DataFrame: translation table for sensitivity settings
+    _sensDF = pd.DataFrame(
         columns = ["i", "V", "Vstr", "I", "Istr"],
         data = [
             [0,  2.0e-09, "2 nV",   2.0e-15, "2 fA"   ],
@@ -73,7 +103,8 @@ class SR8x0():
         ]
     )
 
-    tauDF = pd.DataFrame(
+    #: pandas.DataFrame: translation table for time constant settings
+    _tauDF = pd.DataFrame(
         columns = ["i", "t", "tstr"],
         data = [
             [0,  1.0e-05, "10 us"  ],
@@ -99,7 +130,8 @@ class SR8x0():
         ]
     )
 
-    srateDF = pd.DataFrame(
+    #: pandas.DataFrame: translation table for sample rate settings
+    _srateDF = pd.DataFrame(
         columns = ["i", "srate", "sratestr"],
         data = [
             [0,  6.25e-02, "62.5 mHz" ],
@@ -127,11 +159,11 @@ class SR8x0():
         Parameters
         ----------
         target: str or int
-            If str, try to parse it based on the translation table (see SR830M.sensDF).
+            If str, try to parse it based on the translation table (see SR830M._sensDF).
             If int, set it directly (see translation table or instrument manual). Negative values indicate current measurement mode.
-
         setMode: Bool, default: True
-            Whether to automatically set the input mode. Defaults to A in voltage mode and I (100 MΩ) in current mode. Set to False for more granular control.
+            Whether to automatically set the input mode. Defaults to A in voltage mode and I (100 MΩ) in current mode.
+            Set to False for more granular control.
 
         Returns
         -------
@@ -145,12 +177,12 @@ class SR8x0():
         current = False
 
         if type(target) is str:
-            if target in self.sensDF.Vstr.values:
-                row = np.argwhere(self.sensDF.Vstr == target)[0,0]
-                i = self.sensDF.i[row]
-            elif target in self.sensDF.Istr.values:
-                row = np.argwhere(self.sensDF.Istr == target)[0,0]
-                i = self.sensDF.i[row]
+            if target in self._sensDF.Vstr.values:
+                row = np.argwhere(self._sensDF.Vstr == target)[0,0]
+                i = self._sensDF.i[row]
+            elif target in self._sensDF.Istr.values:
+                row = np.argwhere(self._sensDF.Istr == target)[0,0]
+                i = self._sensDF.i[row]
                 current = True
             else:
                 self.logger.error("Requested sensitivity string is invalid.")
@@ -161,7 +193,7 @@ class SR8x0():
                 target = -target
                 current = True
 
-            if target in self.sensDF.i.values:
+            if target in self._sensDF.i.values:
                 i = target
             else:
                 self.logger.error("Requested sensitivity index is invalid.")
@@ -172,36 +204,80 @@ class SR8x0():
             return -1, None
 
         if current and setMode:
-            self.setInputMode(3)
+            self._setInputMode(3)
         elif setMode:
-            self.setInputMode(0)
+            self._setInputMode(0)
 
         self.device.write(f"SENS {i}")
 
         if current:
-            return self.sensDF.I[np.argwhere(self.sensDF.i == i)[0,0]]
+            return self._sensDF.I[np.argwhere(self._sensDF.i == i)[0,0]]
         else:
-            return self.sensDF.V[np.argwhere(self.sensDF.i == i)[0,0]]
+            return self._sensDF.V[np.argwhere(self._sensDF.i == i)[0,0]]
 
     def setSensitivityV(self, target, **kwargs):
-        row = np.argmin(np.abs(self.sensDF.V - target))
-        i = self.sensDF.i[row]
+        """
+        Sets the sensitivity in volts.
+
+        Parameters
+        ----------
+        target: float
+            Target sensitivity in V.
+        setMode: Bool, default: True
+            Whether to automatically set the input mode to voltage. Defaults to A mode if True.
+
+        Returns
+        -------
+        sens: float
+            Achieved sensitivity in volts or amperes. -1 indicates an error.
+        current: Bool
+            Voltage (False) or current (True) mode.
+        """
+        row = np.argmin(np.abs(self._sensDF.V - target))
+        i = self._sensDF.i[row]
         return self.setSens(i, **kwargs)
 
     def setSensitivityA(self, target, **kwargs):
-        row = np.argmin(np.abs(self.sensDF.I - target))
-        i = self.sensDF.i[row]
+        """
+        Sets the sensitivity in amperes.
+
+        Parameters
+        ----------
+        target: float
+            Target sensitivity in A.
+        setMode: Bool, default: True
+            Whether to automatically set the input mode to current. Defaults to 100 MΩ mode if True.
+
+        Returns
+        -------
+        sens: float
+            Achieved sensitivity in volts or amperes. -1 indicates an error.
+        current: Bool
+            Voltage (False) or current (True) mode.
+        """
+        row = np.argmin(np.abs(self._sensDF.I - target))
+        i = self._sensDF.i[row]
         return self.setSens(-i, **kwargs)
 
     def getSensitivity(self):
-        current = self.getInputMode() >= 2
+        """
+        Get the sensitivity of the device.
+
+        Returns
+        -------
+        index: int
+            Index of sensitvity setting. Negative values indicate current mode.
+        sens: float
+            Achieved sensitivity in volts or amperes.
+        """
+        current = self._getInputMode() >= 2
         i = int(self.device.query("SENS?"))
-        row = np.argwhere(self.sensDF.i == i)[0,0]
+        row = np.argwhere(self._sensDF.i == i)[0,0]
 
         if current:
-            return -i, np.sensDF.I[row]
+            return -i, np._sensDF.I[row]
         else:
-            return i, np.sensDF.V[row]
+            return i, np._sensDF.V[row]
 
     def setSampleRate(self, target = None):
         """
@@ -211,7 +287,7 @@ class SR8x0():
         ----------
         target: None, str or int
             Target sample rate. If None, set highest rate that is meaninful with the current time constant.
-            If str, try to parse it based on the translation table (see SR830M.srateDF).
+            If str, try to parse it based on the translation table (see SR8x0M._srateDF).
             If int, set it directly (see translation table or instrument manual).
 
         Returns
@@ -222,27 +298,27 @@ class SR8x0():
             # Attempt to set automatically based on time constant
             _, t = self.getTau()
             maxfreq = 1/t
-            candidates = self.srateDF.srate[self.srateDF.srate <= maxfreq]
+            candidates = self._srateDF.srate[self._srateDF.srate <= maxfreq]
             maxvalid = np.max(candidates)
-            row = np.argwhere(self.srateDF.srate == maxvalid)[0,0]
-            i = self.srateDF.i[row]
+            row = np.argwhere(self._srateDF.srate == maxvalid)[0,0]
+            i = self._srateDF.i[row]
             self.device.write(f"SRAT {i}")
             return maxvalid
 
         if type(target) is str:
-            res = np.argwhere(self.srateDF.sratestr == target)
+            res = np.argwhere(self._srateDF.sratestr == target)
             if res.shape[0] < 1:
                 self.logger.error("Requested sample rate string is invalid.")
                 return -1
             else:
-                i = self.srateDF.i[res[0,0]]
+                i = self._srateDF.i[res[0,0]]
                 self.device.write(f"SRAT {i}")
-                return self.srateDF.srate[res[0,0]]
+                return self._srateDF.srate[res[0,0]]
 
         elif type(target) is int:
-            if target in self.srateDF.i.values:
+            if target in self._srateDF.i.values:
                 self.device.write(f"SRAT {target}")
-                return self.srateDF.srate[np.argwhere(self.srateDF.i == target)[0,0]]
+                return self._srateDF.srate[np.argwhere(self._srateDF.i == target)[0,0]]
             else:
                 self.logger.error("Requested sample rate index is invalid.")
                 return -1
@@ -258,7 +334,7 @@ class SR8x0():
         Parameters
         ----------
         target: str or int
-            If str, try to parse it based on the translation table (see SR830M.srateDF).
+            If str, try to parse it based on the translation table (see SR8x0M._srateDF).
             If int, set it directly (see translation table or instrument manual).
 
         Returns
@@ -266,19 +342,19 @@ class SR8x0():
         Achieved time constant (float). -1 indicates an error.
         """
         if type(target) is str:
-            res = np.argwhere(self.tauDF.tstr == target)
+            res = np.argwhere(self._tauDF.tstr == target)
             if res.shape[0] < 1:
                 self.logger.error("Requested time constant string is invalid.")
                 return -1
             else:
-                i = self.tauDF.i[res[0,0]]
+                i = self._tauDF.i[res[0,0]]
                 self.device.write(f"OFLT {i}")
-                return self.tauDF.t[res[0,0]]
+                return self._tauDF.t[res[0,0]]
 
         elif type(target) is int:
-            if target in self.tauDF.i:
+            if target in self._tauDF.i:
                 self.device.write(f"OFLT {target}")
-                return self.tauDF.t[np.argwhere(self.tauDF.i == target)[0,0]]
+                return self._tauDF.t[np.argwhere(self._tauDF.i == target)[0,0]]
             else:
                 self.logger.error("Requested time constant index is invalid.")
                 return -1
@@ -286,11 +362,25 @@ class SR8x0():
             self.logger.error("Time constant input type is invalid.")
             return -1
 
-    def setTauS(self, target):
-        row = np.argmin(np.abs(self.tauDF.t - target))
-        i = self.tauDF.i[row]
+    def _setTauS(self, target):
+        """
+        Sets the time constant in seconds.
+
+        Parameters
+        ----------
+        target: float
+            Target time constant in seconds.
+
+        Returns
+        -------
+        achieved: float
+            Achieved time constant.
+            This value was set on the device.
+        """
+        row = np.argmin(np.abs(self._tauDF.t - target))
+        i = self._tauDF.i[row]
         self.device.write(f"OFLT {i}")
-        return self.tauDF.t[row]
+        return self._tauDF.t[row]
 
     def getTau(self):
         """
@@ -298,14 +388,47 @@ class SR8x0():
 
         Returns
         -------
-        (i, t): index and time in seconds
+        i: int
+            Index of time constant setting.
+        t: float
+            Time constant in seconds.
         """
         resp = int(self.device.query("OFLT?"))
-        i = np.argwhere(self.tauDF.i == resp)[0,0]
-        t = self.tauDF.t[i]
+        i = np.argwhere(self._tauDF.i == resp)[0,0]
+        t = self._tauDF.t[i]
         return resp, t
 
+    def _getTauS(self):
+        """
+        Query the device for the currently set time constant.
+
+        Returns
+        -------
+        i: int
+            Index of time constant setting.
+        t: float
+            Time constant in seconds.
+        """
+        resp, t = self.getTau()
+        return t
+
+    #: float: Get or set the time constant in seconds
+    tau = property(fget=_getTauS, fset=_setTauS)
+
     def setFreq(self, freq):
+        """
+        Set the internal oscillator frequency.
+
+        Parameters
+        ----------
+        freq: float
+            Target frequency.
+
+        Returns
+        -------
+        success: bool
+            True if successful.
+        """
         # TODO: Consider harmonic detection for bounds checking.
         if freq >= 0.001 and freq <= 102000:
             self.device.write(f"FREQ {freq}")
@@ -315,21 +438,65 @@ class SR8x0():
             return False
 
     def getFreq(self):
+        """
+        Get the internal oscillator frequency.
+
+        Returns
+        -------
+        freq: float
+            LO frequency.
+        """
         return float(self.device.query("FREQ?"))
 
-    def setPhase(self, phase):
+    #: float: Get or set the oscillator frequency in Hz
+    freq = property(fget=getFreq, fset=setFreq)
+
+    def _setPhase(self, phase):
+        """
+        Set the phase of the internal oscillator.
+
+        Parameters
+        ----------
+        phase: float
+            Oscillator phase in degrees.
+        """
         p = phase % 360 # It's easier to just wrap it here
         self.device.write(f"PHAS {p}")
 
-    def getPhase(self):
+    def _getPhase(self):
+        """
+        Get the phase of the internal oscillator.
+
+        Returns
+        -------
+        phase: float
+            Oscillator phase in degrees.
+        """
         return float(self.device.query("PHAS?"))
 
-    def queryBinary(self, param):
+    #: float: Get or set the oscillator phase in degrees
+    phase = property(fget=_getPhase, fset=_setPhase)
+
+    def queryBinary(self, cmd):
+        """
+        Query a list of binary values from the device.
+
+        Parameters
+        ----------
+        cmd: str
+            Command to send to the device.
+
+        Returns
+        -------
+        response: bytes
+            A set of raw bytes returned by the instrument.
+        """
+
         # Increse timeout, otherwise the transfer takes too long
         oldTimeout = self.device.timeout
         self.device.timeout = 10000 # 10 seconds
 
-        self.device.write(param)
+        self.device.write(cmd)
         response = self.device.read_raw()
 
         # Reset the timeout
@@ -337,12 +504,27 @@ class SR8x0():
 
         return response
 
-    def queryASCIIFloat(self, param):
+    def queryASCIIFloat(self, cmd):
+        """
+        Query a list of float values from the device.
+        Parse the response as ASCII floats.
+
+        Parameters
+        ----------
+        cmd: str
+            Command to send to the device.
+
+        Returns
+        -------
+        response: list(float)
+            A set of floating point values returned by the instrument.
+        """
+
         # Increse timeout, otherwise the transfer takes too long
         oldTimeout = self.device.timeout
         self.device.timeout = 60000 # 1 minute
 
-        resp = self.device.query(param)
+        resp = self.device.query(cmd)
 
         decoded = list(map(float, resp.strip(',').split(',')))
 
@@ -351,79 +533,181 @@ class SR8x0():
 
         return decoded
 
-    def queryBinaryFloat(self, param):
-        response = self.queryBinary(param)
+    def queryBinaryFloat(self, cmd):
+        """
+        Query a list of float values from the device.
+        Parse the response as binary floats.
+
+        Parameters
+        ----------
+        cmd: str
+            Command to send to the device.
+
+        Returns
+        -------
+        response: list(float)
+            A set of floating point values returned by the instrument.
+        """
+        response = self.queryBinary(cmd)
         entries = len(response) // 4
         data = struct.unpack(f"{entries}f", response)
         return list(data)
 
     def resetBuffer(self):
+        """
+        Clear the automatic acquisition buffer
+        """
         self.device.write("REST")
 
     def trigger(self):
+        """
+        Send a command equivalent to a hardware trigger
+        """
         self.device.write("TRIG")
 
     def startBuffer(self):
+        """
+        Start automatic acquisition
+        """
         self.device.write("STRT")
 
     def pauseBuffer(self):
+        """
+        Stop automatic acquisition
+        """
         self.device.write("PAUS")
 
     def enableTrigger(self, state = True):
+        """
+        Enable back panel trigger for automatic acquisition
+
+        Parameters
+        ----------
+        state: bool
+            Whether or not back panel triggering is enabled.
+        """
         if state:
             self.device.write("TSTR 1")
         else:
             self.device.write("TSTR 0")
 
-    def setGrounding(self, grounded = False):
+    def _setGrounding(self, grounded = False):
+        """
+        Set grounded coupling
+
+        Parameters
+        ----------
+        grounded: bool, default : False
+            Whether or not the input's outer conductor is grounded.
+            False means floating.
+        """
         self.device.write(f'IGND {'1' if grounded else '0'}')
 
-    def getGrounding(self):
+    def _getGrounding(self):
+        """
+        Get grounded coupling
+
+        Returns
+        -------
+        grounded: bool
+            Whether or not the input's outer conductor is grounded.
+            False means floating.
+        """
         resp = self.device.query('IGND?')
         return int(resp) == 1
 
-    grounding = property(fget=getGrounding, fset=setGrounding)
+    #: bool: Gets or sets grounded coupling. True is grounded, False is floating.
+    grounding = property(fget=_getGrounding, fset=_setGrounding)
 
-    def setDC(self, DC = False):
+    def _setDC(self, DC = False):
+        """
+        Set DC coupling
+
+        Parameters
+        ----------
+        DC: bool, default : False
+            Whether the device is in DC coupling mode.
+            True is DC, Flase is AC.
+        """
         self.device.write(f'ICPL {'1' if DC else '0'}')
 
-    def getDC(self):
+    def _getDC(self):
+        """
+        Get DC coupling
+
+        Returns
+        -------
+        DC: bool, default : False
+            Whether the device is in DC coupling mode.
+            True is DC, Flase is AC.
+        """
         resp = self.device.query('ICPL?')
         return int(resp) == 1
 
-    DC = property(fget=getDC, fset=setDC)
+    #: bool: Gets or sets DC coupling. True is DC, False is AC.
+    DC = property(fget=_getDC, fset=_setDC)
 
-    def setNotchFilter(self, setting = 0):
-        # 0 is neither, 1 is line, 2 is line*2, 3 is both
+    def _setNotchFilter(self, setting = 0):
+        """
+        Set noth filter
+
+        Parameters
+        ----------
+        setting: int, default : 0
+            0 is neither, 1 is line, 2 is 2line, 3 is both
+        """
         self.device.write(f'ILIN {setting}')
 
-    def getNotchFilter(self):
+    def _getNotchFilter(self):
+        """
+        Set noth filter
+
+        Returns
+        -------
+        setting: int
+            0 is neither, 1 is line, 2 is 2line, 3 is both
+        """
         resp = self.device.query('ILIN?')
         return int(resp)
 
-    notchFilter = property(fget=getNotchFilter, fset=setNotchFilter)
+    #: int: Gets or sets noth filter. 0 is neither, 1 is line, 2 is 2line, 3 is both.
+    notchFilter = property(fget=_getNotchFilter, fset=_setNotchFilter)
 
-    def setReserve(self, reserve = 1):
-        # 0 is high reserve, 1 is normal (or manual for SR850), 2 is low noise
-        self.device.write(f'RMOD {reserve}')
-
-    def getReserve(self):
-        resp = self.device.query('RMOD?')
-        return int(resp)
-
-    reserve = property(fget=getReserve, fset=setReserve)
-
-    def setSlope(self, slope = 0):
+    def _setSlope(self, slope = 0):
         self.device.write(f'OFSL {slope}')
 
-    def getSlope(self):
+    def _getSlope(self):
         resp = self.device.query('OFSL?')
         return int(resp)
 
-    slope = property(fget=getSlope, fset=setSlope)
+    slope = property(fget=_getSlope, fset=_setSlope, doc="""
+    int: Gets or sets the low pass filter slope. Possible values:
+
+    ===== =========
+    Value Slope
+    ===== =========
+    0     6 dB/oct
+    1     12 dB/oct
+    2     18 dB/oct
+    3     24 dB/oct
+    ===== =========
+    """)
 
 class SR830(SR8x0):
+    """
+    Driver class for SR830 and SR830M devices. Supports both GPIB and serial connections.
+    For the latter, the device must be set to RS-323 mode at 19200 baud.
+    """
     def __init__(self, rm, address):
+        """
+        Parameters
+        ----------
+        rm : pyvisa.ResourceManager
+            Pass a pyvisa ResourceManager object to use for opening the device.
+        address : str
+            VISA address of the SR830 device.
+        """
+
         # Set up logger
         self.logger = logging.getLogger('instrumpy.SR830M')
         self.logger.propagate = True
@@ -443,9 +727,9 @@ class SR830(SR8x0):
 
         self.device.timeout = 100000
 
-    bufferSize = 16383
+    #bufferSize = 16383 Not actually used anywhere
 
-    disp1Dict = {
+    _disp1Dict = {
         "X": 0,
         "R": 1,
         "XN": 2,
@@ -456,7 +740,7 @@ class SR830(SR8x0):
         "AUX2": 4,
     }
 
-    disp2Dict = {
+    _disp2Dict = {
         "Y": 0,
         "THETA": 1,
         "Θ": 1,
@@ -468,7 +752,7 @@ class SR830(SR8x0):
         "AUX4": 4,
     }
 
-    snapDict = {
+    _snapDict = {
             "X": 1,
             "Y": 2,
             "R": 3,
@@ -493,7 +777,7 @@ class SR830(SR8x0):
     }
 
     # Oscillator settings
-    def setLO(self, internal):
+    def _setSource(self, internal):
         """
         Set local oscillator source.
 
@@ -509,7 +793,7 @@ class SR830(SR8x0):
         else:
             self.device.write("FMOD 0")
 
-    def getLO(self):
+    def _getSource(self):
         """
         Query which frequency source is in use.
 
@@ -522,9 +806,26 @@ class SR830(SR8x0):
 
         return resp == 1
 
-    def snapshot(self, params):
-        if type(params) == str:
-            params = [params]
+    #: bool: Gets or sets which frequency source is used. True is internal, False is external.
+    source = property(fset=_setSource,fget=_getSource)
+
+    def snapshot(self, *args):
+        """
+        Reads out at most 6 values simultaneously.
+
+        Parameters
+        ----------
+        *args: str
+            At most 6 str arguments, each representing a measured quantitiy.
+            See SR830._snapDict for valid options. Notable examples include 'X', 'Y', 'R' and 'THETA'.
+
+        Returns
+        -------
+        result: list(float)
+            List of up to 6 values, corresponding to the passed arguments.
+            None if a failure has occured.
+        """
+        params = list(args)
 
         if len(params) > 6:
             self.logger.error("At most 6 parameters may be read out at once.")
@@ -536,12 +837,12 @@ class SR830(SR8x0):
         indices = []
         for p in params:
             P = p.upper()
-            if P in self.snapDict:
-                indices.append(str(self.snapDict[P]))
+            if P in self._snapDict:
+                indices.append(str(self._snapDict[P]))
             else:
-                available = ", ".join(self.snapDict.keys())
+                available = ", ".join(self._snapDict.keys())
                 self.logger.error(f"A requested value is invalid. Request: {P}. Available values: {available}")
-                return 0
+                return None
 
         if len(indices) == 1:
             indices.append(indices[0])
@@ -559,17 +860,23 @@ class SR830(SR8x0):
             return list(map(float, resp.split(',')))
 
     # Input configuration
-    def setInputMode(self, mode):
+    def _setInputMode(self, mode):
         """
         Sets the input mode of the device.
 
         Parameters
         ----------
         mode: int
-            Possible values: 0 - A (voltage)
-                             1 - A-B (differential voltage)
-                             2 - I (1 MΩ)
-                             3 - I (100 MΩ)
+            Possible values:
+
+            ===== ==========================
+            Value Description
+            ===== ==========================
+            0     A (voltage)
+            1     A-B (differential voltage)
+            2     I (1 MΩ)
+            3     I (100 MΩ)
+            ===== ==========================
         
         Returns
         -------
@@ -583,44 +890,38 @@ class SR830(SR8x0):
             self.logger.error("Input mode must be one of [0, 1, 2, 3].")
             return False
 
-    def getInputMode(self):
+    def _getInputMode(self):
         """
         Gets the input mode of the device.
-
         
         Returns
         -------
         mode: int
-            Possible values: 0 - A (voltage)
-                             1 - A-B (differential voltage)
-                             2 - I (1 MΩ)
-                             3 - I (100 MΩ)
+            Possible values:
+
+            ===== ==========================
+            Value Description
+            ===== ==========================
+            0     A (voltage)
+            1     A-B (differential voltage)
+            2     I (1 MΩ)
+            3     I (100 MΩ)
+            ===== ==========================
         """
-        return int(self.device.query("ISRC?")) 
+        return int(self.device.query("ISRC?"))
 
-    def setInputFloat(self, floating):
-        # TODO: Implement
-        return None
+    inputMode = property(fset=_setInputMode, fget=_getInputMode, doc = """
+    int: Gets or sets the input mode of the device. Possible values:
 
-    def getInputFloat(self):
-        # TODO: implement
-        return None
-
-    def setInputCoupling(self, dc):
-        # TODO: Implement
-        return None
-
-    def getInputCoupling(self):
-        # TODO: implement
-        return None
-
-    def setInputFilter(self, line, line2):
-        # TODO: Implement
-        return None
-
-    def getInputFilter(self):
-        # TODO: implement
-        return None
+    ===== ==========================
+    Value Description
+    ===== ==========================
+    0     A (voltage)
+    1     A-B (differential voltage)
+    2     I (1 MΩ)
+    3     I (100 MΩ)
+    ===== ==========================
+    """)
 
     # Display settings
     def setDisplay(self, disp, target, ratio = 0):
@@ -640,14 +941,15 @@ class SR830(SR8x0):
 
         Returns
         -------
-        True on success, False on failure.
+        success: bool
+            True on success, False on failure.
         """
         
         if disp not in [1, 2]:
             self.logger.error("Please select display 1 or 2.")
             return False
         
-        dispDict = self.disp1Dict if disp == 1 else self.disp2Dict
+        dispDict = self._disp1Dict if disp == 1 else self._disp2Dict
         
         target = target.upper()
         if target in dispDict:
@@ -660,37 +962,62 @@ class SR830(SR8x0):
             self.logger.error(f"The requested value is invalid. Request: {target}. Available values: {available}")
             return False
 
-    def getDisplay(self):
+    def _getDisplay(self):
         #TODO: implement
         return None
 
-    def readBinNum(self):
+    def getBinNum(self):
+        """
+        Read number of points stored in acquisition buffer.
+
+        Returns
+        -------
+        num: int
+            Number of elements in buffer.
+        """
         res = self.device.query('SPTS?')
         return int(res)
 
-    def readBuffer(self, buffer, firstPoint = 0, numPoints = 0):
-        bufferSize = self.readBinNum()
+    def readBuffer(self, buffer, start, length):
+        """
+        Read a buffer from the device.
+
+        Parameters
+        ----------
+        i: int
+            Buffer number. Must be one 1 or 2.
+        start: int
+            Starting index. Elements are indexed from 0.
+        length: int
+            Number of elements to read starting from index.
+
+        Returns
+        -------
+        result: list(float)
+            Buffer contents as a list of floats.
+        """
+        bufferSize = self.getBinNum()
 
         if bufferSize == 0:
             #logging.warning("The lock-in buffer is empty, nothing could be retrieved.")
             return None
 
-        if numPoints <= 0:
-            numPoints = bufferSize - firstPoint
+        if start <= 0:
+            start = bufferSize - start
 
-        if (firstPoint >= bufferSize) or (firstPoint < 0):
-            self.logger.error(f"Starting index is out of bounds (requested index {firstPoint} from {bufferSize} elements)")
+        if (start >= bufferSize) or (start < 0):
+            self.logger.error(f"Starting index is out of bounds (requested index {start} from {bufferSize} elements)")
             return None
 
-        if (firstPoint + numPoints) > bufferSize:
+        if (start + start) > bufferSize:
             self.logger.info("Requested too many points, clamping it.")
-            numPoints = bufferSize - firstPoint
+            start = bufferSize - start
 
         if self.serial:
-            queryStr = f"TRCA ? {buffer}, {firstPoint}, {numPoints}"
+            queryStr = f"TRCA ? {buffer}, {start}, {start}"
             return self.queryASCIIFloat(queryStr)
         else:
-            queryStr = f"TRCB ? {buffer}, {firstPoint}, {numPoints}"
+            queryStr = f"TRCB ? {buffer}, {start}, {length}"
             return self.queryBinaryFloat(queryStr)
    
     def multiRead(self, ch1 = None, ch2 = None, t = 1, srate = None, wait = False):
@@ -718,11 +1045,12 @@ class SR830(SR8x0):
 
         Returns
         -------
-        ch1
-            Numpy array of floats containing the data from channel 1.
-        ch2
-            Numpy array of floats containing the data from channel 2.
-
+        ch1: list(float)
+            List of floats containing the data from channel 1.
+            None if acquisition is disabled for this channel.
+        ch2: list(float)
+            List of floats containing the data from channel 2.
+            None if acquisition is disabled for this channel.
         """
         readCh1 = False
         readCh2 = False
@@ -739,7 +1067,7 @@ class SR830(SR8x0):
         if srate is None:
             srate = self.setSampleRate(None)
         else:
-            srate = self.setSamplerateHz(srate)
+            srate = self._setSamplerateHz(srate)
             
         self.logger.info(f"Sample rate is {srate}")
             
@@ -761,7 +1089,7 @@ class SR830(SR8x0):
         
         if wait:
             for i in range(100):
-                if self.readBinNum() >= n:
+                if self.getBinNum() >= n:
                     break
                 else:
                     time.sleep(0.1)
@@ -779,8 +1107,42 @@ class SR830(SR8x0):
             
         return dataCh1, dataCh2
 
+    def _setReserve(self, reserve = 1):
+        """
+        Set reserve mode.
+
+        Parameters
+        ----------
+        reserve: int, default: 1
+            Reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.
+        """
+        self.device.write(f'RMOD {reserve}')
+
+    def _getReserve(self):
+        """
+        Get reserve mode.
+
+        Returns
+        -------
+        reserve: int
+            Reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.
+        """
+        resp = self.device.query('RMOD?')
+        return int(resp)
+
+    #: int: Gets or sets reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.
+    reserve = property(fget=_getReserve, fset=_setReserve)
+
 class SR850(SR8x0):
     def __init__(self, rm, address):
+        """
+        Parameters
+        ----------
+        rm : pyvisa.ResourceManager
+            Pass a pyvisa ResourceManager object to use for opening the device.
+        address : str
+            VISA address of the SR850 device.
+        """
         # Set up logger
         self.logger = logging.getLogger('instrumpy.SR850')
         self.logger.propagate = True
@@ -793,11 +1155,11 @@ class SR850(SR8x0):
 
         self.device.write('OUTX 1')
 
-        self.setDate()
+        self._setDate()
 
         #self.device.timeout = 100000
 
-    snapDict = {
+    _snapDict = {
             "X": 1,
             "Y": 2,
             "R": 3,
@@ -808,7 +1170,7 @@ class SR850(SR8x0):
             "FREQ": 5,
     }
 
-    traceDict = {
+    _traceDict = {
         '1': 0,
         "X": 1,
         "Y": 2,
@@ -820,7 +1182,10 @@ class SR850(SR8x0):
         "FREQ": 14,
     }
 
-    def setDate(self):
+    def _setDate(self):
+        """
+        Sets the lock-in's clock to follow the controlling computer's.
+        """
         t = datetime.datetime.now()
 
         self.device.write(f'THRS {t.hour}')
@@ -834,17 +1199,30 @@ class SR850(SR8x0):
         """
         Emulates the snapshot function of the SR830.
         Does not actually guarantee that the samples are taken at the same time.
+        If syncronization is required, use multiRead.
+
+        Parameters
+        ----------
+        *args: str
+            Multiple str arguments, each representing a measured quantitiy.
+            See SR850._snapDict for valid options. Notable examples include 'X', 'Y', 'R', 'THETA' and 'REF'.
+
+        Returns
+        -------
+        result: list(float)
+            List of floats, corresponding to the passed arguments.
+            None if a failure has occured.
         """
 
         indices = []
         for p in params:
             P = p.upper()
-            if P in self.snapDict:
-                indices.append(self.snapDict[P])
+            if P in self._snapDict:
+                indices.append(self._snapDict[P])
             else:
-                available = ", ".join(self.snapDict.keys())
+                available = ", ".join(self._snapDict.keys())
                 self.logger.error(f"A requested value is invalid. Request: {P}. Available values: {available}")
-                return 0
+                return None
 
         resp = []
         for i in indices:
@@ -857,10 +1235,24 @@ class SR850(SR8x0):
         return resp
 
     def getTraceLength(self, i):
+        """
+        Get the length of a trace.
+
+        Parameters
+        ----------
+        i: int,
+            Trace number. Must be in 1-4.
+
+        Returns
+        -------
+        num: int
+            Number of values in the selected trace
+        """
+
         cmd = f"SPTS? {i}"
         return int(self.device.query(cmd))
 
-    def setInputMode(self, mode):
+    def _setInputMode(self, mode):
         """
         Sets the input mode of the device.
 
@@ -888,58 +1280,182 @@ class SR850(SR8x0):
             self.logger.error("Input mode must be one of [0, 1, 2, 3].")
             return False
 
+    def _getInputMode(self):
+        """
+        Sets the input mode of the device.
+
+        Returns
+        -------
+        mode: int
+            Possible values: 0 - A (voltage)
+                             1 - A-B (differential voltage)
+                             2 - I (1 MΩ)
+                             3 - I (100 MΩ)
+        """
+        isrc = int(self.device.query("ISRC?"))
+        if isrc == 3:
+            igan = int(self.device.query("IGAN?"))
+            return isrc + igan
+        else:
+            return igan
+
+    inputMode = property(fset=_setInputMode, fget=_getInputMode, doc = """
+    int: Gets or sets the input mode of the device. Possible values:
+
+    ===== ==========================
+    Value Description
+    ===== ==========================
+    0     A (voltage)
+    1     A-B (differential voltage)
+    2     I (1 MΩ)
+    3     I (100 MΩ)
+    ===== ==========================
+    """)
+
     def setTraceSource(self, i, target, multiply = 0, divide = 0, store = True):
+        """
+        Sets the trace source.
+
+        Parameters
+        ----------
+        i: int
+            Trace number. Must be in 1-4.
+        target: int or str
+            Value to be measured. If str, it will be decoded to the device's option index using SR850._traceDict.
+            Notable examples include 'X', 'Y', 'R' and 'THETA'.
+        multiply: int or str, default: 0
+            Value to divide the target with. Works the same as target.
+            The default value of 0 corresponds to unity ('1'), so no multiplication will be performed.
+        divide: int or str, default: 0
+            Value to divide the target with. Works the same as target.
+            The default value of 0 corresponds to unity ('1'), so no division will be performed.
+        """
+
+        # TODO: Implement different dictionaries for multiply and divide values.
         if type(target) is int:
             j = target
         else:
-            j = self.traceDict.get(target.upper(), None)
+            j = self._traceDict.get(target.upper(), None)
             if j is None:
-                available = ", ".join(self.traceDict.keys())
+                available = ", ".join(self._traceDict.keys())
                 self.logger.error(f"The requested target is invalid. Request: {P}. Available values: {available}")
                 return False
 
         if type(multiply) is int:
             k = multiply
         else:
-            k = self.traceDict.get(target.upper(), None)
+            k = self._traceDict.get(target.upper(), None)
             if k is None:
-                available = ", ".join(self.traceDict.keys())
+                available = ", ".join(self._traceDict.keys())
                 self.logger.error(f"The requested multiplier is invalid. Request: {P}. Available values: {available}")
                 return False
 
         if type(divide) is int:
             l = divide
         else:
-            l = self.traceDict.get(target.upper(), None)
+            l = self._traceDict.get(target.upper(), None)
             if l is None:
-                available = ", ".join(self.traceDict.keys())
+                available = ", ".join(self._traceDict.keys())
                 self.logger.error(f"The requested divider is invalid. Request: {P}. Available values: {available}")
                 return False
 
         self.device.write(f'TRCD {i},{j},{k},{l},{'1' if store else '0'}')
 
     def getTraceSource(self, i):
+        """
+        Get trace definition.
+
+        Parameters
+        ----------
+        i: int
+            Trace number. Must be in 1-4.
+
+        Returns
+        -------
+        source: list(int):
+            A list of 3 int values representing the source values.
+            See SR850._traceDict for a conversion table.
+        """
         resp = self.device.query(f'TRCD? {i}')
         return [int(x) for x in resp.split(',')]
 
     def startTrace(self):
+        """
+        Start a trace.
+        Alias of startBuffer.
+        """
         self.device.write('STRT')
 
     def pauseTrace(self):
+        """
+        Pause a trace.
+        Alias of pauseBuffer.
+        """
         self.device.write('PAUS')
 
     def resetTrace(self):
+        """
+        Reset a trace.
+        Alias of resetBuffer.
+        """
         self.device.write('REST')
 
     def readTrace(self, i, start, length):
+        """
+        Read a trace from the device.
+
+        Parameters
+        ----------
+        i: int
+            Trace number. Must be one of 1, 2, 3 or 4.
+        start: int
+            Starting index. Elements are indexed from 0
+        length: int
+            Number of elements to read starting from index.
+
+        Returns
+        -------
+        result: list(float)
+            Resulting trace as a list of floats.
+        """
         self.pauseTrace()
         length = np.minimum(length, self.getTraceLength(i) - start)
         if length <= 0:
             self.logger.error(f'Start of readout ({start}) must be less than the number of points in the trace ({self.getTraceLength(i)})')
         return self.queryBinaryFloat(f'TRCB? {i},{start},{length}')
 
-    def multiRead(self, tr1 = None, tr2 = None, tr3 = None, tr4 = None, t = 1, srate = None, wait = False):
+    def multiRead(self, tr1 = None, tr2 = None, tr3 = None, tr4 = None, t = 1.0, srate = None, wait = False):
+        """
+        Record a trace on up to 4 channels at a time.
 
+        Parameters
+        ----------
+        tr1: str, optional
+            Trace definition. If None, do not record anything on trace 1.
+            For valid options, see the keys of SR850._traceDict. Notable examples include 'X', 'Y', 'R' and 'THETA'.
+        tr2: str, optional
+            Trace definition. Same as tr1, but for channel 2.
+        tr3: str, optional
+            Trace definition. Same as tr1, but for channel 3.
+        tr4: str, optional
+            Trace definition. Same as tr1, but for channel 4.
+        t: float, default: 1.0
+            Total acquisition time in seconds.
+        srate: float, optional
+            Acquisition sample rate.
+            If none, the highest meaningful sample rate will be used for the given time constant.
+            If the given value is too fast for the time constant, it will be clamped.
+        wait: bool, default: False
+            Whether to account for communication overhead when calculating wait time.
+            When False, a few samples might be missing, especially at high sampling rates.
+
+        Returns
+        -------
+        results: list(list(float))
+            A list of results. The list contains 4 elements, corresponding to traces 1-4.and
+            Each element is itself a list of floats, containing the trace data.
+            If a given trace is disabled, its value will be None.
+        """
         data = [None, None, None, None]
 
         readTraces = [tr is not None for tr in [tr1, tr2, tr3, tr4]]
@@ -951,7 +1467,7 @@ class SR850(SR8x0):
         if srate is None:
             srate = self.setSampleRate(None)
         else:
-            srate = self.setSamplerateHz(srate)
+            srate = self._setSamplerateHz(srate)
 
         self.logger.info(f"Sample rate is {srate}")
 
@@ -990,7 +1506,7 @@ class SR850(SR8x0):
         return data
 
     # Oscillator settings
-    def setLO(self, source):
+    def _setSource(self, source):
         """
         Set local oscillator source.
 
@@ -1002,7 +1518,7 @@ class SR850(SR8x0):
 
         self.device.write(f"FMOD {i}")
 
-    def getLO(self):
+    def _getSource(self):
         """
         Query which frequency source is in use.
 
@@ -1013,13 +1529,33 @@ class SR850(SR8x0):
 
         return int(self.device.query("FMOD?"))
 
-    def setReserve(self, reserve = 3):
+    #: int: Gets or sets the reference frequency source. 0 is internal, 1 is internal sweep and 2 is external.
+    source = property(fget=_getSource,fset=_setSource)
+
+    def _setReserve(self, reserve = 3):
+        """
+        Set reserve mode.
+
+        Parameters
+        ----------
+        reserve: int, default: 3
+            Reserve mode between 0 and 5 inclusive. 0 is minimum reserve, 5 is maximum.
+        """
         # int between 0 and 5 inclusive, 0 is minimum reserve, 5 is maximum
         self.device.write('RMOD 1') # set manual reserve
         self.device.write(f'RSRV {reserve}')
 
-    def getReserve(self):
+    def _getReserve(self):
+        """
+        Get reserve mode.
+
+        Returns
+        -------
+        reserve: int
+            Reserve mode between 0 and 5 inclusive. 0 is minimum reserve, 5 is maximum.
+        """
         resp = self.device.query('RSRV?')
         return int(resp)
 
-    reserve = property(fget=getReserve, fset=setReserve)
+    #: int: Gets or sets reserve mode. 0 is minimum reserve, 5 is maximum.
+    reserve = property(fget=_getReserve, fset=_setReserve)
