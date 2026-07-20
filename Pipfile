@@ -27,4 +27,9 @@ spyder = "*"
 python_version = "3.14"
 
 [docs]
+sphinx = "*"
+sphinx-rtd-theme = "*"
+pydata-sphinx-theme = "*"
+
+[docs-pdf]
 sphinx-simplepdf = "*"
