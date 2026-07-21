@@ -29,12 +29,15 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 autoclass_content = 'both'
 
 autodoc_mock_imports = [
-    "Libraries", 
     "libusb",
     "pyvisa",
+    "numpy",
+    "pandas",
+    "MultiPyVu"
     "Utilities",
     "Experiments",
-    "Devices"
+    "Devices",
+    "Libraries",
 ]
 
 # -- Options for HTML output -------------------------------------------------
