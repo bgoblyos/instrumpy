@@ -33,7 +33,7 @@ autodoc_mock_imports = [
     "pyvisa",
     "numpy",
     "pandas",
-    "MultiPyVu"
+    "MultiPyVu",
     "Utilities",
     "Experiments",
     "Devices",
