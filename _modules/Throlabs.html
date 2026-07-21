@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Throlabs &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">Devices</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Throlabs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Throlabs</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2026 Bence Göblyös</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1">#  terms of the GNU General Public License as published by the Free Software</span>
+<span class="c1"># Foundation, version 3.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful, but WITHOUT ANY</span>
+<span class="c1"># WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A</span>
+<span class="c1"># PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with</span>
+<span class="c1"># this program. If not, see https://www.gnu.org/licenses/.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains drivers for Thorlabs devices.</span>
+<span class="sd">At the moment, this includes the PM100-series power meters.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">Below is a minimum working example showing how to use a PM100D power meter.</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyvisa</span>
+<span class="sd">    from Devices.Throlabs import PM100</span>
+
+<span class="sd">    rm = pyvisa.ResourceManager()</span>
+<span class="sd">    # Instantiate the PM100D with a predefined attenuation curve</span>
+<span class="sd">    pm = PM100(rm, &#39;USB0::0x1313::0x8078::P0017770::INSTR&#39;, attName=&#39;ppms-tap&#39;)</span>
+
+<span class="sd">    pm.wavelength = 530 # Set wavelength for an accurate reading</span>
+
+<span class="sd">    # When reading the power, the wavelength-dependent attenuation</span>
+<span class="sd">    # characteristics are automatically taken into account</span>
+<span class="sd">    print(f&#39;Power: {pm.power * 1e3} mW&#39;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">if</span> <span class="s2">&quot;sphinx&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="PM100">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PM100</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Driver class for ThorLabs PM100x power meter head units.</span>
+
+<span class="sd">    Manages instrument communication via PyVISA and applies an optional</span>
+<span class="sd">    polynomial wavelength-dependent attenuation calibration. Provides explicit</span>
+<span class="sd">    getters and property accessors for core SCPI functionality.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">attName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attConfig</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;PM100.json&quot;</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the power meter connection and loads optional calibration data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rm : pyvisa.ResourceManager</span>
+<span class="sd">            The VISA resource manager instance.</span>
+<span class="sd">        address : str</span>
+<span class="sd">            The VISA resource address for the device.</span>
+<span class="sd">        attName : str, optional</span>
+<span class="sd">            The key inside the JSON configuration file corresponding to the</span>
+<span class="sd">            desired attenuation profile. Up to 9th order polynomials are accepted.</span>
+<span class="sd">        attConfig : str, default: &quot;Config/PM100_attenuation.json&quot;</span>
+<span class="sd">            Path to the JSON configuration file containing polynomial coefficients</span>
+<span class="sd">            for external attenuation/gain adjustments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set up logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.PM100&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setUnits</span><span class="p">(</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">attConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">attConfig</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="n">attName</span><span class="p">]</span>
+
+                <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                        <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cal_lower&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cal_upper&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration could not be loaded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getID">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getID">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the instrument identification string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        idn : str</span>
+<span class="sd">            Identification string (manufacturer, model, serial, firmware).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;*IDN?&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.getSensorID">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getSensorID">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSensorID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the connected sensor identification string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        info : str</span>
+<span class="sd">            Sensor identification and configuration information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SYST:SENS:IDN?&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.getError">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getError">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getError</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the latest error code and message from the error queue.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        error : str</span>
+<span class="sd">            Formatted error message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SYST:ERR?&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.zero">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.zero">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initiates zero adjustment (non-blocking).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting zero adjustment.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SENS:CORR:COLL:ZERO:INIT&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.getWavelength">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getWavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns current operation wavelength.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wavelength : float</span>
+<span class="sd">            Current wavelength in nm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SENS:CORR:WAV?&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PM100.setWavelength">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setWavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets operation wavelength.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        val : float</span>
+<span class="sd">            Wavelength in nm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is below the calibrated minimum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is above the calibrated maximum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS:CORR:WAV </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="n">wavelength</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getWavelength</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setWavelength</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getAverage">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getAverage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getAverage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of samples averaged.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        count : int</span>
+<span class="sd">            Number of samples per measurement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SENS:AVER:COUN?&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PM100.setAverage">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setAverage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setAverage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the number of samples to average.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        val : int</span>
+<span class="sd">            Number of samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS:AVER:COUN </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="n">average</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getAverage</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setAverage</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getFilterLowpass">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getFilterLowpass">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFilterLowpass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the state of the low-pass filter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        enabled : bool</span>
+<span class="sd">            True if low-pass filter is enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;INP:PDI:FILT:LPAS:STAT?&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="PM100.setFilterLowpass">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setFilterLowpass">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setFilterLowpass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables or disables the low-pass filter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state : bool</span>
+<span class="sd">            True to enable, False to disable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INP:PDI:FILT:LPAS:STAT </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="n">filterLowpass</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getFilterLowpass</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setFilterLowpass</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getThermopileAccelerator">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getThermopileAccelerator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getThermopileAccelerator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the state of the thermopile accelerator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        active : bool</span>
+<span class="sd">            True if thermopile accelerator is active.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;INP:THER:ACC:STAT?&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="PM100.setThermopileAccelerator">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setThermopileAccelerator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setThermopileAccelerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables or disables the thermopile accelerator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state : bool</span>
+<span class="sd">            True to enable, False to disable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INP:THER:ACC:STAT </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="n">thermopileAccelerator</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getThermopileAccelerator</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setThermopileAccelerator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.setUnits">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setUnits">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUnits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets measurement units.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target : str</span>
+<span class="sd">            Unit type (&#39;W&#39; or &#39;DBM&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS:POW:UNIT </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.setAutoRange">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.setAutoRange">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setAutoRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;POW&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables or disables auto-ranging for a specific mode.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state : bool, default: True</span>
+<span class="sd">            True to enable, False to disable.</span>
+<span class="sd">        mode : str, default: &quot;POW&quot;</span>
+<span class="sd">            Measurement mode (e.g., &quot;POW&quot;, &quot;CURR&quot;, &quot;VOLT&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS:</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">:RANG:AUTO </span><span class="si">{</span><span class="s1">&#39;ON&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;OFF&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PM100.getPower">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getPower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getPower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">applyCalibration</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns measured power.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        applyCalibration : bool, default: True</span>
+<span class="sd">            Whether to apply the loaded polynomial attenuation profile.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        power : float</span>
+<span class="sd">            Measured optical power.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:POW?&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">applyCalibration</span><span class="p">:</span>
+            <span class="n">wl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWavelength</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">raw</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">raw</span></div>
+
+
+    <span class="n">power</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getPower</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getEnergy">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getEnergy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getEnergy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns measured pulse energy.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Measured pulse energy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:ENER?&quot;</span><span class="p">))</span></div>
+
+
+    <span class="n">energy</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getEnergy</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getFrequency">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getFrequency">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns measured repetition frequency.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        frequency : float</span>
+<span class="sd">            Measured frequency in Hz.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:FREQ?&quot;</span><span class="p">))</span></div>
+
+
+    <span class="n">frequency</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getFrequency</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PM100.getTemperature">
+<a class="viewcode-back" href="../source/Throlabs.html#Throlabs.PM100.getTemperature">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTemperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns current sensor temperature.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        temp : float</span>
+<span class="sd">            Temperature in Celsius.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:TEMP?&quot;</span><span class="p">))</span></div>
+
+
+    <span class="n">temperature</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getTemperature</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

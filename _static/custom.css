@@ -1,0 +1,6 @@
+/* Hide source code links in PDF format */
+@media print {
+    .viewcode-link {
+        display: none !important;
+    }
+}

@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coherent &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">Devices</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Coherent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Coherent</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2026 Bence Göblyös</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software</span>
+<span class="c1"># Foundation, version 3.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful, but WITHOUT ANY</span>
+<span class="c1"># WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A</span>
+<span class="c1"># PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with</span>
+<span class="c1"># this program. If not, see https://www.gnu.org/licenses/.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains drivers for Coherent CUBE and Sapphire lasers.</span>
+<span class="sd">The API for these is identical, only their backends are different.</span>
+<span class="sd">Simply instantiate the correct class for your laser.</span>
+<span class="sd">The class ``CoherentLaser`` contains the complete user-facing API,</span>
+<span class="sd">but it should not be used as it cannot intercafe with anything.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">Below is a minimum working example showing how to use a Coherent CUBE laser.</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyvisa</span>
+<span class="sd">    import time</span>
+<span class="sd">    from Devices.Coherent import CUBE</span>
+
+<span class="sd">    rm = pyvisa.ResourceManager()</span>
+<span class="sd">    cube = CUBE(rm, &#39;ASRL3::INSTR&#39;) # Assuming the serial link is on COM3</span>
+
+<span class="sd">    print(f&#39;Serial number: {cube.getID()}&#39;)</span>
+
+<span class="sd">    cube.on() # Turn on the laser</span>
+
+<span class="sd">    cube.power = 50                          # Set to 50 mW</span>
+<span class="sd">    time.sleep(5)                            # Wait for it to reach the target</span>
+<span class="sd">    print(f&#39;Current power: {cube.power} mw&#39;) # Read back the power</span>
+
+<span class="sd">    cube.off() # Turn off the laser</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvisa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">if</span> <span class="s2">&quot;sphinx&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="CoherentLaser">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoherentLaser</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parent driver class for Coherent lasers.</span>
+<span class="sd">    Handles the common API commands and limits.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;Coherent.json&quot;</span><span class="p">),</span> <span class="n">maxOverride</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rm: pyvisa.ResourceManager</span>
+<span class="sd">            The VISA resource manager instance.</span>
+<span class="sd">        address: str</span>
+<span class="sd">            The VISA resource address for the laser (e.g., &#39;ASRL3::INSTR&#39;).</span>
+<span class="sd">        config: str, default: &quot;Config/CUBE_limits.csv&quot;</span>
+<span class="sd">            Path to the CSV configuration file containing user-defined power limits.</span>
+<span class="sd">        maxOverride: float, optional</span>
+<span class="sd">            A hard override for the maximum allowed power in mW. Overrides the config file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set up logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;instrumpy.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set up serial communication</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="mi">19200</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Disable prompt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&gt;=0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flushBuffer</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxPower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMaxPower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minPower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMinPower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getID</span><span class="p">()</span>
+
+        <span class="c1"># Read user limits from config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">maxOverride</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span> <span class="o">=</span> <span class="n">maxOverride</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">conf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+                <span class="n">entry</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;limit&quot;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;limit&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Config entry does not contain a limit key or entry is missing. User limits are disabled.&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not open config file. User limits are disabled.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CoherentLaser.write">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a string to the device.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cmd: str</span>
+<span class="sd">            The command to be sent to the device.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement custom write logic.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.query">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a string to the device and get the response.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cmd: str</span>
+<span class="sd">            The command to be sent to the device.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        resp: str</span>
+<span class="sd">            Response to the query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement custom query logic.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.flushBuffer">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.flushBuffer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flushBuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flushes the read queue to prevent issues. Only implemented for Sapphire.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getID">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getID">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the serial number of the laser head.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        id: str</span>
+<span class="sd">            Serial number prefixed with the laser type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement custom query logic.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getWavelength">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getWavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?WAVE&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+    <span class="c1">#: float: Wavelength of the laser.</span>
+    <span class="n">wavelength</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getWavelength</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CoherentLaser.getMinPower">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getMinPower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMinPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the minimum rated power of the laser.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        min: float</span>
+<span class="sd">            Minimum power in mW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?MINLP&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getMaxPower">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getMaxPower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaxPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum rated power of the laser.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        max: float</span>
+<span class="sd">            Maximum power in mW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?MAXLP&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getHours">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getHours">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getHours</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the power-on hours of the laser.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hours: float</span>
+<span class="sd">            Numer of operational hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?HH&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getServo">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getServo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getServo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query whether servo control is enabled (what even is that?)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        servo: bool</span>
+<span class="sd">            True if servo is enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?T&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getSafety</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?CDRH&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setSafety</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;CDRH=1&quot;</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s2">&quot;CDRH=0&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="c1">#: bool: Sets or gets whether the turn-on safety delay is enabled.</span>
+    <span class="n">safety</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSafety</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setSafety</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CoherentLaser.getExternal">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getExternal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getExternal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query whether external modulation is enabled.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ext: bool</span>
+<span class="sd">            True if external modulation is enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?EXT&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getState">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getState">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query whether the laser is turned on.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ext: bool</span>
+<span class="sd">            True if the laser is on, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?L&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.on">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.on">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turn the laser head on. If blocking is enabled, wait for it to actually turn on before returning.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        blocking: bool, default: True</span>
+<span class="sd">            Whether or not to block execution until the laser turns on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="n">blocking</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.off">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.off">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turn the laser head off. If blocking is enabled, wait for it to actually turn off before returning.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        blocking: bool, default: True</span>
+<span class="sd">            Whether or not to block execution until the laser turns off.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="n">blocking</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.setState">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.setState">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turn the laser head off. If blocking is enabled, wait for it to actually turn off before returning.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state: bool</span>
+<span class="sd">            Target state of the laser. Use True to turn on and False to turn off.</span>
+<span class="sd">        blocking: bool, default: True</span>
+<span class="sd">            Whether or not to block execution until the laser is in the desired state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;L=1&quot;</span> <span class="k">if</span> <span class="n">state</span> <span class="k">else</span> <span class="s2">&quot;L=0&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">blocking</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">state</span> <span class="o">^</span> <span class="bp">self</span><span class="o">.</span><span class="n">getState</span><span class="p">():</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getPowerSetpoint">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getPowerSetpoint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getPowerSetpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the power setpoint of the laser.</span>
+<span class="sd">        This should read back the value given in the last ``setPower(target)`` call.</span>
+<span class="sd">        For the actual output power, use ``power`` or ``getPower()``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        setpoint: bool</span>
+<span class="sd">            Power setpoint in mW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?SP&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoherentLaser.getPower">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.getPower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getPower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current output power of the laser in mW.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pow: float</span>
+<span class="sd">            Current output power in mW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?P&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+    <span class="c1">#: bool: Sets whether or not the given type of laser accepts power settings under its nominal rating.</span>
+    <span class="n">allowUnderpower</span> <span class="o">=</span> <span class="kc">True</span>
+    
+<div class="viewcode-block" id="CoherentLaser.setPower">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CoherentLaser.setPower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setPower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the power target for the laser.</span>
+<span class="sd">        Value will be clamped according to laser capabilities and user-defined limits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target: float</span>
+<span class="sd">            Target power in mW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot set negative power.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minPower</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowUnderpower</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power below minimum level. Laser might not start.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power below minimum level. It has been increased to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">minPower</span><span class="si">}</span><span class="s2"> mW.&quot;</span><span class="p">)</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minPower</span>
+
+        <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxPower</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power exceeds maximum rating. It has been reduced to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPower</span><span class="si">}</span><span class="s2"> mW.&quot;</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxPower</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">target</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power exceeds user limit. It has been reduced to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span><span class="si">}</span><span class="s2"> mW.&quot;</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">userLimit</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;P=&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+
+    <span class="c1">#: float: Get or set the laser&#39;s output power in mW.</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getPower</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setPower</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CUBE">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CUBE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CUBE</span><span class="p">(</span><span class="n">CoherentLaser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Driver class for Coherent CUBE lasers.</span>
+
+<span class="sd">    Please refer to ``CoherentLaser`` on usage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">allowUnderpower</span> <span class="o">=</span> <span class="kc">True</span>
+    
+<div class="viewcode-block" id="CUBE.write">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CUBE.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+        <span class="c1"># Maintain original logic: CUBE returns a prompt (\r\n) after write</span>
+        <span class="c1"># commands, which pyvisa&#39;s query() handles by reading and discarding.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CUBE.query">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CUBE.query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CUBE.getID">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.CUBE.getID">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?HID&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;CUBE-&quot;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SapphireLP">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.SapphireLP">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SapphireLP</span><span class="p">(</span><span class="n">CoherentLaser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Driver class for Coherent Sapphire LP lasers.</span>
+<span class="sd">    Includes custom buffer clearing to account for non-disableable command echo.</span>
+
+<span class="sd">    Please refer to ``CoherentLaser`` on usage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">allowUnderpower</span> <span class="o">=</span> <span class="kc">False</span>
+    
+<div class="viewcode-block" id="SapphireLP.write">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.SapphireLP.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">retries</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a string to the device.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cmd: str</span>
+<span class="sd">            The command to be sent to the device.</span>
+<span class="sd">        retries: float, default: 3</span>
+<span class="sd">            Number of retries in case of communication failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="c1"># Read back the echoed command from the buffer to prevent</span>
+                <span class="c1"># it from polluting the next query</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">return</span>
+            <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1073807253</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Serial communication issue encountered during write, retrying (attempt </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">retries</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flushBuffer</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">err</span></div>
+
+
+<div class="viewcode-block" id="SapphireLP.query">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.SapphireLP.query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">retries</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a string to the device and get the response.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cmd: str</span>
+<span class="sd">            The command to be sent to the device.</span>
+<span class="sd">        retries: float, default: 3</span>
+<span class="sd">            Number of retries in case of communication failure.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        resp: str</span>
+<span class="sd">            Response to the query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1073807253</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Serial communication issue encountered during query, retrying (attempt </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">retries</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flushBuffer</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">err</span></div>
+
+        
+
+<div class="viewcode-block" id="SapphireLP.flushBuffer">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.SapphireLP.flushBuffer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flushBuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">bytes_in_buffer</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">VisaIOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1073807253</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Serial communication issue encountered while flushing buffer, retrying.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">err</span></div>
+
+                
+
+<div class="viewcode-block" id="SapphireLP.getID">
+<a class="viewcode-back" href="../source/Coherent.html#Coherent.SapphireLP.getID">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;?HID&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Sapphire-LP-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">resp</span><span class="p">)))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

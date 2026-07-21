@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORIEL module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PhaseMatrix module" href="PhaseMatrix.html" />
+    <link rel="prev" title="Kuhne module" href="Kuhne.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Avenir.html">Avenir module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Coherent.html">Coherent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ORIEL module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ORIEL.Luminator"><code class="docutils literal notranslate"><span class="pre">Luminator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ORIEL.Luminator.actual2internal"><code class="docutils literal notranslate"><span class="pre">Luminator.actual2internal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ORIEL.Luminator.getWavelength"><code class="docutils literal notranslate"><span class="pre">Luminator.getWavelength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ORIEL.Luminator.internal2actual"><code class="docutils literal notranslate"><span class="pre">Luminator.internal2actual()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ORIEL.Luminator.setWavelength"><code class="docutils literal notranslate"><span class="pre">Luminator.setWavelength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ORIEL.Luminator.wavelength"><code class="docutils literal notranslate"><span class="pre">Luminator.wavelength</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">ORIEL module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/ORIEL.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ORIEL">
+<span id="oriel-module"></span><h1>ORIEL module<a class="headerlink" href="#module-ORIEL" title="Link to this heading"></a></h1>
+<p>This module contains the driver for ORIEL Luminator monochromated light sources.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to use the ORIEL Luminator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvisa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Devices.ORIEL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Luminator</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">ResourceManager</span><span class="p">()</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">Luminator</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="s1">&#39;GPIB0::4::INSTR&#39;</span><span class="p">)</span>
+
+<span class="n">device</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">532</span> <span class="c1"># By default, the first-order wavelength calibration is applied</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Wavelength: </span><span class="si">{</span><span class="n">device</span><span class="o">.</span><span class="n">wavelength</span><span class="si">}</span><span class="s1"> nm&#39;</span><span class="p">)</span> <span class="c1"># Read back actual wavelength</span>
+
+<span class="c1"># The timeout will prevent new commands from being sent while the monochromator is moving</span>
+<span class="n">device</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">device</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">900</span>
+
+<span class="c1"># Everything outside the configured bounds in clamped</span>
+<span class="n">device</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">device</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="ORIEL.Luminator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ORIEL.</span></span><span class="sig-name descname"><span class="pre">Luminator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/Luminator.json')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ORIEL.html#Luminator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ORIEL.Luminator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver class for the ORIEL Luminator monochromated light source.</p>
+<p>Handles instrument communication via PyVISA and applies an optional
+linear wavelength calibration based on a provided configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – The VISA resource manager instance.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – The VISA resource address for the device.</p></li>
+<li><p><strong>config</strong> (<em>Path</em><em>, </em><em>default: &quot;Config/Luminator.json&quot;</em>) – Path to the JSON configuration file containing calibration data
+with ‘c0’ and ‘c1’ coefficients, ‘lower’ and ‘upper’ limits and
+‘speed’ value.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ORIEL.Luminator.actual2internal">
+<span class="sig-name descname"><span class="pre">actual2internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actual</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ORIEL.html#Luminator.actual2internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ORIEL.Luminator.actual2internal" title="Link to this definition"></a></dt>
+<dd><p>Converts a desired actual output wavelength to the required internal setpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actual</strong> (<em>float</em>) – The desired actual output wavelength in nm.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>internal</strong> – The necessary internal setpoint in nm to achieve the actual wavelength.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ORIEL.Luminator.getWavelength">
+<span class="sig-name descname"><span class="pre">getWavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ORIEL.html#Luminator.getWavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ORIEL.Luminator.getWavelength" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current operating wavelength of the monochromator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>convert</strong> (<em>bool</em><em>, </em><em>default: True</em>) – If True, returns the calibrated actual wavelength.
+If False, returns the raw internal setpoint.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>wavelength</strong> – The current wavelength in nm.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ORIEL.Luminator.internal2actual">
+<span class="sig-name descname"><span class="pre">internal2actual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">internal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ORIEL.html#Luminator.internal2actual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ORIEL.Luminator.internal2actual" title="Link to this definition"></a></dt>
+<dd><p>Converts the internal monochromator setpoint to the actual output wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>internal</strong> (<em>float</em>) – The internal wavelength setpoint in nm.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>actual</strong> – The calibrated actual output wavelength in nm.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ORIEL.Luminator.setWavelength">
+<span class="sig-name descname"><span class="pre">setWavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ORIEL.html#Luminator.setWavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ORIEL.Luminator.setWavelength" title="Link to this definition"></a></dt>
+<dd><p>Sets the operating wavelength of the monochromator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>float</em>) – The target wavelength in nm.</p></li>
+<li><p><strong>convert</strong> (<em>bool</em><em>, </em><em>default: True</em>) – If True, applies the linear calibration to the target before sending.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ORIEL.Luminator.wavelength">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wavelength</span></span><a class="headerlink" href="#ORIEL.Luminator.wavelength" title="Link to this definition"></a></dt>
+<dd><p>Get or set the wavelength of the monochromator in nm. Applies calibration if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Kuhne.html" class="btn btn-neutral float-left" title="Kuhne module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PhaseMatrix.html" class="btn btn-neutral float-right" title="PhaseMatrix module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

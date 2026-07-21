@@ -1,0 +1,379 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keithley module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kuhne module" href="Kuhne.html" />
+    <link rel="prev" title="HP module" href="HP.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Avenir.html">Avenir module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Coherent.html">Coherent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Keithley module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Keithley.SourceMeter2400"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.I"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.I</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.R"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.V"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.V</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.beep"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.beep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.chime"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.chime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.front"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.front</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.getFront"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.getFront()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.getI"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.getI()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.getOutput"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.getOutput()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.getR"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.getR()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.getV"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.getV()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.off"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.off()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.on"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.on()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.output"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.output</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.setCC"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.setCC()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.setCV"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.setCV()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.setFront"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.setFront()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Keithley.SourceMeter2400.setOutput"><code class="docutils literal notranslate"><span class="pre">SourceMeter2400.setOutput()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">Keithley module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/Keithley.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Keithley">
+<span id="keithley-module"></span><h1>Keithley module<a class="headerlink" href="#module-Keithley" title="Link to this heading"></a></h1>
+<p>This module contains the SourceMeter2400 class for interacting with Keithley 2400 SourceMeter series devices.
+Current functionality focuses on using it as a source only, so 4-wire mode is not implemented yet.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to use a Keithley 2400 series SourceMeter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvisa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Devices.Keithley</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceMeter2400</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">ResourceManager</span><span class="p">()</span>
+<span class="c1"># Automatically find device based on serial number.</span>
+<span class="c1"># A matching USB device will be used if it&#39;s found.&#39;</span>
+<span class="c1"># Otherwise, the hostname defined in the config is used to connect over the network.</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="n">SourceMeter2400</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="n">sn</span><span class="o">=</span><span class="s1">&#39;04085563&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set the device to constant current mode at 100 uA with a voltage limit of 1 V</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">setCC</span><span class="p">(</span><span class="mf">100e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Read back current and voltage</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current: {sm.I*1e6} uA&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Voltage: {sm.V*1e3} mV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Keithley.</span></span><span class="sig-name descname"><span class="pre">SourceMeter2400</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addressOverride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/SourceMeter.json')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver class for Keithley 2400 SourceMeter series devices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – Resource manager instance with which to open the instrument</p></li>
+<li><p><strong>sn</strong> (<em>str</em><em>, </em><em>optional</em>) – Serial number of the instrument. Used for grabbing the hostname from the config or finding the USB device.
+If this is None, addressOverride should be specified.</p></li>
+<li><p><strong>addressOverride</strong> (<em>str</em><em>, </em><em>optional</em>) – Manually specified VISA resource locator. Overrides sn.
+If this is None, sn should be specified.</p></li>
+<li><p><strong>config</strong> (<em>pathlib.Path</em><em>, </em><em>default: &quot;Config/SourceMeter.json&quot;</em>) – Config file path.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.I">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">I</span></span><a class="headerlink" href="#Keithley.SourceMeter2400.I" title="Link to this definition"></a></dt>
+<dd><p>Measure current in amperes on the force or sense pins depending on mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.R">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">R</span></span><a class="headerlink" href="#Keithley.SourceMeter2400.R" title="Link to this definition"></a></dt>
+<dd><p>Measure resistance in Ohms in 2 or 4-point configuration depending on mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.V">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">V</span></span><a class="headerlink" href="#Keithley.SourceMeter2400.V" title="Link to this definition"></a></dt>
+<dd><p>Measure voltage in volts on the force or sense pins depending on mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.beep">
+<span class="sig-name descname"><span class="pre">beep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.beep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.beep" title="Link to this definition"></a></dt>
+<dd><p>Plays a beep of the given frequency for the given time.
+Blocks until note is played.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>float</em>) – Frequency of beep in Hz. Use 0 for silence.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Duration of beep in seconds.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.chime">
+<span class="sig-name descname"><span class="pre">chime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.chime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.chime" title="Link to this definition"></a></dt>
+<dd><p>Plays a chime defined in the config file.
+See the ‘chimes’ key of the config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of chime in the config file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.front">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">front</span></span><a class="headerlink" href="#Keithley.SourceMeter2400.front" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the active status of the front panel ports. True corresponds to the front, while False means back panel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.getFront">
+<span class="sig-name descname"><span class="pre">getFront</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.getFront"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.getFront" title="Link to this definition"></a></dt>
+<dd><p>Get the front panel ports as active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>front</strong> – If True, the front panel ports are active.
+If False, the back panel ports are active.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.getI">
+<span class="sig-name descname"><span class="pre">getI</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.getI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.getI" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.getOutput">
+<span class="sig-name descname"><span class="pre">getOutput</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.getOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.getOutput" title="Link to this definition"></a></dt>
+<dd><p>Get the output state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output</strong> – If True, the outputs are enabled.
+If False, the outputs are disabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.getR">
+<span class="sig-name descname"><span class="pre">getR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.getR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.getR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.getV">
+<span class="sig-name descname"><span class="pre">getV</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.getV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.getV" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.off">
+<span class="sig-name descname"><span class="pre">off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.off"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.off" title="Link to this definition"></a></dt>
+<dd><p>Turns the ouptut off.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.on">
+<span class="sig-name descname"><span class="pre">on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.on" title="Link to this definition"></a></dt>
+<dd><p>Turns the ouptut on.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.output">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#Keithley.SourceMeter2400.output" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets whther the output is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.setCC">
+<span class="sig-name descname"><span class="pre">setCC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.setCC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.setCC" title="Link to this definition"></a></dt>
+<dd><p>Set the device to constant current mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>I</strong> (<em>float</em>) – Target current in amperes.</p></li>
+<li><p><strong>V_lim</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage limit in volts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.setCV">
+<span class="sig-name descname"><span class="pre">setCV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.setCV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.setCV" title="Link to this definition"></a></dt>
+<dd><p>Set the device to constant voltage mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>V</strong> (<em>float</em>) – Target voltage in volts.</p></li>
+<li><p><strong>I_lim</strong> (<em>float</em><em>, </em><em>optional</em>) – Current limit in amperes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.setFront">
+<span class="sig-name descname"><span class="pre">setFront</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.setFront"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.setFront" title="Link to this definition"></a></dt>
+<dd><p>Set the front panel ports as active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>front</strong> (<em>bool</em><em>, </em><em>default: True</em>) – If True, the front panel ports are active.
+If False, the back panel ports are active.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Keithley.SourceMeter2400.setOutput">
+<span class="sig-name descname"><span class="pre">setOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Keithley.html#SourceMeter2400.setOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Keithley.SourceMeter2400.setOutput" title="Link to this definition"></a></dt>
+<dd><p>Set the output state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output</strong> (<em>bool</em>) – If True, the outputs are enabled.
+If False, the outputs are disabled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="HP.html" class="btn btn-neutral float-left" title="HP module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Kuhne.html" class="btn btn-neutral float-right" title="Kuhne module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

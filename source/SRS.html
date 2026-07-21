@@ -1,0 +1,956 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRS module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Throlabs module" href="Throlabs.html" />
+    <link rel="prev" title="QD module" href="QD.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Avenir.html">Avenir module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Coherent.html">Coherent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SRS module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#SRS.SR830"><code class="docutils literal notranslate"><span class="pre">SR830</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.getBinNum"><code class="docutils literal notranslate"><span class="pre">SR830.getBinNum()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.inputMode"><code class="docutils literal notranslate"><span class="pre">SR830.inputMode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.multiRead"><code class="docutils literal notranslate"><span class="pre">SR830.multiRead()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.readBuffer"><code class="docutils literal notranslate"><span class="pre">SR830.readBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.reserve"><code class="docutils literal notranslate"><span class="pre">SR830.reserve</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.setDisplay"><code class="docutils literal notranslate"><span class="pre">SR830.setDisplay()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.snapshot"><code class="docutils literal notranslate"><span class="pre">SR830.snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR830.source"><code class="docutils literal notranslate"><span class="pre">SR830.source</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#SRS.SR850"><code class="docutils literal notranslate"><span class="pre">SR850</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.getTraceLength"><code class="docutils literal notranslate"><span class="pre">SR850.getTraceLength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.getTraceSource"><code class="docutils literal notranslate"><span class="pre">SR850.getTraceSource()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.inputMode"><code class="docutils literal notranslate"><span class="pre">SR850.inputMode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.multiRead"><code class="docutils literal notranslate"><span class="pre">SR850.multiRead()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.pauseTrace"><code class="docutils literal notranslate"><span class="pre">SR850.pauseTrace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.readTrace"><code class="docutils literal notranslate"><span class="pre">SR850.readTrace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.reserve"><code class="docutils literal notranslate"><span class="pre">SR850.reserve</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.resetTrace"><code class="docutils literal notranslate"><span class="pre">SR850.resetTrace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.setTraceSource"><code class="docutils literal notranslate"><span class="pre">SR850.setTraceSource()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.snapshot"><code class="docutils literal notranslate"><span class="pre">SR850.snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.source"><code class="docutils literal notranslate"><span class="pre">SR850.source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR850.startTrace"><code class="docutils literal notranslate"><span class="pre">SR850.startTrace()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#SRS.SR8x0"><code class="docutils literal notranslate"><span class="pre">SR8x0</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.DC"><code class="docutils literal notranslate"><span class="pre">SR8x0.DC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.enableTrigger"><code class="docutils literal notranslate"><span class="pre">SR8x0.enableTrigger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.freq"><code class="docutils literal notranslate"><span class="pre">SR8x0.freq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.getFreq"><code class="docutils literal notranslate"><span class="pre">SR8x0.getFreq()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.getSamplerate"><code class="docutils literal notranslate"><span class="pre">SR8x0.getSamplerate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.getSensitivity"><code class="docutils literal notranslate"><span class="pre">SR8x0.getSensitivity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.getTau"><code class="docutils literal notranslate"><span class="pre">SR8x0.getTau()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.grounding"><code class="docutils literal notranslate"><span class="pre">SR8x0.grounding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.notchFilter"><code class="docutils literal notranslate"><span class="pre">SR8x0.notchFilter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.pauseBuffer"><code class="docutils literal notranslate"><span class="pre">SR8x0.pauseBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.phase"><code class="docutils literal notranslate"><span class="pre">SR8x0.phase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.queryASCIIFloat"><code class="docutils literal notranslate"><span class="pre">SR8x0.queryASCIIFloat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.queryBinary"><code class="docutils literal notranslate"><span class="pre">SR8x0.queryBinary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.queryBinaryFloat"><code class="docutils literal notranslate"><span class="pre">SR8x0.queryBinaryFloat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.resetBuffer"><code class="docutils literal notranslate"><span class="pre">SR8x0.resetBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.sampleRate"><code class="docutils literal notranslate"><span class="pre">SR8x0.sampleRate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setFreq"><code class="docutils literal notranslate"><span class="pre">SR8x0.setFreq()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setSampleRate"><code class="docutils literal notranslate"><span class="pre">SR8x0.setSampleRate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setSensitivity"><code class="docutils literal notranslate"><span class="pre">SR8x0.setSensitivity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setSensitivityA"><code class="docutils literal notranslate"><span class="pre">SR8x0.setSensitivityA()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setSensitivityV"><code class="docutils literal notranslate"><span class="pre">SR8x0.setSensitivityV()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.setTau"><code class="docutils literal notranslate"><span class="pre">SR8x0.setTau()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.slope"><code class="docutils literal notranslate"><span class="pre">SR8x0.slope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.startBuffer"><code class="docutils literal notranslate"><span class="pre">SR8x0.startBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.tau"><code class="docutils literal notranslate"><span class="pre">SR8x0.tau</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SRS.SR8x0.trigger"><code class="docutils literal notranslate"><span class="pre">SR8x0.trigger()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">SRS module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/SRS.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-SRS">
+<span id="srs-module"></span><h1>SRS module<a class="headerlink" href="#module-SRS" title="Link to this heading"></a></h1>
+<p>This module contains drivers for Stanford Research Systems devices.
+Currently, this includes the SR830 and SR850 lock-in amplifier models.</p>
+<p>The SR8x0 class contains common API elements, while the SR830 and SR850 classes implement device-specific functions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="SRS.SR830">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">SRS.</span></span><span class="sig-name descname"><span class="pre">SR830</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#SRS.SR8x0" title="SRS.SR8x0"><code class="xref py py-class docutils literal notranslate"><span class="pre">SR8x0</span></code></a></p>
+<p>Driver class for SR830 and SR830M devices. Supports both GPIB and serial connections.
+For the latter, the device must be set to RS-323 mode at 19200 baud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – Pass a pyvisa ResourceManager object to use for opening the device.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – VISA address of the SR830 device.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR830.getBinNum">
+<span class="sig-name descname"><span class="pre">getBinNum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830.getBinNum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830.getBinNum" title="Link to this definition"></a></dt>
+<dd><p>Read number of points stored in acquisition buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num</strong> – Number of elements in buffer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR830.inputMode">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inputMode</span></span><a class="headerlink" href="#SRS.SR830.inputMode" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the input mode of the device. Possible values:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>A (voltage)</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>A-B (differential voltage)</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>I (1 MΩ)</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>I (100 MΩ)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR830.multiRead">
+<span class="sig-name descname"><span class="pre">multiRead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830.multiRead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830.multiRead" title="Link to this definition"></a></dt>
+<dd><p>Capture the given data on each channel for an amount of time and return the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ch1</strong> (<em>str</em><em>, </em><em>optional</em>) – Value to capture on channel 1. Possible values: “X”, “R”, “XNOISE”, “AUX1”, “AUX2”.
+Use None to disable this channel. The default is None.</p></li>
+<li><p><strong>ch2</strong> (<em>str</em><em>, </em><em>optional</em>) – Value to capture on channel 1. Possible values: “Y”, “THETA”, “YNOISE”, “AUX3”, “AUX4”.
+Use None to disable this channel. The default is None.</p></li>
+<li><p><strong>t</strong> (<em>float</em><em>, </em><em>optional</em>) – Acqusition time in seconds. The default is 1.</p></li>
+<li><p><strong>srate</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling rate in Hz. If set to None, the highest available sampling rate is selected for the current time constant.
+The default is None.</p></li>
+<li><p><strong>wait</strong> (<em>bool</em><em>, </em><em>optiona</em>) – Whether to wait for all planned points to arrive.
+If True, it will extent the desired time if there are not enough points in the buffer.
+If False, will return all points gathered up until the desired timer is up.
+The default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ch1</strong> (<em>list(float)</em>) – List of floats containing the data from channel 1.
+None if acquisition is disabled for this channel.</p></li>
+<li><p><strong>ch2</strong> (<em>list(float)</em>) – List of floats containing the data from channel 2.
+None if acquisition is disabled for this channel.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR830.readBuffer">
+<span class="sig-name descname"><span class="pre">readBuffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830.readBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830.readBuffer" title="Link to this definition"></a></dt>
+<dd><p>Read a buffer from the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – Buffer number. Must be one 1 or 2.</p></li>
+<li><p><strong>start</strong> (<em>int</em>) – Starting index. Elements are indexed from 0.</p></li>
+<li><p><strong>length</strong> (<em>int</em>) – Number of elements to read starting from index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Buffer contents as a list of floats.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR830.reserve">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reserve</span></span><a class="headerlink" href="#SRS.SR830.reserve" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR830.setDisplay">
+<span class="sig-name descname"><span class="pre">setDisplay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830.setDisplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830.setDisplay" title="Link to this definition"></a></dt>
+<dd><p>Sets a specified display on the lock-in to a given value.
+Required for automated data collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>disp</strong> (<em>int</em>)</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – Select value to be displayed.
+Possible values for display 1: “X”, “R”, “XNOISE”, “AUX1”, “AUX2”.
+Possible values for display 2: “Y”, “THETA”, “YNOISE”, “AUX3”, “AUX4”.</p></li>
+<li><p><strong>ratio</strong> (<em>int</em><em>, </em><em>optional</em>) – Display ratio. 0 is none, 1 is AUX1, 2 is AUX2. The default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True on success, False on failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR830.snapshot">
+<span class="sig-name descname"><span class="pre">snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR830.snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR830.snapshot" title="Link to this definition"></a></dt>
+<dd><p>Reads out at most 6 values simultaneously.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*args</strong> (<em>str</em>) – At most 6 str arguments, each representing a measured quantitiy.
+See SR830._snapDict for valid options. Notable examples include ‘X’, ‘Y’, ‘R’ and ‘THETA’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – List of up to 6 values, corresponding to the passed arguments.
+None if a failure has occured.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR830.source">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#SRS.SR830.source" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets which frequency source is used. True is internal, False is external.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SRS.SR850">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">SRS.</span></span><span class="sig-name descname"><span class="pre">SR850</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#SRS.SR8x0" title="SRS.SR8x0"><code class="xref py py-class docutils literal notranslate"><span class="pre">SR8x0</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – Pass a pyvisa ResourceManager object to use for opening the device.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – VISA address of the SR850 device.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.getTraceLength">
+<span class="sig-name descname"><span class="pre">getTraceLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.getTraceLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.getTraceLength" title="Link to this definition"></a></dt>
+<dd><p>Get the length of a trace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em><em>,</em>) – Trace number. Must be in 1-4.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>num</strong> – Number of values in the selected trace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.getTraceSource">
+<span class="sig-name descname"><span class="pre">getTraceSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.getTraceSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.getTraceSource" title="Link to this definition"></a></dt>
+<dd><p>Get trace definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – Trace number. Must be in 1-4.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>source</strong> – A list of 3 int values representing the source values.
+See SR850._traceDict for a conversion table.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(int):</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR850.inputMode">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inputMode</span></span><a class="headerlink" href="#SRS.SR850.inputMode" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the input mode of the device. Possible values:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>A (voltage)</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>A-B (differential voltage)</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>I (1 MΩ)</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>I (100 MΩ)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.multiRead">
+<span class="sig-name descname"><span class="pre">multiRead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tr1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.multiRead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.multiRead" title="Link to this definition"></a></dt>
+<dd><p>Record a trace on up to 4 channels at a time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tr1</strong> (<em>str</em><em>, </em><em>optional</em>) – Trace definition. If None, do not record anything on trace 1.
+For valid options, see the keys of SR850._traceDict. Notable examples include ‘X’, ‘Y’, ‘R’ and ‘THETA’.</p></li>
+<li><p><strong>tr2</strong> (<em>str</em><em>, </em><em>optional</em>) – Trace definition. Same as tr1, but for channel 2.</p></li>
+<li><p><strong>tr3</strong> (<em>str</em><em>, </em><em>optional</em>) – Trace definition. Same as tr1, but for channel 3.</p></li>
+<li><p><strong>tr4</strong> (<em>str</em><em>, </em><em>optional</em>) – Trace definition. Same as tr1, but for channel 4.</p></li>
+<li><p><strong>t</strong> (<em>float</em><em>, </em><em>default: 1.0</em>) – Total acquisition time in seconds.</p></li>
+<li><p><strong>srate</strong> (<em>float</em><em>, </em><em>optional</em>) – Acquisition sample rate.
+If none, the highest meaningful sample rate will be used for the given time constant.
+If the given value is too fast for the time constant, it will be clamped.</p></li>
+<li><p><strong>wait</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether to account for communication overhead when calculating wait time.
+When False, a few samples might be missing, especially at high sampling rates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>results</strong> – A list of results. The list contains 4 elements, corresponding to traces 1-4.and
+Each element is itself a list of floats, containing the trace data.
+If a given trace is disabled, its value will be None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(list(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.pauseTrace">
+<span class="sig-name descname"><span class="pre">pauseTrace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.pauseTrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.pauseTrace" title="Link to this definition"></a></dt>
+<dd><p>Pause a trace.
+Alias of pauseBuffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.readTrace">
+<span class="sig-name descname"><span class="pre">readTrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.readTrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.readTrace" title="Link to this definition"></a></dt>
+<dd><p>Read a trace from the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – Trace number. Must be one of 1, 2, 3 or 4.</p></li>
+<li><p><strong>start</strong> (<em>int</em>) – Starting index. Elements are indexed from 0</p></li>
+<li><p><strong>length</strong> (<em>int</em>) – Number of elements to read starting from index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Resulting trace as a list of floats.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR850.reserve">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reserve</span></span><a class="headerlink" href="#SRS.SR850.reserve" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets reserve mode. 0 is minimum reserve, 5 is maximum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.resetTrace">
+<span class="sig-name descname"><span class="pre">resetTrace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.resetTrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.resetTrace" title="Link to this definition"></a></dt>
+<dd><p>Reset a trace.
+Alias of resetBuffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.setTraceSource">
+<span class="sig-name descname"><span class="pre">setTraceSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.setTraceSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.setTraceSource" title="Link to this definition"></a></dt>
+<dd><p>Sets the trace source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – Trace number. Must be in 1-4.</p></li>
+<li><p><strong>target</strong> (<em>int</em><em> or </em><em>str</em>) – Value to be measured. If str, it will be decoded to the device’s option index using SR850._traceDict.
+Notable examples include ‘X’, ‘Y’, ‘R’ and ‘THETA’.</p></li>
+<li><p><strong>multiply</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>default: 0</em>) – Value to divide the target with. Works the same as target.
+The default value of 0 corresponds to unity (‘1’), so no multiplication will be performed.</p></li>
+<li><p><strong>divide</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>default: 0</em>) – Value to divide the target with. Works the same as target.
+The default value of 0 corresponds to unity (‘1’), so no division will be performed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.snapshot">
+<span class="sig-name descname"><span class="pre">snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.snapshot" title="Link to this definition"></a></dt>
+<dd><p>Emulates the snapshot function of the SR830.
+Does not actually guarantee that the samples are taken at the same time.
+If syncronization is required, use multiRead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*args</strong> (<em>str</em>) – Multiple str arguments, each representing a measured quantitiy.
+See SR850._snapDict for valid options. Notable examples include ‘X’, ‘Y’, ‘R’, ‘THETA’ and ‘REF’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – List of floats, corresponding to the passed arguments.
+None if a failure has occured.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR850.source">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#SRS.SR850.source" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the reference frequency source. 0 is internal, 1 is internal sweep and 2 is external.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR850.startTrace">
+<span class="sig-name descname"><span class="pre">startTrace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR850.startTrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR850.startTrace" title="Link to this definition"></a></dt>
+<dd><p>Start a trace.
+Alias of startBuffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SRS.SR8x0">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">SRS.</span></span><span class="sig-name descname"><span class="pre">SR8x0</span></span><a class="reference internal" href="../_modules/SRS.html#SR8x0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.DC">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DC</span></span><a class="headerlink" href="#SRS.SR8x0.DC" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets DC coupling. True is DC, False is AC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.enableTrigger">
+<span class="sig-name descname"><span class="pre">enableTrigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.enableTrigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.enableTrigger" title="Link to this definition"></a></dt>
+<dd><p>Enable back panel trigger for automatic acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>bool</em>) – Whether or not back panel triggering is enabled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.freq">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">freq</span></span><a class="headerlink" href="#SRS.SR8x0.freq" title="Link to this definition"></a></dt>
+<dd><p>Get or set the oscillator frequency in Hz</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.getFreq">
+<span class="sig-name descname"><span class="pre">getFreq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.getFreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.getFreq" title="Link to this definition"></a></dt>
+<dd><p>Get the internal oscillator frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>freq</strong> – LO frequency.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.getSamplerate">
+<span class="sig-name descname"><span class="pre">getSamplerate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.getSamplerate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.getSamplerate" title="Link to this definition"></a></dt>
+<dd><p>Query the device for the currently set sampling rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – Index of frequency setting</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – Sampling frequency in Hz.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.getSensitivity">
+<span class="sig-name descname"><span class="pre">getSensitivity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.getSensitivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.getSensitivity" title="Link to this definition"></a></dt>
+<dd><p>Get the sensitivity of the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – Index of sensitvity setting. Negative values indicate current mode.</p></li>
+<li><p><strong>sens</strong> (<em>float</em>) – Achieved sensitivity in volts or amperes.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.getTau">
+<span class="sig-name descname"><span class="pre">getTau</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.getTau"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.getTau" title="Link to this definition"></a></dt>
+<dd><p>Query the device for the currently set time constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – Index of time constant setting.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time constant in seconds.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.grounding">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">grounding</span></span><a class="headerlink" href="#SRS.SR8x0.grounding" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets grounded coupling. True is grounded, False is floating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.notchFilter">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">notchFilter</span></span><a class="headerlink" href="#SRS.SR8x0.notchFilter" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets noth filter. 0 is neither, 1 is line, 2 is 2line, 3 is both.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.pauseBuffer">
+<span class="sig-name descname"><span class="pre">pauseBuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.pauseBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.pauseBuffer" title="Link to this definition"></a></dt>
+<dd><p>Stop automatic acquisition</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.phase">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">phase</span></span><a class="headerlink" href="#SRS.SR8x0.phase" title="Link to this definition"></a></dt>
+<dd><p>Get or set the oscillator phase in degrees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.queryASCIIFloat">
+<span class="sig-name descname"><span class="pre">queryASCIIFloat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.queryASCIIFloat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.queryASCIIFloat" title="Link to this definition"></a></dt>
+<dd><p>Query a list of float values from the device.
+Parse the response as ASCII floats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – Command to send to the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>response</strong> – A set of floating point values returned by the instrument.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.queryBinary">
+<span class="sig-name descname"><span class="pre">queryBinary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.queryBinary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.queryBinary" title="Link to this definition"></a></dt>
+<dd><p>Query a list of binary values from the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – Command to send to the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>response</strong> – A set of raw bytes returned by the instrument.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.queryBinaryFloat">
+<span class="sig-name descname"><span class="pre">queryBinaryFloat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.queryBinaryFloat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.queryBinaryFloat" title="Link to this definition"></a></dt>
+<dd><p>Query a list of float values from the device.
+Parse the response as binary floats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – Command to send to the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>response</strong> – A set of floating point values returned by the instrument.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.resetBuffer">
+<span class="sig-name descname"><span class="pre">resetBuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.resetBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.resetBuffer" title="Link to this definition"></a></dt>
+<dd><p>Clear the automatic acquisition buffer</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.sampleRate">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sampleRate</span></span><a class="headerlink" href="#SRS.SR8x0.sampleRate" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the sample rate in Hz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setFreq">
+<span class="sig-name descname"><span class="pre">setFreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setFreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setFreq" title="Link to this definition"></a></dt>
+<dd><p>Set the internal oscillator frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>freq</strong> (<em>float</em>) – Target frequency.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setSampleRate">
+<span class="sig-name descname"><span class="pre">setSampleRate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setSampleRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setSampleRate" title="Link to this definition"></a></dt>
+<dd><p>Sets a specified sample rate for automatic acquisition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>None</em><em>, </em><em>str</em><em> or </em><em>int</em>) – Target sample rate. If None, set highest rate that is meaninful with the current time constant.
+If str, try to parse it based on the translation table (see SR8x0M._srateDF).
+If int, set it directly (see translation table or instrument manual).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Achieved sample rate in Hz (float). Trigger mode corresponds to 0, while -1 indicates a failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setSensitivity">
+<span class="sig-name descname"><span class="pre">setSensitivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setMode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setSensitivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setSensitivity" title="Link to this definition"></a></dt>
+<dd><p>Sets a specified sensitivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>str</em><em> or </em><em>int</em>) – If str, try to parse it based on the translation table (see SR830M._sensDF).
+If int, set it directly (see translation table or instrument manual). Negative values indicate current measurement mode.</p></li>
+<li><p><strong>setMode</strong> (<em>Bool</em><em>, </em><em>default: True</em>) – Whether to automatically set the input mode. Defaults to A in voltage mode and I (100 MΩ) in current mode.
+Set to False for more granular control.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>sens</strong> (<em>float</em>) – Achieved sensitivity (float). -1 indicates an error.</p></li>
+<li><p><strong>current</strong> (<em>Bool</em>) – Voltage (False) or current (True) mode</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setSensitivityA">
+<span class="sig-name descname"><span class="pre">setSensitivityA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setSensitivityA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setSensitivityA" title="Link to this definition"></a></dt>
+<dd><p>Sets the sensitivity in amperes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>float</em>) – Target sensitivity in A.</p></li>
+<li><p><strong>setMode</strong> (<em>Bool</em><em>, </em><em>default: True</em>) – Whether to automatically set the input mode to current. Defaults to 100 MΩ mode if True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>sens</strong> (<em>float</em>) – Achieved sensitivity in volts or amperes. -1 indicates an error.</p></li>
+<li><p><strong>current</strong> (<em>Bool</em>) – Voltage (False) or current (True) mode.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setSensitivityV">
+<span class="sig-name descname"><span class="pre">setSensitivityV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setSensitivityV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setSensitivityV" title="Link to this definition"></a></dt>
+<dd><p>Sets the sensitivity in volts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>float</em>) – Target sensitivity in V.</p></li>
+<li><p><strong>setMode</strong> (<em>Bool</em><em>, </em><em>default: True</em>) – Whether to automatically set the input mode to voltage. Defaults to A mode if True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>sens</strong> (<em>float</em>) – Achieved sensitivity in volts or amperes. -1 indicates an error.</p></li>
+<li><p><strong>current</strong> (<em>Bool</em>) – Voltage (False) or current (True) mode.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.setTau">
+<span class="sig-name descname"><span class="pre">setTau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.setTau"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.setTau" title="Link to this definition"></a></dt>
+<dd><p>Sets a specified time constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>str</em><em> or </em><em>int</em>) – If str, try to parse it based on the translation table (see SR8x0M._srateDF).
+If int, set it directly (see translation table or instrument manual).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Achieved time constant (float). -1 indicates an error.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.slope">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">slope</span></span><a class="headerlink" href="#SRS.SR8x0.slope" title="Link to this definition"></a></dt>
+<dd><p>Gets or sets the low pass filter slope. Possible values:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Slope</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>6 dB/oct</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>12 dB/oct</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>18 dB/oct</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>24 dB/oct</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.startBuffer">
+<span class="sig-name descname"><span class="pre">startBuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.startBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.startBuffer" title="Link to this definition"></a></dt>
+<dd><p>Start automatic acquisition</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SRS.SR8x0.tau">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#SRS.SR8x0.tau" title="Link to this definition"></a></dt>
+<dd><p>Get or set the time constant in seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SRS.SR8x0.trigger">
+<span class="sig-name descname"><span class="pre">trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SRS.html#SR8x0.trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SRS.SR8x0.trigger" title="Link to this definition"></a></dt>
+<dd><p>Send a command equivalent to a hardware trigger</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="QD.html" class="btn btn-neutral float-left" title="QD module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Throlabs.html" class="btn btn-neutral float-right" title="Throlabs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

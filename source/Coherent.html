@@ -1,0 +1,623 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coherent module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dummy module" href="Dummy.html" />
+    <link rel="prev" title="Avenir module" href="Avenir.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Avenir.html">Avenir module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Coherent module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Coherent.CUBE"><code class="docutils literal notranslate"><span class="pre">CUBE</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CUBE.allowUnderpower"><code class="docutils literal notranslate"><span class="pre">CUBE.allowUnderpower</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CUBE.getID"><code class="docutils literal notranslate"><span class="pre">CUBE.getID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CUBE.query"><code class="docutils literal notranslate"><span class="pre">CUBE.query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CUBE.write"><code class="docutils literal notranslate"><span class="pre">CUBE.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Coherent.CoherentLaser"><code class="docutils literal notranslate"><span class="pre">CoherentLaser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.allowUnderpower"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.allowUnderpower</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.flushBuffer"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.flushBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getExternal"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getExternal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getHours"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getHours()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getID"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getMaxPower"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getMaxPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getMinPower"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getMinPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getPower"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getPowerSetpoint"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getPowerSetpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getServo"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getServo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getState"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getState()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.getWavelength"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.getWavelength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.off"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.off()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.on"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.on()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.power"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.query"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.safety"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.safety</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.setPower"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.setPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.setState"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.setState()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.wavelength"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.wavelength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.CoherentLaser.write"><code class="docutils literal notranslate"><span class="pre">CoherentLaser.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Coherent.SapphireLP"><code class="docutils literal notranslate"><span class="pre">SapphireLP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.SapphireLP.allowUnderpower"><code class="docutils literal notranslate"><span class="pre">SapphireLP.allowUnderpower</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.SapphireLP.flushBuffer"><code class="docutils literal notranslate"><span class="pre">SapphireLP.flushBuffer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.SapphireLP.getID"><code class="docutils literal notranslate"><span class="pre">SapphireLP.getID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.SapphireLP.query"><code class="docutils literal notranslate"><span class="pre">SapphireLP.query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Coherent.SapphireLP.write"><code class="docutils literal notranslate"><span class="pre">SapphireLP.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">Coherent module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/Coherent.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Coherent">
+<span id="coherent-module"></span><h1>Coherent module<a class="headerlink" href="#module-Coherent" title="Link to this heading"></a></h1>
+<p>This module contains drivers for Coherent CUBE and Sapphire lasers.
+The API for these is identical, only their backends are different.
+Simply instantiate the correct class for your laser.
+The class <code class="docutils literal notranslate"><span class="pre">CoherentLaser</span></code> contains the complete user-facing API,
+but it should not be used as it cannot intercafe with anything.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to use a Coherent CUBE laser.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvisa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Devices.Coherent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CUBE</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">ResourceManager</span><span class="p">()</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">CUBE</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="s1">&#39;ASRL3::INSTR&#39;</span><span class="p">)</span> <span class="c1"># Assuming the serial link is on COM3</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Serial number: </span><span class="si">{</span><span class="n">cube</span><span class="o">.</span><span class="n">getID</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">cube</span><span class="o">.</span><span class="n">on</span><span class="p">()</span> <span class="c1"># Turn on the laser</span>
+
+<span class="n">cube</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="mi">50</span>                          <span class="c1"># Set to 50 mW</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>                            <span class="c1"># Wait for it to reach the target</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Current power: </span><span class="si">{</span><span class="n">cube</span><span class="o">.</span><span class="n">power</span><span class="si">}</span><span class="s1"> mw&#39;</span><span class="p">)</span> <span class="c1"># Read back the power</span>
+
+<span class="n">cube</span><span class="o">.</span><span class="n">off</span><span class="p">()</span> <span class="c1"># Turn off the laser</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="Coherent.CUBE">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Coherent.</span></span><span class="sig-name descname"><span class="pre">CUBE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/Coherent.json')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxOverride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CUBE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CUBE" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Coherent.CoherentLaser" title="Coherent.CoherentLaser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoherentLaser</span></code></a></p>
+<p>Driver class for Coherent CUBE lasers.</p>
+<p>Please refer to <code class="docutils literal notranslate"><span class="pre">CoherentLaser</span></code> on usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – The VISA resource manager instance.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – The VISA resource address for the laser (e.g., ‘ASRL3::INSTR’).</p></li>
+<li><p><strong>config</strong> (<em>str</em><em>, </em><em>default: &quot;Config/CUBE_limits.csv&quot;</em>) – Path to the CSV configuration file containing user-defined power limits.</p></li>
+<li><p><strong>maxOverride</strong> (<em>float</em><em>, </em><em>optional</em>) – A hard override for the maximum allowed power in mW. Overrides the config file.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Coherent.CUBE.allowUnderpower">
+<span class="sig-name descname"><span class="pre">allowUnderpower</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#Coherent.CUBE.allowUnderpower" title="Link to this definition"></a></dt>
+<dd><p>Sets whether or not the given type of laser accepts power settings under its nominal rating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CUBE.getID">
+<span class="sig-name descname"><span class="pre">getID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CUBE.getID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CUBE.getID" title="Link to this definition"></a></dt>
+<dd><p>Get the serial number of the laser head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – Serial number prefixed with the laser type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CUBE.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CUBE.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CUBE.query" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device and get the response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>resp</strong> – Response to the query.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CUBE.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CUBE.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CUBE.write" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Coherent.</span></span><span class="sig-name descname"><span class="pre">CoherentLaser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/Coherent.json')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxOverride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Parent driver class for Coherent lasers.
+Handles the common API commands and limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – The VISA resource manager instance.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – The VISA resource address for the laser (e.g., ‘ASRL3::INSTR’).</p></li>
+<li><p><strong>config</strong> (<em>str</em><em>, </em><em>default: &quot;Config/CUBE_limits.csv&quot;</em>) – Path to the CSV configuration file containing user-defined power limits.</p></li>
+<li><p><strong>maxOverride</strong> (<em>float</em><em>, </em><em>optional</em>) – A hard override for the maximum allowed power in mW. Overrides the config file.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.allowUnderpower">
+<span class="sig-name descname"><span class="pre">allowUnderpower</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#Coherent.CoherentLaser.allowUnderpower" title="Link to this definition"></a></dt>
+<dd><p>Sets whether or not the given type of laser accepts power settings under its nominal rating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.flushBuffer">
+<span class="sig-name descname"><span class="pre">flushBuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.flushBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.flushBuffer" title="Link to this definition"></a></dt>
+<dd><p>Flushes the read queue to prevent issues. Only implemented for Sapphire.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getExternal">
+<span class="sig-name descname"><span class="pre">getExternal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getExternal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getExternal" title="Link to this definition"></a></dt>
+<dd><p>Query whether external modulation is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> – True if external modulation is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getHours">
+<span class="sig-name descname"><span class="pre">getHours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getHours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getHours" title="Link to this definition"></a></dt>
+<dd><p>Get the power-on hours of the laser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hours</strong> – Numer of operational hours.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getID">
+<span class="sig-name descname"><span class="pre">getID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getID" title="Link to this definition"></a></dt>
+<dd><p>Get the serial number of the laser head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – Serial number prefixed with the laser type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getMaxPower">
+<span class="sig-name descname"><span class="pre">getMaxPower</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getMaxPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getMaxPower" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum rated power of the laser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max</strong> – Maximum power in mW.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getMinPower">
+<span class="sig-name descname"><span class="pre">getMinPower</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getMinPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getMinPower" title="Link to this definition"></a></dt>
+<dd><p>Get the minimum rated power of the laser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>min</strong> – Minimum power in mW.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getPower">
+<span class="sig-name descname"><span class="pre">getPower</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getPower" title="Link to this definition"></a></dt>
+<dd><p>Get the current output power of the laser in mW.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pow</strong> – Current output power in mW.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getPowerSetpoint">
+<span class="sig-name descname"><span class="pre">getPowerSetpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getPowerSetpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getPowerSetpoint" title="Link to this definition"></a></dt>
+<dd><p>Get the power setpoint of the laser.
+This should read back the value given in the last <code class="docutils literal notranslate"><span class="pre">setPower(target)</span></code> call.
+For the actual output power, use <code class="docutils literal notranslate"><span class="pre">power</span></code> or <code class="docutils literal notranslate"><span class="pre">getPower()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>setpoint</strong> – Power setpoint in mW.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getServo">
+<span class="sig-name descname"><span class="pre">getServo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getServo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getServo" title="Link to this definition"></a></dt>
+<dd><p>Query whether servo control is enabled (what even is that?)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>servo</strong> – True if servo is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getState">
+<span class="sig-name descname"><span class="pre">getState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getState" title="Link to this definition"></a></dt>
+<dd><p>Query whether the laser is turned on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> – True if the laser is on, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.getWavelength">
+<span class="sig-name descname"><span class="pre">getWavelength</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.getWavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.getWavelength" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.off">
+<span class="sig-name descname"><span class="pre">off</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.off"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.off" title="Link to this definition"></a></dt>
+<dd><p>Turn the laser head off. If blocking is enabled, wait for it to actually turn off before returning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>blocking</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether or not to block execution until the laser turns off.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.on">
+<span class="sig-name descname"><span class="pre">on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.on" title="Link to this definition"></a></dt>
+<dd><p>Turn the laser head on. If blocking is enabled, wait for it to actually turn on before returning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>blocking</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether or not to block execution until the laser turns on.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.power">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">power</span></span><a class="headerlink" href="#Coherent.CoherentLaser.power" title="Link to this definition"></a></dt>
+<dd><p>Get or set the laser’s output power in mW.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.query" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device and get the response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>resp</strong> – Response to the query.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.safety">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">safety</span></span><a class="headerlink" href="#Coherent.CoherentLaser.safety" title="Link to this definition"></a></dt>
+<dd><p>Sets or gets whether the turn-on safety delay is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.setPower">
+<span class="sig-name descname"><span class="pre">setPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.setPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.setPower" title="Link to this definition"></a></dt>
+<dd><p>Set the power target for the laser.
+Value will be clamped according to laser capabilities and user-defined limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>float</em>) – Target power in mW.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.setState">
+<span class="sig-name descname"><span class="pre">setState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.setState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.setState" title="Link to this definition"></a></dt>
+<dd><p>Turn the laser head off. If blocking is enabled, wait for it to actually turn off before returning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>bool</em>) – Target state of the laser. Use True to turn on and False to turn off.</p></li>
+<li><p><strong>blocking</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether or not to block execution until the laser is in the desired state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.wavelength">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wavelength</span></span><a class="headerlink" href="#Coherent.CoherentLaser.wavelength" title="Link to this definition"></a></dt>
+<dd><p>Wavelength of the laser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.CoherentLaser.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#CoherentLaser.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.CoherentLaser.write" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Coherent.SapphireLP">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Coherent.</span></span><span class="sig-name descname"><span class="pre">SapphireLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/Coherent.json')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxOverride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#SapphireLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.SapphireLP" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Coherent.CoherentLaser" title="Coherent.CoherentLaser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoherentLaser</span></code></a></p>
+<p>Driver class for Coherent Sapphire LP lasers.
+Includes custom buffer clearing to account for non-disableable command echo.</p>
+<p>Please refer to <code class="docutils literal notranslate"><span class="pre">CoherentLaser</span></code> on usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – The VISA resource manager instance.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – The VISA resource address for the laser (e.g., ‘ASRL3::INSTR’).</p></li>
+<li><p><strong>config</strong> (<em>str</em><em>, </em><em>default: &quot;Config/CUBE_limits.csv&quot;</em>) – Path to the CSV configuration file containing user-defined power limits.</p></li>
+<li><p><strong>maxOverride</strong> (<em>float</em><em>, </em><em>optional</em>) – A hard override for the maximum allowed power in mW. Overrides the config file.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Coherent.SapphireLP.allowUnderpower">
+<span class="sig-name descname"><span class="pre">allowUnderpower</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#Coherent.SapphireLP.allowUnderpower" title="Link to this definition"></a></dt>
+<dd><p>Sets whether or not the given type of laser accepts power settings under its nominal rating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.SapphireLP.flushBuffer">
+<span class="sig-name descname"><span class="pre">flushBuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#SapphireLP.flushBuffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.SapphireLP.flushBuffer" title="Link to this definition"></a></dt>
+<dd><p>Flushes the read queue to prevent issues. Only implemented for Sapphire.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.SapphireLP.getID">
+<span class="sig-name descname"><span class="pre">getID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#SapphireLP.getID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.SapphireLP.getID" title="Link to this definition"></a></dt>
+<dd><p>Get the serial number of the laser head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – Serial number prefixed with the laser type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.SapphireLP.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#SapphireLP.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.SapphireLP.query" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device and get the response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p></li>
+<li><p><strong>retries</strong> (<em>float</em><em>, </em><em>default: 3</em>) – Number of retries in case of communication failure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>resp</strong> – Response to the query.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Coherent.SapphireLP.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Coherent.html#SapphireLP.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Coherent.SapphireLP.write" title="Link to this definition"></a></dt>
+<dd><p>Send a string to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd</strong> (<em>str</em>) – The command to be sent to the device.</p></li>
+<li><p><strong>retries</strong> (<em>float</em><em>, </em><em>default: 3</em>) – Number of retries in case of communication failure.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Avenir.html" class="btn btn-neutral float-left" title="Avenir module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Dummy.html" class="btn btn-neutral float-right" title="Dummy module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avenir module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coherent module" href="Coherent.html" />
+    <link rel="prev" title="Devices" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Avenir module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Avenir.ARIS"><code class="docutils literal notranslate"><span class="pre">ARIS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Avenir.ARIS.capture"><code class="docutils literal notranslate"><span class="pre">ARIS.capture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Avenir.ARIS.setAutoExposure"><code class="docutils literal notranslate"><span class="pre">ARIS.setAutoExposure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Avenir.ARIS.setExposure"><code class="docutils literal notranslate"><span class="pre">ARIS.setExposure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Coherent.html">Coherent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">Avenir module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/Avenir.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Avenir">
+<span id="avenir-module"></span><h1>Avenir module<a class="headerlink" href="#module-Avenir" title="Link to this heading"></a></h1>
+<p>This module provides the high-level object-oriented interface to control and
+stream data from Avenir ARIS compact spectrometers. It handles the low-level
+USB polling, handles exposure adjustment, and parses raw metadata.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to initialize the spectrometer,
+set up automatic exposure and capture a single spectrum:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Devices.Avenir</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARIS</span>
+
+<span class="c1"># Initialize the device (automatically searches for the USB interface)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">ARIS</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># Set automatic exposure. This will set the exposure time and averaging automatically</span>
+    <span class="c1"># such that the total integration time is 20 ms.</span>
+    <span class="n">spec</span><span class="o">.</span><span class="n">setAutoExposure</span><span class="p">(</span><span class="n">exposure_us</span><span class="o">=</span><span class="mi">200000</span><span class="p">)</span>
+
+    <span class="c1"># Capture the data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">capture</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Captured spectrum at </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;temperature_c&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">°C&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;spectrum&#39;</span><span class="p">]</span><span class="s2">&quot;)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="Avenir.ARIS">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Avenir.</span></span><span class="sig-name descname"><span class="pre">ARIS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Avenir.html#ARIS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Avenir.ARIS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver class for Avenir ARIS compact spectrometers.</p>
+<p>Manages USB connection, device configuration, and spectrum capture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>dict</em>) – Keyword arguments passed to _find_address() to manually select a USB device.
+Valid keywords are “idVendor” and “idProduct”, corresponding to the vendor
+and product ID of the manually defined USB device.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Avenir.ARIS.capture">
+<span class="sig-name descname"><span class="pre">capture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Avenir.html#ARIS.capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Avenir.ARIS.capture" title="Link to this definition"></a></dt>
+<dd><p>Captures a single spectrum and retrieves associated metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>result</strong> – A dictionary containing the wavelength array, spectrum intensities,
+exposure settings, device temperature, and other capture metadata.
+Returns None if the received data stream is invalid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Avenir.ARIS.setAutoExposure">
+<span class="sig-name descname"><span class="pre">setAutoExposure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_us</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Avenir.html#ARIS.setAutoExposure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Avenir.ARIS.setAutoExposure" title="Link to this definition"></a></dt>
+<dd><p>Enables automatic exposure and specifies target integration time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exposure_us</strong> (<em>int</em><em>, </em><em>default: 200000</em>) – Target integration time in microseconds.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Avenir.ARIS.setExposure">
+<span class="sig-name descname"><span class="pre">setExposure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exposure_us</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Avenir.html#ARIS.setExposure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Avenir.ARIS.setExposure" title="Link to this definition"></a></dt>
+<dd><p>Sets the exposure time and number of averages for spectral capture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exposure_us</strong> (<em>int</em><em>, </em><em>default: 1000</em>) – Exposure time in microseconds.</p></li>
+<li><p><strong>average</strong> (<em>int</em><em>, </em><em>default: 1</em>) – Number of spectra to average.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Devices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Coherent.html" class="btn btn-neutral float-right" title="Coherent module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

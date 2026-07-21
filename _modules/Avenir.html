@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avenir &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">Devices</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Avenir</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Avenir</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Based on basic_spectrometer from the Avenir SDK, Copyright 2023 by Avenir Photonics GmbH &amp; Co. KG</span>
+<span class="c1">#</span>
+<span class="c1"># All added code is copyright (C) 2026 Bence Göblyös</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software</span>
+<span class="c1"># Foundation, version 3.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful, but WITHOUT ANY</span>
+<span class="c1"># WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A</span>
+<span class="c1"># PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with</span>
+<span class="c1"># this program. If not, see https://www.gnu.org/licenses/.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides the high-level object-oriented interface to control and</span>
+<span class="sd">stream data from Avenir ARIS compact spectrometers. It handles the low-level</span>
+<span class="sd">USB polling, handles exposure adjustment, and parses raw metadata.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">Below is a minimum working example showing how to initialize the spectrometer,</span>
+<span class="sd">set up automatic exposure and capture a single spectrum:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import matplotlib.pyplot as plt</span>
+<span class="sd">    from Devices.Avenir import ARIS</span>
+
+<span class="sd">    # Initialize the device (automatically searches for the USB interface)</span>
+<span class="sd">    spec = ARIS()</span>
+
+<span class="sd">    if spec.device is not None:</span>
+<span class="sd">        # Set automatic exposure. This will set the exposure time and averaging automatically</span>
+<span class="sd">        # such that the total integration time is 20 ms.</span>
+<span class="sd">        spec.setAutoExposure(exposure_us=200000)</span>
+
+<span class="sd">        # Capture the data</span>
+<span class="sd">        data = spec.capture()</span>
+
+<span class="sd">        if data:</span>
+<span class="sd">            print(f&quot;Captured spectrum at {data[&#39;temperature_c&#39;]}°C&quot;)</span>
+<span class="sd">            plt.plot(data[&#39;wavelengths&#39;], data[&#39;spectrum&#39;]&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Include SDK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Libraries.ARIS.libusb_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibusbInterface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Libraries.ARIS.ziolink_protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZioLinkProtocol</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_enum</span><span class="p">(</span><span class="o">**</span><span class="n">enums</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a simple enumeration type from keyword arguments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    **enums: dict</span>
+<span class="sd">        Keyword arguments representing the enumeration keys and values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Enum: type</span>
+<span class="sd">        A new class acting as an enumeration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;Enum&#39;</span><span class="p">,</span> <span class="p">(),</span> <span class="n">enums</span><span class="p">)</span>
+
+
+<span class="c1"># Values of Spectrometer Status</span>
+<span class="n">_SpectrStatus</span> <span class="o">=</span> <span class="n">_enum</span><span class="p">(</span>
+    <span class="n">Idle</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span>
+    <span class="n">WaitingForTrigger</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span>
+    <span class="n">TakingSpectrum</span><span class="o">=</span><span class="mh">0x02</span><span class="p">,</span>
+    <span class="n">WaitingForTemperature</span><span class="o">=</span><span class="mh">0x03</span><span class="p">,</span>
+    <span class="n">PoweredOff</span><span class="o">=</span><span class="mh">0x08</span><span class="p">,</span>
+    <span class="n">SleepMode</span><span class="o">=</span><span class="mh">0x09</span><span class="p">,</span>
+    <span class="n">NotConnected</span><span class="o">=</span><span class="mh">0x0A</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_address</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds and returns the first compatible Avenir USB spectrometer device.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    **kwargs: dict</span>
+<span class="sd">        Arguments to pass to LibusbInterface.find_interfaces.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    device: object or None</span>
+<span class="sd">        The first matching USB device interface, or None if no device is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find all interfaces</span>
+    <span class="n">devices</span> <span class="o">=</span> <span class="n">LibusbInterface</span><span class="o">.</span><span class="n">find_interfaces</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">devices</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">idVendor</span> <span class="o">==</span> <span class="mh">0x354F</span> <span class="ow">and</span> <span class="mh">0x0100</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="o">.</span><span class="n">idProduct</span> <span class="o">&lt;=</span> <span class="mh">0x01FF</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">devices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ARIS">
+<a class="viewcode-back" href="../source/Avenir.html#Avenir.ARIS">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ARIS</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Driver class for Avenir ARIS compact spectrometers.</span>
+
+<span class="sd">    Manages USB connection, device configuration, and spectrum capture.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs: dict</span>
+<span class="sd">            Keyword arguments passed to _find_address() to manually select a USB device.</span>
+<span class="sd">            Valid keywords are &quot;idVendor&quot; and &quot;idProduct&quot;, corresponding to the vendor</span>
+<span class="sd">            and product ID of the manually defined USB device.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set up logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.ARIS&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">_find_address</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span> <span class="o">=</span> <span class="n">ZioLinkProtocol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Opened ARIS device for communication.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Did not find a suitable USB device.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x0000</span><span class="p">)</span> <span class="c1"># Send reset command</span>
+
+        <span class="c1"># Gather basic system data</span>
+        <span class="n">model_name_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x2003</span><span class="p">)</span>  <span class="c1"># 0x2003 = Get Device Property: ModelName</span>
+        <span class="k">if</span> <span class="n">model_name_bytes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">model_name_bytes</span> <span class="o">=</span> <span class="n">model_name_bytes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># strip trailing null terminator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_name_bytes</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+        <span class="n">serial_number_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x2001</span><span class="p">)</span>  <span class="c1"># 0x2001 = Get Device Property: SerialNumber</span>
+        <span class="k">if</span> <span class="n">serial_number_bytes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">serial_number_bytes</span> <span class="o">=</span> <span class="n">serial_number_bytes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># strip trailing null terminator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serial</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">serial_number_bytes</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+        <span class="n">pixel_count_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x2007</span><span class="p">)</span>  <span class="c1"># 0x2007 = Get Device Property: PixelCount</span>
+        <span class="n">pixel_count</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">pixel_count_bytes</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixels</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">pixel_count_bytes</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">, Serial: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">serial</span><span class="si">}</span><span class="s2">, CCD size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pixels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get wavelength calibration</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">wavelengths_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x201C</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>  <span class="c1"># 0x201C = Get Device Property: WavelengthCoeff0</span>
+            <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,</span> <span class="n">wavelengths_bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavelengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">p</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixels</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Wavelength range: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; to &quot;</span> <span class="o">+</span>
+          <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; nm&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the USB connection when the object is destroyed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ARIS.setExposure">
+<a class="viewcode-back" href="../source/Avenir.html#Avenir.ARIS.setExposure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setExposure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exposure_us</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the exposure time and number of averages for spectral capture.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exposure_us: int, default: 1000</span>
+<span class="sd">            Exposure time in microseconds.</span>
+<span class="sd">        average: int, default: 1</span>
+<span class="sd">            Number of spectra to average.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x1109</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>                <span class="c1"># 0x1109 = Set Parameter: AutoExposureEnabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x1100</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">exposure_us</span><span class="p">))</span> <span class="c1"># 0x1100 = Set Parameter: ExposureTime (in microseconds)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x1101</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">average</span><span class="p">))</span>     <span class="c1"># 0x1101 = Set Parameter: Averaging</span></div>
+
+
+<div class="viewcode-block" id="ARIS.setAutoExposure">
+<a class="viewcode-back" href="../source/Avenir.html#Avenir.ARIS.setAutoExposure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setAutoExposure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_us</span> <span class="o">=</span> <span class="mi">200000</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables automatic exposure and specifies target integration time.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exposure_us: int, default: 200000</span>
+<span class="sd">            Target integration time in microseconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x1109</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>              <span class="c1"># 0x1109 = Set Parameter: AutoExposureEnabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x110A</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_us</span><span class="p">))</span> <span class="c1"># 0x110A = Set Parameter: AutoExposureTime</span></div>
+
+
+<div class="viewcode-block" id="ARIS.capture">
+<a class="viewcode-back" href="../source/Avenir.html#Avenir.ARIS.capture">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">capture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Captures a single spectrum and retrieves associated metadata.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result: dict or None</span>
+<span class="sd">            A dictionary containing the wavelength array, spectrum intensities,</span>
+<span class="sd">            exposure settings, device temperature, and other capture metadata.</span>
+<span class="sd">            Returns None if the received data stream is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x0004</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># Start capture with a single spectrum</span>
+        <span class="c1"># TODO: implement multiple spectrum capture</span>
+
+        <span class="c1"># Wait for completion</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">_SpectrStatus</span><span class="o">.</span><span class="n">TakingSpectrum</span>
+        <span class="n">available_spectra</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">status</span> <span class="o">==</span> <span class="n">_SpectrStatus</span><span class="o">.</span><span class="n">TakingSpectrum</span> <span class="ow">or</span> <span class="n">status</span> <span class="o">==</span> <span class="n">_SpectrStatus</span><span class="o">.</span><span class="n">WaitingForTrigger</span><span class="p">:</span>
+            <span class="n">st_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x3000</span><span class="p">)</span>  <span class="c1"># 0x3000 = Get Measured Value: Status</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">st_bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># byte 0 of returned value</span>
+            <span class="n">available_spectra</span> <span class="o">=</span> <span class="n">st_bytes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">256</span> <span class="o">*</span> <span class="n">st_bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># //byte 1 and 2 of returned value</span>
+
+        <span class="n">rawdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ziolink</span><span class="o">.</span><span class="n">send_receive_message</span><span class="p">(</span><span class="mh">0x4000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">64</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixels</span> <span class="o">*</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unexpected number of bytes in spectrum data stream.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">exposure_us</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">averaging</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">time_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">10.0</span>
+        <span class="n">date_days</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">load_level</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">temperature_c</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">20</span><span class="p">:</span><span class="mi">24</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exposure_settings</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">28</span><span class="p">:</span><span class="mi">30</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">applied_processing</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">30</span><span class="p">:</span><span class="mi">32</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="p">[</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="n">p</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">64</span><span class="p">:</span><span class="n">p</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">68</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixels</span><span class="p">)]</span>
+        <span class="n">dark_avg</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">56</span><span class="p">:</span><span class="mi">60</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">readout_noise</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">60</span><span class="p">:</span><span class="mi">64</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">load_level</span> <span class="o">&gt;=</span> <span class="mf">0.95</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;High spectrometer load (</span><span class="si">{</span><span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">load_level</span><span class="p">)</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelengths&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">,</span>
+            <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">spectrum</span><span class="p">,</span>
+            <span class="s2">&quot;exposure_us&quot;</span><span class="p">:</span> <span class="n">exposure_us</span><span class="p">,</span>
+            <span class="s2">&quot;averaging&quot;</span><span class="p">:</span> <span class="n">averaging</span><span class="p">,</span>
+            <span class="s2">&quot;uptime_s&quot;</span><span class="p">:</span> <span class="n">date_days</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">+</span> <span class="n">time_ms</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">&quot;load_level&quot;</span><span class="p">:</span> <span class="n">load_level</span><span class="p">,</span>
+            <span class="s2">&quot;temperature_c&quot;</span><span class="p">:</span> <span class="n">temperature_c</span><span class="p">,</span>
+            <span class="s2">&quot;exposure_settings&quot;</span><span class="p">:</span> <span class="n">exposure_settings</span><span class="p">,</span>
+            <span class="s2">&quot;applied_processing&quot;</span><span class="p">:</span> <span class="n">applied_processing</span><span class="p">,</span>
+            <span class="s2">&quot;dark_avg&quot;</span><span class="p">:</span> <span class="n">dark_avg</span><span class="p">,</span>
+            <span class="s2">&quot;readout_noise&quot;</span><span class="p">:</span> <span class="n">readout_noise</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp_unix_ns&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time_ns</span><span class="p">(),</span>
+        <span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
