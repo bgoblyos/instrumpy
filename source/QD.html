@@ -55,7 +55,29 @@
 <li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">QD module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">QD module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#QD.PPMS"><code class="docutils literal notranslate"><span class="pre">PPMS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.convertMagUnits"><code class="docutils literal notranslate"><span class="pre">PPMS.convertMagUnits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getChamber"><code class="docutils literal notranslate"><span class="pre">PPMS.getChamber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getCurrent"><code class="docutils literal notranslate"><span class="pre">PPMS.getCurrent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getField"><code class="docutils literal notranslate"><span class="pre">PPMS.getField()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getFieldSetpoint"><code class="docutils literal notranslate"><span class="pre">PPMS.getFieldSetpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getResistance"><code class="docutils literal notranslate"><span class="pre">PPMS.getResistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getRotatorPosition"><code class="docutils literal notranslate"><span class="pre">PPMS.getRotatorPosition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getTemperature"><code class="docutils literal notranslate"><span class="pre">PPMS.getTemperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.getTemperatureSetpoint"><code class="docutils literal notranslate"><span class="pre">PPMS.getTemperatureSetpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.isSteady"><code class="docutils literal notranslate"><span class="pre">PPMS.isSteady()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setCC"><code class="docutils literal notranslate"><span class="pre">PPMS.setCC()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setChamber"><code class="docutils literal notranslate"><span class="pre">PPMS.setChamber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setField"><code class="docutils literal notranslate"><span class="pre">PPMS.setField()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setRotatorPosition"><code class="docutils literal notranslate"><span class="pre">PPMS.setRotatorPosition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setTemperature"><code class="docutils literal notranslate"><span class="pre">PPMS.setTemperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.setupBridge"><code class="docutils literal notranslate"><span class="pre">PPMS.setupBridge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#QD.PPMS.waitFor"><code class="docutils literal notranslate"><span class="pre">PPMS.waitFor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
 </ul>
@@ -87,8 +109,332 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="qd-module">
-<h1>QD module<a class="headerlink" href="#qd-module" title="Link to this heading"></a></h1>
+  <section id="module-QD">
+<span id="qd-module"></span><h1>QD module<a class="headerlink" href="#module-QD" title="Link to this heading"></a></h1>
+<p>This module contains a driver class for Quantum Design instruments, wrapping MultiPyVu.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to use a PM100D power meter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Devices.QD</span><span class="w"> </span><span class="kn">import</span> <span class="n">PPMS</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">PPMS</span><span class="p">(</span><span class="s2">&quot;8fvfvd3.dhcp.nd.edu&quot;</span><span class="p">)</span>
+
+<span class="c1"># Go to 77 K at a rate of 2 K/min using the fast settle mode</span>
+<span class="n">device</span><span class="o">.</span><span class="n">setTemperature</span><span class="p">(</span><span class="mf">77.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Wait until the temperature is reached (or a maximum of 4 hours),</span>
+<span class="c1"># plus another 10 minutes for sample thermalization</span>
+<span class="n">device</span><span class="o">.</span><span class="n">waitFor</span><span class="p">(</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="mi">3600</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">temp</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Set up a resistance measurement on bridge 1 with a limit of 100 uA, 100 uW and 95 mV,</span>
+<span class="c1"># and a built-in waiting period of 5 seconds to allow the bridge to configure itself</span>
+<span class="n">device</span><span class="o">.</span><span class="n">setupBridge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">channelOn</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">currentLimit</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">powerLimit</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">voltageLimit</span> <span class="o">=</span> <span class="mi">95</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+<span class="c1"># Measure resistance</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Sample resistance: </span><span class="si">{</span><span class="n">device</span><span class="o">.</span><span class="n">getResistance</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> Ohm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="QD.PPMS">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">QD.</span></span><span class="sig-name descname"><span class="pre">PPMS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver class for Quantum Design PPMS systems.</p>
+<p>This class implements the client only. If you want to run this
+on the same machine MultiVu is running on, make sure to start the
+server manually (python -m MultiPyVu) and use 127.0.0.1 as the
+address given to the client.</p>
+<p>Initializes the PPMS connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> (<em>str</em>) – The IP address or hostname of the server.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.convertMagUnits">
+<span class="sig-name descname"><span class="pre">convertMagUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startingUnit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetUnit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.convertMagUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.convertMagUnits" title="Link to this definition"></a></dt>
+<dd><p>Magnetic unit conversion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>float</em>) – Numerical value to be converted.</p></li>
+<li><p><strong>startingUnit</strong> (<em>str</em>) – Unit in which the value is specified. One of “Oe”, “A/m” or “T”.</p></li>
+<li><p><strong>targetUnit</strong> (<em>str</em>) – Unit to which the value should be converted. One of “Oe”, “A/m” or “T”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>converted</strong> – The converted value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getChamber">
+<span class="sig-name descname"><span class="pre">getChamber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getChamber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getChamber" title="Link to this definition"></a></dt>
+<dd><p>Gets the PPMS chamber state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Chamber state. Note: not the same values that are used for setChamber().</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getCurrent">
+<span class="sig-name descname"><span class="pre">getCurrent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getCurrent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getCurrent" title="Link to this definition"></a></dt>
+<dd><p>Measure current on the given bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bridge</strong> (<em>int</em>) – Number of the target bridge.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>current</strong> – Measured current, presumably in uA.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getField">
+<span class="sig-name descname"><span class="pre">getField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getField" title="Link to this definition"></a></dt>
+<dd><p>Reads back the magnetic field from the PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>str</em><em>, </em><em>default: 'T'</em>) – Indicates the units in which the response should be given. One of “Oe”, “A/m” or “T”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>field</strong> (<em>float</em>) – Current magnetic field strength in the selected units.</p></li>
+<li><p><strong>status</strong> (<em>str</em>) – Status string.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getFieldSetpoint">
+<span class="sig-name descname"><span class="pre">getFieldSetpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getFieldSetpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getFieldSetpoint" title="Link to this definition"></a></dt>
+<dd><p>Reads back magnetic field setpoint from PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>str</em><em>, </em><em>default: 'T'</em>) – Indicates the units in which the response should be given. One of “Oe”, “A/m” or “T”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>setpoint</strong> (<em>float</em>) – Target H-field strength in Oersted (or A/m if si = True).</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – Approach rate in Oersted per second (or A/m/s if si = True).</p></li>
+<li><p><strong>mode</strong> (<em>str, default: “linear”</em>) – Approach mode. Possible values are: “linear”, “no_overshoot” or “oscillate”.</p></li>
+<li><p><strong>driven</strong> (<em>bool, default: False</em>) – Whether or not the magnet is in driven mode. False corresponds to persistent mode.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getResistance">
+<span class="sig-name descname"><span class="pre">getResistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getResistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getResistance" title="Link to this definition"></a></dt>
+<dd><p>Measure resistance with the given bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bridge</strong> (<em>int</em>) – Number of the target bridge.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>res</strong> – Measured resistance, presumably in Ohms.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getRotatorPosition">
+<span class="sig-name descname"><span class="pre">getRotatorPosition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getRotatorPosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getRotatorPosition" title="Link to this definition"></a></dt>
+<dd><p>Reads back rotator position from PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>position</strong> (<em>float</em>) – Current rotator position in degrees.</p></li>
+<li><p><strong>status</strong> (<em>str</em>) – Status string.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getTemperature">
+<span class="sig-name descname"><span class="pre">getTemperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getTemperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getTemperature" title="Link to this definition"></a></dt>
+<dd><p>Reads back cryostat temperature from PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>temp</strong> (<em>float</em>) – Current cryostat temperature in Kelvin.</p></li>
+<li><p><strong>status</strong> (<em>str</em>) – Status string.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.getTemperatureSetpoint">
+<span class="sig-name descname"><span class="pre">getTemperatureSetpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.getTemperatureSetpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.getTemperatureSetpoint" title="Link to this definition"></a></dt>
+<dd><p>Reads back cryostat temperature setpoint from PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>temp</strong> (<em>float</em>) – Current cryostat temperature in Kelvin.</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – Cryostat approach rate in Kelvin per minute.</p></li>
+<li><p><strong>fast</strong> (<em>bool</em>) – Whether fast settle mode is enabled. False corresponds to the no overshoot method.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.isSteady">
+<span class="sig-name descname"><span class="pre">isSteady</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chamber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.isSteady"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.isSteady" title="Link to this definition"></a></dt>
+<dd><p>Check whether the setpoits have been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temp</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to check for if temperature is in a steady state.</p></li>
+<li><p><strong>field</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to check if H-field setpoint has been reached.</p></li>
+<li><p><strong>chamber</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to check if the chamber has completes its last operation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Whether or not the system is in a steady state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setCC">
+<span class="sig-name descname"><span class="pre">setCC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setCC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setCC" title="Link to this definition"></a></dt>
+<dd><p>Set up bridge to output a constant current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bridge</strong> (<em>int</em>) – Number of the target bridge.</p></li>
+<li><p><strong>current</strong> (<em>float</em>) – Constant current in uA.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setChamber">
+<span class="sig-name descname"><span class="pre">setChamber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setChamber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setChamber" title="Link to this definition"></a></dt>
+<dd><p>Sets the PPMS chamber state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>str</em>) – Chamber state. Possible values are: “seal”, “purge_seal”, “vent_seal”, “pump_continuous”, “vent_continous” or “high_vacuum”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setField">
+<span class="sig-name descname"><span class="pre">setField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driven</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setField" title="Link to this definition"></a></dt>
+<dd><p>Sets magnetic field inside the PPMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>setpoint</strong> (<em>float</em>) – Target H-field strength in Oersted (or A/m if si = True).</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – Approach rate in Oersted per second (or A/m/s if si = True).</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>default: &quot;linear&quot;</em>) – Approach mode. Possible values are: “linear”, “no_overshoot” or “oscillate”.</p></li>
+<li><p><strong>driven</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Sets whether or not the magnet should be in driven mode. False corresponds to persistent mode.</p></li>
+<li><p><strong>unit</strong> (<em>str</em><em>, </em><em>default: 'T'</em>) – Indicates the units in which the setpoint is given. One of “Oe”, “A/m” or “T”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setRotatorPosition">
+<span class="sig-name descname"><span class="pre">setRotatorPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setRotatorPosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setRotatorPosition" title="Link to this definition"></a></dt>
+<dd><p>Set the horizontal rotator’s position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>float</em>) – Rotator position in degrees.</p></li>
+<li><p><strong>rate</strong> (<em>float</em><em>, </em><em>default: 100</em>) – Roation speed in degrees per second.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setTemperature">
+<span class="sig-name descname"><span class="pre">setTemperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setTemperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setTemperature" title="Link to this definition"></a></dt>
+<dd><p>Sets the temperature of the cryostat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>setpoint</strong> (<em>float</em>) – Setpoint temperature in Kelvin.</p></li>
+<li><p><strong>rate</strong> (<em>float</em><em>, </em><em>default: 2</em>) – Approach rate in Kelvin per minute.</p></li>
+<li><p><strong>fast</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether to enable fast settle mode. If false, the no overshoot approach mode will be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.setupBridge">
+<span class="sig-name descname"><span class="pre">setupBridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelOn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentLimit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">powerLimit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voltageLimit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.setupBridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.setupBridge" title="Link to this definition"></a></dt>
+<dd><p>Set up bridge for resistivity measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bridge</strong> (<em>int</em>) – Number of the target bridge.</p></li>
+<li><p><strong>channelOn</strong> (<em>bool</em>) – Whether or not to enable the selected bridge.</p></li>
+<li><p><strong>currentLimit</strong> (<em>float</em>) – Current limit in uA.</p></li>
+<li><p><strong>powerLimit</strong> (<em>float</em>) – Power limit in uW.</p></li>
+<li><p><strong>voltageLimit</strong> (<em>float</em>) – Voltage limit in mV.</p></li>
+<li><p><strong>delay</strong> (<em>float</em><em>, </em><em>default: 5.0</em>) – Number of seconds to wait after sending the configuration.
+This allows the module to configure itself before a measurement is taken.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="QD.PPMS.waitFor">
+<span class="sig-name descname"><span class="pre">waitFor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chamber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/QD.html#PPMS.waitFor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QD.PPMS.waitFor" title="Link to this definition"></a></dt>
+<dd><p>Wait for setpoints to be reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>default: 120</em>) – Time in seconds after which the command will return even if the setpoit is not reached.</p></li>
+<li><p><strong>delay</strong> (<em>int</em><em>, </em><em>default: 0</em>) – Time in seconds to wait after all setpoits have been reached. Useful for letting the sample thermalize.</p></li>
+<li><p><strong>temp</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to wait for temperature setpoint.</p></li>
+<li><p><strong>field</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to wait for H-field setpoint.</p></li>
+<li><p><strong>chamber</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether or not to wait for the chamber to complete its current operation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Whether or not the setpoit was reached before the timeout.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

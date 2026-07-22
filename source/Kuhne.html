@@ -51,7 +51,17 @@
 <li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Kuhne module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kuhne module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Kuhne.MKULO813PLL"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhne.MKULO813PLL.sendCommand"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL.sendCommand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhne.MKULO813PLL.setGHz"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL.setGHz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhne.MKULO813PLL.setHz"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL.setHz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhne.MKULO813PLL.setMHz"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL.setMHz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhne.MKULO813PLL.setkHz"><code class="docutils literal notranslate"><span class="pre">MKULO813PLL.setkHz()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
@@ -87,8 +97,137 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="kuhne-module">
-<h1>Kuhne module<a class="headerlink" href="#kuhne-module" title="Link to this heading"></a></h1>
+  <section id="module-Kuhne">
+<span id="kuhne-module"></span><h1>Kuhne module<a class="headerlink" href="#module-Kuhne" title="Link to this heading"></a></h1>
+<p>Copyright (C) 2025-2026 Bence Göblyös</p>
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, version 3.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with
+this program. If not, see <a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Kuhne.</span></span><span class="sig-name descname"><span class="pre">MKULO813PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legacy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Kuhne MKU LO 8-13 PLL driver class. Supports both v1 and v2 firmware.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> (<em>str</em>) – Seirial port of the device. Examples: ‘COM3’ on Windows, ‘/dev/ttyACM0’ on Linux.</p></li>
+<li><p><strong>timeout</strong> (<em>float</em><em>, </em><em>default: 1.0</em>) – Communication timeout in seconds.</p></li>
+<li><p><strong>legacy</strong> (<em>bool</em><em>, </em><em>default: False</em>) – If True, uses the comminication protocol for the older v1.x firmware.
+If False, uses the more modern command set and syntax the v2.x firmware.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL.sendCommand">
+<span class="sig-name descname"><span class="pre">sendCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL.sendCommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL.sendCommand" title="Link to this definition"></a></dt>
+<dd><p>Sends a command to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd</strong> (<em>str</em>) – Command to be sent.</p></li>
+<li><p><strong>timeout</strong> (<em>float</em><em>, </em><em>default: 1.0</em>) – Communication timeout in seconds.</p></li>
+<li><p><strong>capture_output</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether or not to capture the response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nchar</strong> (<em>int</em>) – Number of characters transmitted. -1 indicates a transmission failure.</p></li>
+<li><p><strong>resp</strong> (<em>str</em>) – Response from device. None if response is not captured.
+If <code class="docutils literal notranslate"><span class="pre">nchar</span> <span class="pre">==</span> <span class="pre">-1</span></code>, resp will contain the error message.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL.setGHz">
+<span class="sig-name descname"><span class="pre">setGHz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL.setGHz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL.setGHz" title="Link to this definition"></a></dt>
+<dd><p>Sets the oscillator frequency in GHz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>float</em>) – Target frequency in GHz.</p></li>
+<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>default: 3</em>) – Number of retransimssions in case of failure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL.setHz">
+<span class="sig-name descname"><span class="pre">setHz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL.setHz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL.setHz" title="Link to this definition"></a></dt>
+<dd><p>Sets the oscillator frequency in Hz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>int</em>) – Target frequency in Hz.</p></li>
+<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>default: 3</em>) – Number of retransimssions in case of failure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL.setMHz">
+<span class="sig-name descname"><span class="pre">setMHz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL.setMHz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL.setMHz" title="Link to this definition"></a></dt>
+<dd><p>Sets the oscillator frequency in MHz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>float</em>) – Target frequency in MHz.</p></li>
+<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>default: 3</em>) – Number of retransimssions in case of failure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Kuhne.MKULO813PLL.setkHz">
+<span class="sig-name descname"><span class="pre">setkHz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Kuhne.html#MKULO813PLL.setkHz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Kuhne.MKULO813PLL.setkHz" title="Link to this definition"></a></dt>
+<dd><p>Sets the oscillator frequency in kHz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>float</em>) – Target frequency in kHz.</p></li>
+<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>default: 3</em>) – Number of retransimssions in case of failure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
