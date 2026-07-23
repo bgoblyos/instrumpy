@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thorlabs module &mdash; instrumpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=045c9e84" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Throlabs module" href="Throlabs.html" />
+    <link rel="prev" title="SRS module" href="SRS.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            instrumpy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Avenir.html">Avenir module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Coherent.html">Coherent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dummy.html">Dummy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HP.html">HP module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Keithley.html">Keithley module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Kuhne.html">Kuhne module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ORIEL.html">ORIEL module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PicoPulse.html">PicoPulse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QD.html">QD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SRS.html">SRS module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Thorlabs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Thorlabs.PM100"><code class="docutils literal notranslate"><span class="pre">PM100</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.average"><code class="docutils literal notranslate"><span class="pre">PM100.average</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.energy"><code class="docutils literal notranslate"><span class="pre">PM100.energy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.filterLowpass"><code class="docutils literal notranslate"><span class="pre">PM100.filterLowpass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.frequency"><code class="docutils literal notranslate"><span class="pre">PM100.frequency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getAverage"><code class="docutils literal notranslate"><span class="pre">PM100.getAverage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getEnergy"><code class="docutils literal notranslate"><span class="pre">PM100.getEnergy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getError"><code class="docutils literal notranslate"><span class="pre">PM100.getError()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getFilterLowpass"><code class="docutils literal notranslate"><span class="pre">PM100.getFilterLowpass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getFrequency"><code class="docutils literal notranslate"><span class="pre">PM100.getFrequency()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getID"><code class="docutils literal notranslate"><span class="pre">PM100.getID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getPower"><code class="docutils literal notranslate"><span class="pre">PM100.getPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getSensorID"><code class="docutils literal notranslate"><span class="pre">PM100.getSensorID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getTemperature"><code class="docutils literal notranslate"><span class="pre">PM100.getTemperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getThermopileAccelerator"><code class="docutils literal notranslate"><span class="pre">PM100.getThermopileAccelerator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.getWavelength"><code class="docutils literal notranslate"><span class="pre">PM100.getWavelength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.power"><code class="docutils literal notranslate"><span class="pre">PM100.power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setAutoRange"><code class="docutils literal notranslate"><span class="pre">PM100.setAutoRange()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setAverage"><code class="docutils literal notranslate"><span class="pre">PM100.setAverage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setFilterLowpass"><code class="docutils literal notranslate"><span class="pre">PM100.setFilterLowpass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setThermopileAccelerator"><code class="docutils literal notranslate"><span class="pre">PM100.setThermopileAccelerator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setUnits"><code class="docutils literal notranslate"><span class="pre">PM100.setUnits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.setWavelength"><code class="docutils literal notranslate"><span class="pre">PM100.setWavelength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.temperature"><code class="docutils literal notranslate"><span class="pre">PM100.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.thermopileAccelerator"><code class="docutils literal notranslate"><span class="pre">PM100.thermopileAccelerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.wavelength"><code class="docutils literal notranslate"><span class="pre">PM100.wavelength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Thorlabs.PM100.zero"><code class="docutils literal notranslate"><span class="pre">PM100.zero()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Throlabs.html">Throlabs module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">instrumpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Devices</a></li>
+      <li class="breadcrumb-item active">Thorlabs module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/bgoblyos/instrumpy/blob/main/Docs/source/Thorlabs.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Thorlabs">
+<span id="thorlabs-module"></span><h1>Thorlabs module<a class="headerlink" href="#module-Thorlabs" title="Link to this heading"></a></h1>
+<p>This module contains drivers for Thorlabs devices.
+At the moment, this includes the PM100-series power meters.</p>
+<p class="rubric">Examples</p>
+<p>Below is a minimum working example showing how to use a PM100D power meter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvisa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Devices.Throlabs</span><span class="w"> </span><span class="kn">import</span> <span class="n">PM100</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">pyvisa</span><span class="o">.</span><span class="n">ResourceManager</span><span class="p">()</span>
+<span class="c1"># Instantiate the PM100D with a predefined attenuation curve</span>
+<span class="n">pm</span> <span class="o">=</span> <span class="n">PM100</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="s1">&#39;USB0::0x1313::0x8078::P0017770::INSTR&#39;</span><span class="p">,</span> <span class="n">attName</span><span class="o">=</span><span class="s1">&#39;ppms-tap&#39;</span><span class="p">)</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="mi">530</span> <span class="c1"># Set wavelength for an accurate reading</span>
+
+<span class="c1"># When reading the power, the wavelength-dependent attenuation</span>
+<span class="c1"># characteristics are automatically taken into account</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Power: </span><span class="si">{</span><span class="n">pm</span><span class="o">.</span><span class="n">power</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">}</span><span class="s1"> mW&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="Thorlabs.PM100">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Thorlabs.</span></span><span class="sig-name descname"><span class="pre">PM100</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('Config/PM100.json')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver class for ThorLabs PM100x power meter head units.</p>
+<p>Manages instrument communication via PyVISA and applies an optional
+polynomial wavelength-dependent attenuation calibration. Provides explicit
+getters and property accessors for core SCPI functionality.</p>
+<p>Initializes the power meter connection and loads optional calibration data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rm</strong> (<em>pyvisa.ResourceManager</em>) – The VISA resource manager instance.</p></li>
+<li><p><strong>address</strong> (<em>str</em>) – The VISA resource address for the device.</p></li>
+<li><p><strong>attName</strong> (<em>str</em><em>, </em><em>optional</em>) – The key inside the JSON configuration file corresponding to the
+desired attenuation profile. Up to 9th order polynomials are accepted.</p></li>
+<li><p><strong>attConfig</strong> (<em>str</em><em>, </em><em>default: &quot;Config/PM100_attenuation.json&quot;</em>) – Path to the JSON configuration file containing polynomial coefficients
+for external attenuation/gain adjustments.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.average">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">average</span></span><a class="headerlink" href="#Thorlabs.PM100.average" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of samples averaged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>count</strong> – Number of samples per measurement.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.energy">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">energy</span></span><a class="headerlink" href="#Thorlabs.PM100.energy" title="Link to this definition"></a></dt>
+<dd><p>Returns measured pulse energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>energy</strong> – Measured pulse energy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.filterLowpass">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">filterLowpass</span></span><a class="headerlink" href="#Thorlabs.PM100.filterLowpass" title="Link to this definition"></a></dt>
+<dd><p>Returns the state of the low-pass filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enabled</strong> – True if low-pass filter is enabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.frequency">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#Thorlabs.PM100.frequency" title="Link to this definition"></a></dt>
+<dd><p>Returns measured repetition frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frequency</strong> – Measured frequency in Hz.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getAverage">
+<span class="sig-name descname"><span class="pre">getAverage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getAverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getAverage" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of samples averaged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>count</strong> – Number of samples per measurement.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getEnergy">
+<span class="sig-name descname"><span class="pre">getEnergy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getEnergy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getEnergy" title="Link to this definition"></a></dt>
+<dd><p>Returns measured pulse energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>energy</strong> – Measured pulse energy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getError">
+<span class="sig-name descname"><span class="pre">getError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getError" title="Link to this definition"></a></dt>
+<dd><p>Returns the latest error code and message from the error queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> – Formatted error message.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getFilterLowpass">
+<span class="sig-name descname"><span class="pre">getFilterLowpass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getFilterLowpass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getFilterLowpass" title="Link to this definition"></a></dt>
+<dd><p>Returns the state of the low-pass filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enabled</strong> – True if low-pass filter is enabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getFrequency">
+<span class="sig-name descname"><span class="pre">getFrequency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getFrequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getFrequency" title="Link to this definition"></a></dt>
+<dd><p>Returns measured repetition frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frequency</strong> – Measured frequency in Hz.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getID">
+<span class="sig-name descname"><span class="pre">getID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getID" title="Link to this definition"></a></dt>
+<dd><p>Returns the instrument identification string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idn</strong> – Identification string (manufacturer, model, serial, firmware).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getPower">
+<span class="sig-name descname"><span class="pre">getPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applyCalibration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getPower" title="Link to this definition"></a></dt>
+<dd><p>Returns measured power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>applyCalibration</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether to apply the loaded polynomial attenuation profile.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>power</strong> – Measured optical power.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getSensorID">
+<span class="sig-name descname"><span class="pre">getSensorID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getSensorID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getSensorID" title="Link to this definition"></a></dt>
+<dd><p>Returns the connected sensor identification string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>info</strong> – Sensor identification and configuration information.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getTemperature">
+<span class="sig-name descname"><span class="pre">getTemperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getTemperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getTemperature" title="Link to this definition"></a></dt>
+<dd><p>Returns current sensor temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temp</strong> – Temperature in Celsius.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getThermopileAccelerator">
+<span class="sig-name descname"><span class="pre">getThermopileAccelerator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getThermopileAccelerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getThermopileAccelerator" title="Link to this definition"></a></dt>
+<dd><p>Returns the state of the thermopile accelerator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>active</strong> – True if thermopile accelerator is active.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.getWavelength">
+<span class="sig-name descname"><span class="pre">getWavelength</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.getWavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.getWavelength" title="Link to this definition"></a></dt>
+<dd><p>Returns current operation wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wavelength</strong> – Current wavelength in nm.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.power">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">power</span></span><a class="headerlink" href="#Thorlabs.PM100.power" title="Link to this definition"></a></dt>
+<dd><p>Returns measured power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>applyCalibration</strong> (<em>bool</em><em>, </em><em>default: True</em>) – Whether to apply the loaded polynomial attenuation profile.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>power</strong> – Measured optical power.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setAutoRange">
+<span class="sig-name descname"><span class="pre">setAutoRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'POW'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setAutoRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setAutoRange" title="Link to this definition"></a></dt>
+<dd><p>Enables or disables auto-ranging for a specific mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>bool</em><em>, </em><em>default: True</em>) – True to enable, False to disable.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>default: &quot;POW&quot;</em>) – Measurement mode (e.g., “POW”, “CURR”, “VOLT”).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setAverage">
+<span class="sig-name descname"><span class="pre">setAverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setAverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setAverage" title="Link to this definition"></a></dt>
+<dd><p>Sets the number of samples to average.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>int</em>) – Number of samples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setFilterLowpass">
+<span class="sig-name descname"><span class="pre">setFilterLowpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setFilterLowpass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setFilterLowpass" title="Link to this definition"></a></dt>
+<dd><p>Enables or disables the low-pass filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>bool</em>) – True to enable, False to disable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setThermopileAccelerator">
+<span class="sig-name descname"><span class="pre">setThermopileAccelerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setThermopileAccelerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setThermopileAccelerator" title="Link to this definition"></a></dt>
+<dd><p>Enables or disables the thermopile accelerator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>bool</em>) – True to enable, False to disable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setUnits">
+<span class="sig-name descname"><span class="pre">setUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setUnits" title="Link to this definition"></a></dt>
+<dd><p>Sets measurement units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>str</em>) – Unit type (‘W’ or ‘DBM’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.setWavelength">
+<span class="sig-name descname"><span class="pre">setWavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.setWavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.setWavelength" title="Link to this definition"></a></dt>
+<dd><p>Sets operation wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>float</em>) – Wavelength in nm.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.temperature">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#Thorlabs.PM100.temperature" title="Link to this definition"></a></dt>
+<dd><p>Returns current sensor temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temp</strong> – Temperature in Celsius.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.thermopileAccelerator">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">thermopileAccelerator</span></span><a class="headerlink" href="#Thorlabs.PM100.thermopileAccelerator" title="Link to this definition"></a></dt>
+<dd><p>Returns the state of the thermopile accelerator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>active</strong> – True if thermopile accelerator is active.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Thorlabs.PM100.wavelength">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wavelength</span></span><a class="headerlink" href="#Thorlabs.PM100.wavelength" title="Link to this definition"></a></dt>
+<dd><p>Returns current operation wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wavelength</strong> – Current wavelength in nm.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Thorlabs.PM100.zero">
+<span class="sig-name descname"><span class="pre">zero</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Thorlabs.html#PM100.zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Thorlabs.PM100.zero" title="Link to this definition"></a></dt>
+<dd><p>Initiates zero adjustment (non-blocking).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SRS.html" class="btn btn-neutral float-left" title="SRS module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Throlabs.html" class="btn btn-neutral float-right" title="Throlabs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Bence Göblyös.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

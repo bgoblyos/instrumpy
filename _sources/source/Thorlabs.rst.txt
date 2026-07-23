@@ -1,0 +1,7 @@
+Thorlabs module
+===============
+
+.. automodule:: Thorlabs
+   :members:
+   :show-inheritance:
+   :undoc-members:

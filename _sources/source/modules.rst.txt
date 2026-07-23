@@ -15,4 +15,5 @@ Devices
    PicoPulse
    QD
    SRS
+   Thorlabs
    Throlabs
