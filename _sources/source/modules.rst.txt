@@ -16,4 +16,3 @@ Devices
    QD
    SRS
    Thorlabs
-   Throlabs
