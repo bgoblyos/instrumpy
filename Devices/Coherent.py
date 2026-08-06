@@ -241,7 +241,7 @@ class CoherentLaser():
         ext: bool
             True if the laser is on, False otherwise.
         """
-        resp = self.query("?L")
+        resp = self.query("?l")
         return int(resp) == 1
 
     def on(self, blocking=True):
@@ -277,7 +277,7 @@ class CoherentLaser():
         blocking: bool, default: True
             Whether or not to block execution until the laser is in the desired state.
         """
-        cmd = "L=1" if state else "L=0"
+        cmd = "l=1" if state else "l=0"
         self.write(cmd)
         if blocking:
             while state ^ self.getState():
@@ -366,7 +366,7 @@ class CUBE(CoherentLaser):
         return resp.split('=')[-1]
 
     def getID(self):
-        resp = self.query("?HID")
+        resp = self.query("?hid")
         return "CUBE-" + resp.replace(' ', '-')
 
 
