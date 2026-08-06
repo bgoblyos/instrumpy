@@ -1422,7 +1422,7 @@ class SR850(SR8x0):
         length = np.minimum(length, self.getTraceLength(i) - start)
         if length <= 0:
             self.logger.error(f'Start of readout ({start}) must be less than the number of points in the trace ({self.getTraceLength(i)})')
-        return self.queryBinaryFloat(f'TRCB? {i},{start},{length}')
+        return self.queryASCIIFloat(f'TRCA? {i},{start},{length}')
 
     def multiRead(self, tr1 = None, tr2 = None, tr3 = None, tr4 = None, t = 1.0, srate = None, wait = False):
         """
@@ -1497,10 +1497,11 @@ class SR850(SR8x0):
             time.sleep(1)
 
         self.pauseTrace()
+        time.sleep(1)
 
         for i in range(4):
             if readTraces[i]:
-                print(f'Reading trace for {i+1}')
+                self.logger.debug(f'Reading trace for {i+1}')
                 data[i] = self.readTrace(i+1, 0, n)
 
         return data
