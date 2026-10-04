@@ -47,7 +47,8 @@ if "sphinx" in sys.modules:
 else:
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-class PM100():
+
+class PM100:
     """
     Driver class for ThorLabs PM100x power meter head units.
 
@@ -55,7 +56,14 @@ class PM100():
     polynomial wavelength-dependent attenuation calibration. Provides explicit
     getters and property accessors for core SCPI functionality.
     """
-    def __init__(self, rm, address, attName=None, attConfig=(PROJECT_ROOT / "Config" / "PM100.json")):
+
+    def __init__(
+        self,
+        rm,
+        address,
+        attName=None,
+        attConfig=(PROJECT_ROOT / "Config" / "PM100.json"),
+    ):
         """
         Initializes the power meter connection and loads optional calibration data.
 
@@ -73,7 +81,7 @@ class PM100():
             for external attenuation/gain adjustments.
         """
         # Set up logger
-        self.logger = logging.getLogger('instrumpy.PM100')
+        self.logger = logging.getLogger("instrumpy.PM100")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -81,7 +89,7 @@ class PM100():
         self.device = rm.open_resource(address)
         self.device.read_termination = "\n"
 
-        self.setUnits('W')
+        self.setUnits("W")
 
         self.poly = None
         self.lower = 0
@@ -93,7 +101,7 @@ class PM100():
 
                 coeffs = []
                 for i in range(10):
-                    k = f'c{i}'
+                    k = f"c{i}"
                     if k in d:
                         coeffs.append(d[k])
 
@@ -166,10 +174,14 @@ class PM100():
         """
         if self.poly is not None:
             if self.lower != 0 and val < self.lower:
-                self.logger.warning(f"The set wavelength ({val} nm) is below the calibrated minimum ({self.lower} nm). Attenuation calculations may be erroneous.")
+                self.logger.warning(
+                    f"The set wavelength ({val} nm) is below the calibrated minimum ({self.lower} nm). Attenuation calculations may be erroneous."
+                )
             if self.upper != 0 and val > self.upper:
-                self.logger.warning(f"The set wavelength ({val} nm) is above the calibrated maximum ({self.upper} nm). Attenuation calculations may be erroneous.")
-        
+                self.logger.warning(
+                    f"The set wavelength ({val} nm) is above the calibrated maximum ({self.upper} nm). Attenuation calculations may be erroneous."
+                )
+
         self.device.write(f"SENS:CORR:WAV {int(val)}")
 
     wavelength = property(fget=getWavelength, fset=setWavelength)
@@ -244,7 +256,9 @@ class PM100():
         """
         self.device.write(f"INP:THER:ACC:STAT {1 if state else 0}")
 
-    thermopileAccelerator = property(fget=getThermopileAccelerator, fset=setThermopileAccelerator)
+    thermopileAccelerator = property(
+        fget=getThermopileAccelerator, fset=setThermopileAccelerator
+    )
 
     def setUnits(self, target):
         """

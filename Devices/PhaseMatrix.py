@@ -18,7 +18,9 @@ Module for interfacing with the Phase Matrix 25B microwave frequency counter
 """
 Phase Matrix 25B frequency counter
 """
-class PM25B():
+
+
+class PM25B:
     def __init__(self, rm, addr):
         """
         Initializes the frequency counter.
@@ -31,12 +33,12 @@ class PM25B():
             The VISA resource address for the counter.
         """
         self.device = rm.open_resource(addr)
-        self.device.read_termination = '\r'
+        self.device.read_termination = "\r"
         self.device.write("PA")
         self.device.write("BR")
 
     def read(self):
         "Take a frequency and power reading and return them in Hz and dBm respectively"
         resp = self.device.read()
-        freq, power = [float(x.strip()) for x in resp.split(',')]
+        freq, power = [float(x.strip()) for x in resp.split(",")]
         return freq, power

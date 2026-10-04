@@ -50,11 +50,19 @@ if "sphinx" in sys.modules:
 else:
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-class SourceMeter2400():
+
+class SourceMeter2400:
     """
     Driver class for Keithley 2400 SourceMeter series devices.
     """
-    def __init__(self, rm, sn = None, addressOverride=None, config = (PROJECT_ROOT / "Config" / "SourceMeter.json")):
+
+    def __init__(
+        self,
+        rm,
+        sn=None,
+        addressOverride=None,
+        config=(PROJECT_ROOT / "Config" / "SourceMeter.json"),
+    ):
         """
         Parameters
         ----------
@@ -69,7 +77,7 @@ class SourceMeter2400():
         config: pathlib.Path, default: "Config/SourceMeter.json"
             Config file path.
         """
-        self.logger = logging.getLogger('instrumpy.SourceMeter2400')
+        self.logger = logging.getLogger("instrumpy.SourceMeter2400")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -81,10 +89,12 @@ class SourceMeter2400():
             self.addr = addressOverride
         elif sn is not None:
             # try USB
-            candidates = rm.list_resources(f'?*{sn}?*::INSTR')
+            candidates = rm.list_resources(f"?*{sn}?*::INSTR")
             if len(candidates) >= 1:
                 if len(candidates) > 1:
-                    self.logger.warning(f'Multiple instruments found ({candidates}), picking first option.')
+                    self.logger.warning(
+                        f"Multiple instruments found ({candidates}), picking first option."
+                    )
 
                 self.addr = candidates[0]
             elif config is not None:
@@ -92,26 +102,32 @@ class SourceMeter2400():
                 try:
                     with open(config, "r") as file:
                         d = json.load(file)
-                        hostname = d.get('devices', {}).get(sn, {}).get('hostname', None)
+                        hostname = (
+                            d.get("devices", {}).get(sn, {}).get("hostname", None)
+                        )
                         if hostname is not None:
-                            self.addr = f'TCPIP::{hostname}::INSTR'
+                            self.addr = f"TCPIP::{hostname}::INSTR"
                         else:
-                            self.logger.warning(f'Key devices.{sn}.hostname is not present in the config.')
+                            self.logger.warning(
+                                f"Key devices.{sn}.hostname is not present in the config."
+                            )
                             self.addr = None
                 except Exception as e:
                     self.logger.warning(f"Configuration could not be loaded: {e}")
                     self.addr = None
         else:
-            self.logger.warning(f'Either sn or addressOverride needs to be set.')
+            self.logger.warning(f"Either sn or addressOverride needs to be set.")
             self.addr = None
 
         if self.addr is not None:
             self.device = rm.open_resource(self.addr)
         else:
             self.device = None
-            self.logger.error(f'No valid address could be found, device will not be opened.')
+            self.logger.error(
+                f"No valid address could be found, device will not be opened."
+            )
 
-        self.device.read_termination = '\n'
+        self.device.read_termination = "\n"
 
     def beep(self, f, t):
         """
@@ -127,7 +143,7 @@ class SourceMeter2400():
         """
         start = time.time()
         if f > 0:
-            self.device.write(f'SYST:BEEP {f}, {t}')
+            self.device.write(f"SYST:BEEP {f}, {t}")
 
         # wait however long it takes to play the note
         while (time.time() - start) < t:
@@ -144,28 +160,29 @@ class SourceMeter2400():
             Name of chime in the config file.
         """
         if self.config is None:
-            self.logger.warning('Config file is not defined, cannot find predefined chimes')
+            self.logger.warning(
+                "Config file is not defined, cannot find predefined chimes"
+            )
             return
 
         chime = []
         try:
             with open(self.config, "r") as file:
                 d = json.load(file)
-                chime = d.get('chimes', {}).get(name, [])
+                chime = d.get("chimes", {}).get(name, [])
 
         except Exception as e:
-                    self.logger.warning(f"Configuration could not be loaded: {e}")
-                    return
+            self.logger.warning(f"Configuration could not be loaded: {e}")
+            return
 
         if len(chime) == 0:
-            self.logger.warning(f"Chime could not be loaded, check that the chimes.{name} key exists.")
+            self.logger.warning(
+                f"Chime could not be loaded, check that the chimes.{name} key exists."
+            )
             return
 
         for note in chime:
-            self.beep(
-                note.get('f', 0),
-                note.get('t', 0)
-            )
+            self.beep(note.get("f", 0), note.get("t", 0))
 
     # Output toggle
     def getOutput(self):
@@ -178,7 +195,7 @@ class SourceMeter2400():
             If True, the outputs are enabled.
             If False, the outputs are disabled.
         """
-        resp = self.device.query('OUTP:STAT?')
+        resp = self.device.query("OUTP:STAT?")
         return int(resp) == 1
 
     def setOutput(self, output):
@@ -191,7 +208,7 @@ class SourceMeter2400():
             If True, the outputs are enabled.
             If False, the outputs are disabled.
         """
-        cmd = f'OUTP:STAT {'1' if output else '0'}'
+        cmd = f"OUTP:STAT {'1' if output else '0'}"
         self.device.write(cmd)
 
     #: bool: Gets or sets whther the output is active.
@@ -220,10 +237,10 @@ class SourceMeter2400():
             If True, the front panel ports are active.
             If False, the back panel ports are active.
         """
-        resp = self.device.query('ROUT:TERM?')
-        return resp == 'FRON'
+        resp = self.device.query("ROUT:TERM?")
+        return resp == "FRON"
 
-    def setFront(front = True):
+    def setFront(front=True):
         """
         Set the front panel ports as active.
 
@@ -233,14 +250,14 @@ class SourceMeter2400():
             If True, the front panel ports are active.
             If False, the back panel ports are active.
         """
-        cmd = f'ROUT:TERM {'FRON' if front else 'REAR'}'
+        cmd = f"ROUT:TERM {'FRON' if front else 'REAR'}"
         self.device.write(cmd)
 
     #: bool: Gets or sets the active status of the front panel ports. True corresponds to the front, while False means back panel.
     front = property(fget=getFront, fset=setFront)
 
     # CV and CC modes
-    def setCV(self, V, I_lim = None):
+    def setCV(self, V, I_lim=None):
         """
         Set the device to constant voltage mode.
 
@@ -251,12 +268,12 @@ class SourceMeter2400():
         I_lim: float, optional
             Current limit in amperes.
         """
-        self.device.write('SOUR:FUNC VOLT')
-        self.device.write(f'SOUR:VOLT {V}')
+        self.device.write("SOUR:FUNC VOLT")
+        self.device.write(f"SOUR:VOLT {V}")
         if I_lim is not None:
-            self.device.write(f'SOUR:VOLT:ILIM {I_lim}')
+            self.device.write(f"SOUR:VOLT:ILIM {I_lim}")
 
-    def setCC(self, I, V_lim = None):
+    def setCC(self, I, V_lim=None):
         """
         Set the device to constant current mode.
 
@@ -267,25 +284,25 @@ class SourceMeter2400():
         V_lim: float, optional
             Voltage limit in volts.
         """
-        self.device.write('SOUR:FUNC CURR')
-        self.device.write(f'SOUR:CURR {I}')
+        self.device.write("SOUR:FUNC CURR")
+        self.device.write(f"SOUR:CURR {I}")
         if V_lim is not None:
-            self.device.write(f'SOUR:CURR:VLIM {V_lim}')
+            self.device.write(f"SOUR:CURR:VLIM {V_lim}")
 
     def getV(self):
-        return float(self.device.query('MEAS:VOLT?'))
+        return float(self.device.query("MEAS:VOLT?"))
 
     #: float: Measure voltage in volts on the force or sense pins depending on mode.
     V = property(fget=getV)
 
     def getI(self):
-        return float(self.device.query('MEAS:CURR?'))
+        return float(self.device.query("MEAS:CURR?"))
 
     #: float: Measure current in amperes on the force or sense pins depending on mode.
     I = property(fget=getI)
 
     def getR(self):
-        return float(self.device.query('MEAS:RES?'))
+        return float(self.device.query("MEAS:RES?"))
 
     #: float: Measure resistance in Ohms in 2 or 4-point configuration depending on mode.
     R = property(fget=getR)

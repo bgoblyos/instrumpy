@@ -1,9 +1,9 @@
-class HP83752A():
+class HP83752A:
     def __init__(self, rm, address):
         self.device = rm.open_resource(address)
-        self.freqRange = (0.01,20)
-        self.powerRange = (-80,20)
-        self.timeRange = (0,100)
+        self.freqRange = (0.01, 20)
+        self.powerRange = (-80, 20)
+        self.timeRange = (0, 100)
 
     def setupSweep(self, min, max, time):
         self.device.write("FREQ:MODE SWE")
@@ -12,8 +12,8 @@ class HP83752A():
         self.device.write(f"SWE:TIME {time} s")
 
     def readSweepParams(self):
-        start = float(self.device.query("FREQ:STAR?"))/1e9
-        end = float(self.device.query("FREQ:STOP?"))/1e9
+        start = float(self.device.query("FREQ:STAR?")) / 1e9
+        end = float(self.device.query("FREQ:STOP?")) / 1e9
         time = float(self.device.query("SWE:TIME?"))
         return (start, end, time)
 
@@ -22,7 +22,7 @@ class HP83752A():
 
     def resetMarkers(self):
         self.device.write("MARK:AOFF")
-    
+
     def setMarker(self, markNum, freq):
         self.device.write(f"MARK{markNum}:STATE ON; FREQ {freq} GHz")
 
@@ -49,15 +49,16 @@ class HP83752A():
 
     def stopSweep(self):
         self.device.write("ABORT")
-        
+
     def getCW(self):
         resp = self.device.query("FREQ:CW?")
         return float(resp)
-    
+
     def setCW(self, freq_GHz):
         resp = self.device.write(f"FREQ:CW {freq_GHz} GHz")
         return float(resp)
 
     model = "HP83752A"
+
 
 # TODO: implement the other models we have as well with inheritance

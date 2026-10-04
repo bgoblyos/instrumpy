@@ -12,10 +12,11 @@
 # this program. If not, see https://www.gnu.org/licenses/.
 
 
-class Dummy():
+class Dummy:
     """
     Dummy device class for debugging.
     Simulated features are implemented as they are needed.
     """
+
     def write(self, string):
         print("[Dummy] Write received: " + string)

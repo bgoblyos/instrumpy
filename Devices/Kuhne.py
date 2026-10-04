@@ -13,19 +13,20 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see https://www.gnu.org/licenses/.
 """
 
-import serial      # Serial communication
-import time        # Timeout handling
-import numpy as np # Math
+import serial  # Serial communication
+import time  # Timeout handling
+import numpy as np  # Math
 import logging
 
 # TODO: split into two parts. The legacy should use serial, while the new one should be reimplemented with pyvisa for graceful failures.
 
 
-class MKULO813PLL():
+class MKULO813PLL:
     """
     Kuhne MKU LO 8-13 PLL driver class. Supports both v1 and v2 firmware.
     """
-    def __init__(self, port, timeout = 1.0, legacy = False):
+
+    def __init__(self, port, timeout=1.0, legacy=False):
         """
         Parameters
         ----------
@@ -38,32 +39,32 @@ class MKULO813PLL():
             If False, uses the more modern command set and syntax the v2.x firmware.
         """
         # Set up logger
-        self.logger = logging.getLogger('instrumpy.KuhnePLL')
+        self.logger = logging.getLogger("instrumpy.KuhnePLL")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
-        
+
         self.device = None
         self.port = port
         self.connect_timeout = timeout
         self.legacy = legacy
         self._connect()
-        
+
     def __del__(self):
         self.device.close()
-        
+
     def _connect(self):
         """
         Open connection on the serial port.
         """
         try:
             self.device = serial.Serial(
-                port = self.port,
-                baudrate = 115200,
-                bytesize = serial.EIGHTBITS,
-                parity = serial.PARITY_NONE,
-                stopbits = serial.STOPBITS_ONE,
-                timeout = self.connect_timeout,
+                port=self.port,
+                baudrate=115200,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                timeout=self.connect_timeout,
             )
             return True
         except serial.SerialException as err:
@@ -71,7 +72,7 @@ class MKULO813PLL():
             self.device = None
             return False
 
-    def sendCommand(self, cmd, timeout = 1.0, capture_output = True):
+    def sendCommand(self, cmd, timeout=1.0, capture_output=True):
         """
         Sends a command to the device.
 
@@ -102,13 +103,15 @@ class MKULO813PLL():
                 return nchar, resp
 
             else:
-                return nchar, None 
+                return nchar, None
 
         except serial.SerialException as err:
-            self.logger.error(f"Sending command to oscillator failed with reason: {err}")
+            self.logger.error(
+                f"Sending command to oscillator failed with reason: {err}"
+            )
             return -1, err
 
-    def setHz(self, val, retries = 3):
+    def setHz(self, val, retries=3):
         """
         Sets the oscillator frequency in Hz.
 
@@ -129,36 +132,37 @@ class MKULO813PLL():
             return False
 
         hz = str(round((np.floor(val) % 1000))).zfill(3)
-        khz = str(round(np.floor(val*1e-3) % 1000)).zfill(3)
-        mhz = str(round(np.floor(val*1e-6) % 1000)).zfill(3)
-        ghz = str(round(np.floor(val*1e-9) % 1000)).zfill(3)
+        khz = str(round(np.floor(val * 1e-3) % 1000)).zfill(3)
+        mhz = str(round(np.floor(val * 1e-6) % 1000)).zfill(3)
+        ghz = str(round(np.floor(val * 1e-9) % 1000)).zfill(3)
 
-        
-        for (freq, prefix) in zip([ghz, mhz, khz, hz], ["G", "M", "k", "H"]):
+        for freq, prefix in zip([ghz, mhz, khz, hz], ["G", "M", "k", "H"]):
             if self.legacy:
                 cmd = f"{freq}{prefix}F1"
             else:
                 cmd = f"{prefix}FR{freq}\r\n"
-            
+
             # Attempt transmission multiple times
             successful = True
             for attempt in range(retries + 1):
                 if attempt != 0:
-                    self.logger.warning(f"Sending command failed, retrying (attempt {attempt}/{retries}).")
-                
-                nchar, resp = self.sendCommand(cmd, timeout = 0.015, capture_output = True)
+                    self.logger.warning(
+                        f"Sending command failed, retrying (attempt {attempt}/{retries})."
+                    )
+
+                nchar, resp = self.sendCommand(cmd, timeout=0.015, capture_output=True)
                 if nchar != -1 and resp == "A":
                     successful = True
                     break
                 else:
                     successful = False
-            
+
             if not successful:
                 self.logger.error("Could not send command to device.")
                 return False
 
         return True
-    
+
     def setkHz(self, val, **kwargs):
         """
         Sets the oscillator frequency in kHz.
@@ -175,8 +179,8 @@ class MKULO813PLL():
         success: bool
             True if successful, False otherwise.
         """
-        return self.setHz(val*1e3, **kwargs)
-    
+        return self.setHz(val * 1e3, **kwargs)
+
     def setMHz(self, val, **kwargs):
         """
         Sets the oscillator frequency in MHz.
@@ -193,8 +197,8 @@ class MKULO813PLL():
         success: bool
             True if successful, False otherwise.
         """
-        return self.setHz(val*1e6, **kwargs)
-    
+        return self.setHz(val * 1e6, **kwargs)
+
     def setGHz(self, val, **kwargs):
         """
         Sets the oscillator frequency in GHz.
@@ -211,4 +215,4 @@ class MKULO813PLL():
         success: bool
             True if successful, False otherwise.
         """
-        return self.setHz(val*1e9, **kwargs)
+        return self.setHz(val * 1e9, **kwargs)

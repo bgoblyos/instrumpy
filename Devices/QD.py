@@ -46,18 +46,19 @@ from IPython.utils.io import capture_output
 
 from Utilities.SetupLogging import fixLogger
 
-_mu0 = 1.25663706127e-6 # in N/A^2
+_mu0 = 1.25663706127e-6  # in N/A^2
 
 _oeConversion = {
-    'oe': 1.0,
-    'oersted': 1.0,
-    'apm': 1000 / (4*np.pi),
-    'a/m': 1000 / (4*np.pi),
-    't': _mu0 * 1000 / (4*np.pi),
-    'tesla': _mu0 * 1000 / (4*np.pi),
+    "oe": 1.0,
+    "oersted": 1.0,
+    "apm": 1000 / (4 * np.pi),
+    "a/m": 1000 / (4 * np.pi),
+    "t": _mu0 * 1000 / (4 * np.pi),
+    "tesla": _mu0 * 1000 / (4 * np.pi),
 }
 
-class PPMS():
+
+class PPMS:
     """
     Driver class for Quantum Design PPMS systems.
 
@@ -78,7 +79,7 @@ class PPMS():
         """
 
         # Set up logger
-        self.logger = logging.getLogger('instrumpy.PPMS')
+        self.logger = logging.getLogger("instrumpy.PPMS")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -97,7 +98,7 @@ class PPMS():
             Unit in which the value is specified. One of "Oe", "A/m" or "T".
         targetUnit: str
             Unit to which the value should be converted. One of "Oe", "A/m" or "T".
-        
+
         Returns
         -------
         converted: float
@@ -107,15 +108,21 @@ class PPMS():
         targetUnit = targetUnit.lower()
 
         if startingUnit not in _oeConversion:
-            self.logger.error(f'Starting unit \"{startingUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
-        
-        if targetUnit not in _oeConversion:
-            self.logger.error(f'Target unit \"{targetUnit}\" is not recognized, result may be NaN. Please use \"Oe\", \"A/m\" or \"T\"')
+            self.logger.error(
+                f'Starting unit "{startingUnit}" is not recognized, result may be NaN. Please use "Oe", "A/m" or "T"'
+            )
 
-        factor = _oeConversion.get(targetUnit, float('nan')) / _oeConversion.get(startingUnit, float('nan'))
+        if targetUnit not in _oeConversion:
+            self.logger.error(
+                f'Target unit "{targetUnit}" is not recognized, result may be NaN. Please use "Oe", "A/m" or "T"'
+            )
+
+        factor = _oeConversion.get(targetUnit, float("nan")) / _oeConversion.get(
+            startingUnit, float("nan")
+        )
         return value * factor
 
-    def setTemperature(self, setpoint : float, rate = 2.0, fast = False):
+    def setTemperature(self, setpoint: float, rate=2.0, fast=False):
         """
         Sets the temperature of the cryostat.
 
@@ -128,7 +135,11 @@ class PPMS():
         fast: bool, default: False
             Whether to enable fast settle mode. If false, the no overshoot approach mode will be used.
         """
-        mode = MultiPyVu.Client.temperature.approach_mode.fast_settle if fast else MultiPyVu.Client.temperature.approach_mode.no_overshoot
+        mode = (
+            MultiPyVu.Client.temperature.approach_mode.fast_settle
+            if fast
+            else MultiPyVu.Client.temperature.approach_mode.no_overshoot
+        )
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 client.set_temperature(setpoint, rate, mode)
@@ -149,7 +160,7 @@ class PPMS():
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 temp, status = client.get_temperature()
-        
+
         fixLogger()
         return temp, status
 
@@ -175,7 +186,7 @@ class PPMS():
         fast = approach == MultiPyVu.Client.temperature.approach_mode.fast_settle
         return temp, rate, fast
 
-    def setField(self, setpoint, rate, mode = "linear", driven = False, unit = 'T'):
+    def setField(self, setpoint, rate, mode="linear", driven=False, unit="T"):
         """
         Sets magnetic field inside the PPMS.
 
@@ -194,20 +205,26 @@ class PPMS():
         """
         approachMode = getattr(MultiPyVu.Client.field.approach_mode, mode, None)
         if approachMode is None:
-            self.logger.error(f"The entered mode \"{mode}\" is not valid. Please use one of: \"linear\", \"no_overshoot\" or \"oscillate\"")
+            self.logger.error(
+                f'The entered mode "{mode}" is not valid. Please use one of: "linear", "no_overshoot" or "oscillate"'
+            )
             return
 
-        driveMode = MultiPyVu.Client.field.driven_mode.driven if driven else MultiPyVu.Client.field.driven_mode.persistent
-        setpoint = self.convertMagUnits(setpoint, startingUnit=unit, targetUnit='Oe')
-        rate = self.convertMagUnits(rate, startingUnit=unit, targetUnit='Oe')
-                    
+        driveMode = (
+            MultiPyVu.Client.field.driven_mode.driven
+            if driven
+            else MultiPyVu.Client.field.driven_mode.persistent
+        )
+        setpoint = self.convertMagUnits(setpoint, startingUnit=unit, targetUnit="Oe")
+        rate = self.convertMagUnits(rate, startingUnit=unit, targetUnit="Oe")
+
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 client.set_field(setpoint, rate, approachMode, driveMode)
 
         fixLogger()
 
-    def getField(self, unit = 'T'):
+    def getField(self, unit="T"):
         """
         Reads back the magnetic field from the PPMS.
 
@@ -228,10 +245,10 @@ class PPMS():
                 field, status = client.get_field()
 
         fixLogger()
-        field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
+        field = self.convertMagUnits(field, startingUnit="Oe", targetUnit=unit)
         return field, status
 
-    def getFieldSetpoint(self, unit = 'T'):
+    def getFieldSetpoint(self, unit="T"):
         """
         Reads back magnetic field setpoint from PPMS.
 
@@ -256,10 +273,10 @@ class PPMS():
                 field, rate, approach, driven = client.get_field_setpoints()
 
         fixLogger()
-        field = self.convertMagUnits(field, startingUnit='Oe', targetUnit=unit)
-        rate = self.convertMagUnits(rate, startingUnit='Oe', targetUnit=unit)
+        field = self.convertMagUnits(field, startingUnit="Oe", targetUnit=unit)
+        rate = self.convertMagUnits(rate, startingUnit="Oe", targetUnit=unit)
         driven = driven == "driven"
-        
+
         return field, rate, approach, driven
 
     def setChamber(self, state):
@@ -273,7 +290,9 @@ class PPMS():
         """
         mode = getattr(MultiPyVu.Client.chamber.mode, state, None)
         if mode is None:
-            self.logger.error(f"The entered state \"{mode}\" is not valid. Please use one of: \"seal\", \"purge_seal\", \"vent_seal\", \"pump_continuous\", \"vent_continous\" or \"high_vacuum\"")
+            self.logger.error(
+                f'The entered state "{mode}" is not valid. Please use one of: "seal", "purge_seal", "vent_seal", "pump_continuous", "vent_continous" or "high_vacuum"'
+            )
             return
 
         with capture_output():
@@ -299,7 +318,7 @@ class PPMS():
         fixLogger()
         return resp
 
-    def waitFor(self, timeout = 120, delay = 0, temp = False, field = False, chamber = False):
+    def waitFor(self, timeout=120, delay=0, temp=False, field=False, chamber=False):
         """
         Wait for setpoints to be reached.
 
@@ -323,7 +342,9 @@ class PPMS():
         """
 
         if not (temp or field or chamber):
-            self.logger.warning("At least one of temp, field or chamber must be enabled.")
+            self.logger.warning(
+                "At least one of temp, field or chamber must be enabled."
+            )
             return False
 
         tempWait = MultiPyVu.Client.temperature.waitfor if temp else 0
@@ -335,9 +356,9 @@ class PPMS():
                 client.wait_for(delay, timeout, tempWait | fieldWait | chamberWait)
 
         fixLogger()
-        return self.isSteady(temp = temp, field = field, chamber = chamber)
+        return self.isSteady(temp=temp, field=field, chamber=chamber)
 
-    def isSteady(self, temp = False, field = False, chamber = False):
+    def isSteady(self, temp=False, field=False, chamber=False):
         """
         Check whether the setpoits have been reached.
 
@@ -355,9 +376,11 @@ class PPMS():
         result: bool
             Whether or not the system is in a steady state.
         """
-        
+
         if not (temp or field or chamber):
-            self.logger.warning("At least one of temp, field or chamber must be enabled.")
+            self.logger.warning(
+                "At least one of temp, field or chamber must be enabled."
+            )
             return False
 
         tempWait = MultiPyVu.Client.temperature.waitfor if temp else 0
@@ -369,13 +392,15 @@ class PPMS():
                 res = client.is_steady(tempWait | fieldWait | chamberWait)
 
         fixLogger()
-        
+
         if res is not None:
             return res
         else:
             return False
 
-    def setupBridge(self, bridge, channelOn, currentLimit, powerLimit, voltageLimit, delay = 5.0):
+    def setupBridge(
+        self, bridge, channelOn, currentLimit, powerLimit, voltageLimit, delay=5.0
+    ):
         """
         Set up bridge for resistivity measurement
 
@@ -398,11 +423,11 @@ class PPMS():
         with capture_output():
             with MultiPyVu.Client(host=self.addr) as client:
                 client.resistivity.bridge_setup(
-                    bridge_number = bridge,
-                    channel_on = channelOn,
-                    current_limit_uA = currentLimit,
-                    power_limit_uW = powerLimit,
-                    voltage_limit_mV = voltageLimit
+                    bridge_number=bridge,
+                    channel_on=channelOn,
+                    current_limit_uA=currentLimit,
+                    power_limit_uW=powerLimit,
+                    voltage_limit_mV=voltageLimit,
                 )
 
         fixLogger()
@@ -425,7 +450,7 @@ class PPMS():
 
         fixLogger()
 
-    def getResistance(self, bridge : int):
+    def getResistance(self, bridge: int):
         """
         Measure resistance with the given bridge.
 
@@ -448,7 +473,7 @@ class PPMS():
         fixLogger()
         return res
 
-    def getCurrent(self, bridge : int):
+    def getCurrent(self, bridge: int):
         """
         Measure current on the given bridge.
 
@@ -471,7 +496,7 @@ class PPMS():
         fixLogger()
         return res
 
-    def setRotatorPosition(self, position : float, rate = 100.0):
+    def setRotatorPosition(self, position: float, rate=100.0):
         """
         Set the horizontal rotator's position.
 

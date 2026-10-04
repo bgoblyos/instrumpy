@@ -54,12 +54,20 @@ if "sphinx" in sys.modules:
 else:
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-class CoherentLaser():
+
+class CoherentLaser:
     """
     Parent driver class for Coherent lasers.
     Handles the common API commands and limits.
     """
-    def __init__(self, rm, address, config=(PROJECT_ROOT / "Config" / "Coherent.json"), maxOverride=None):
+
+    def __init__(
+        self,
+        rm,
+        address,
+        config=(PROJECT_ROOT / "Config" / "Coherent.json"),
+        maxOverride=None,
+    ):
         """
         Parameters
         ----------
@@ -73,7 +81,7 @@ class CoherentLaser():
             A hard override for the maximum allowed power in mW. Overrides the config file.
         """
         # Set up logger
-        self.logger = logging.getLogger(f'instrumpy.{self.__class__.__name__}')
+        self.logger = logging.getLogger(f"instrumpy.{self.__class__.__name__}")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -106,9 +114,13 @@ class CoherentLaser():
                 if entry is not None and "limit" in entry:
                     self.userLimit = entry["limit"]
                 else:
-                    self.logger.warning("Config entry does not contain a limit key or entry is missing. User limits are disabled.")
+                    self.logger.warning(
+                        "Config entry does not contain a limit key or entry is missing. User limits are disabled."
+                    )
             except Exception:
-                self.logger.warning("Could not open config file. User limits are disabled.")
+                self.logger.warning(
+                    "Could not open config file. User limits are disabled."
+                )
 
     def write(self, cmd):
         """
@@ -311,7 +323,7 @@ class CoherentLaser():
 
     #: bool: Sets whether or not the given type of laser accepts power settings under its nominal rating.
     allowUnderpower = True
-    
+
     def setPower(self, target):
         """
         Set the power target for the laser.
@@ -329,15 +341,21 @@ class CoherentLaser():
             if self.allowUnderpower:
                 self.logger.info(f"Power below minimum level. Laser might not start.")
             else:
-                self.logger.warning(f"Power below minimum level. It has been increased to {self.minPower} mW.")
+                self.logger.warning(
+                    f"Power below minimum level. It has been increased to {self.minPower} mW."
+                )
                 target = self.minPower
 
         if target > self.maxPower:
-            self.logger.warning(f"Power exceeds maximum rating. It has been reduced to {self.maxPower} mW.")
+            self.logger.warning(
+                f"Power exceeds maximum rating. It has been reduced to {self.maxPower} mW."
+            )
             target = self.maxPower
 
         if (self.userLimit is not None) and (target > self.userLimit):
-            self.logger.warning(f"Power exceeds user limit. It has been reduced to {self.userLimit} mW.")
+            self.logger.warning(
+                f"Power exceeds user limit. It has been reduced to {self.userLimit} mW."
+            )
             target = self.userLimit
 
         cmd = "P=" + "{:.3f}".format(target)
@@ -355,7 +373,7 @@ class CUBE(CoherentLaser):
     """
 
     allowUnderpower = True
-    
+
     def write(self, cmd):
         # Maintain original logic: CUBE returns a prompt (\r\n) after write
         # commands, which pyvisa's query() handles by reading and discarding.
@@ -363,11 +381,11 @@ class CUBE(CoherentLaser):
 
     def query(self, cmd):
         resp = self.device.query(cmd)
-        return resp.split('=')[-1]
+        return resp.split("=")[-1]
 
     def getID(self):
         resp = self.query("?hid")
-        return "CUBE-" + resp.replace(' ', '-')
+        return "CUBE-" + resp.replace(" ", "-")
 
 
 class SapphireLP(CoherentLaser):
@@ -379,8 +397,8 @@ class SapphireLP(CoherentLaser):
     """
 
     allowUnderpower = False
-    
-    def write(self, cmd, retries = 3):
+
+    def write(self, cmd, retries=3):
         """
         Send a string to the device.
 
@@ -400,12 +418,14 @@ class SapphireLP(CoherentLaser):
                 return
             except pyvisa.VisaIOError as err:
                 if err.error_code == -1073807253:
-                    self.logger.warning(f"Serial communication issue encountered during write, retrying (attempt {i+1}/{retries}).")
+                    self.logger.warning(
+                        f"Serial communication issue encountered during write, retrying (attempt {i + 1}/{retries})."
+                    )
                     self.flushBuffer()
                 else:
                     raise err
 
-    def query(self, cmd, retries = 3):
+    def query(self, cmd, retries=3):
         """
         Send a string to the device and get the response.
 
@@ -428,11 +448,12 @@ class SapphireLP(CoherentLaser):
                 return self.device.read()
             except pyvisa.VisaIOError as err:
                 if err.error_code == -1073807253:
-                    self.logger.warning(f"Serial communication issue encountered during query, retrying (attempt {i+1}/{retries+1}).")
+                    self.logger.warning(
+                        f"Serial communication issue encountered during query, retrying (attempt {i + 1}/{retries + 1})."
+                    )
                     self.flushBuffer()
                 else:
                     raise err
-        
 
     def flushBuffer(self):
         while self.device.bytes_in_buffer > 0:
@@ -440,10 +461,11 @@ class SapphireLP(CoherentLaser):
                 self.device.read()
             except pyvisa.VisaIOError as err:
                 if err.error_code == -1073807253:
-                    self.logger.warning("Serial communication issue encountered while flushing buffer, retrying.")
+                    self.logger.warning(
+                        "Serial communication issue encountered while flushing buffer, retrying."
+                    )
                 else:
                     raise err
-                
 
     def getID(self):
         resp = self.query("?HID")

@@ -56,6 +56,7 @@ import pandas as pd
 from Libraries.ARIS.libusb_interface import LibusbInterface
 from Libraries.ARIS.ziolink_protocol import ZioLinkProtocol
 
+
 def _enum(**enums):
     """
     Creates a simple enumeration type from keyword arguments.
@@ -70,7 +71,7 @@ def _enum(**enums):
     Enum: type
         A new class acting as an enumeration.
     """
-    return type('Enum', (), enums)
+    return type("Enum", (), enums)
 
 
 # Values of Spectrometer Status
@@ -81,8 +82,9 @@ _SpectrStatus = _enum(
     WaitingForTemperature=0x03,
     PoweredOff=0x08,
     SleepMode=0x09,
-    NotConnected=0x0A
+    NotConnected=0x0A,
 )
+
 
 def _find_address(**kwargs):
     """
@@ -100,19 +102,23 @@ def _find_address(**kwargs):
     """
     # Find all interfaces
     devices = LibusbInterface.find_interfaces(**kwargs)
-    devices = [d for d in devices if d.idVendor == 0x354F and 0x0100 <= d.idProduct <= 0x01FF]
+    devices = [
+        d for d in devices if d.idVendor == 0x354F and 0x0100 <= d.idProduct <= 0x01FF
+    ]
 
     if len(devices) > 0:
         return devices[0]
     else:
         return None
 
-class ARIS():
+
+class ARIS:
     """
     Driver class for Avenir ARIS compact spectrometers.
 
     Manages USB connection, device configuration, and spectrum capture.
     """
+
     def __init__(self, **kwargs):
         """
         Parameters
@@ -123,7 +129,7 @@ class ARIS():
             and product ID of the manually defined USB device.
         """
         # Set up logger
-        self.logger = logging.getLogger('instrumpy.ARIS')
+        self.logger = logging.getLogger("instrumpy.ARIS")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -139,34 +145,54 @@ class ARIS():
             return None
 
         self.ziolink.open()
-        self.ziolink.send_receive_message(0x0000) # Send reset command
+        self.ziolink.send_receive_message(0x0000)  # Send reset command
 
         # Gather basic system data
-        model_name_bytes = self.ziolink.send_receive_message(0x2003)  # 0x2003 = Get Device Property: ModelName
+        model_name_bytes = self.ziolink.send_receive_message(
+            0x2003
+        )  # 0x2003 = Get Device Property: ModelName
         if model_name_bytes[-1] == 0:
             model_name_bytes = model_name_bytes[:-1]  # strip trailing null terminator
         self.model = str(model_name_bytes, "utf-8")
 
-        serial_number_bytes = self.ziolink.send_receive_message(0x2001)  # 0x2001 = Get Device Property: SerialNumber
+        serial_number_bytes = self.ziolink.send_receive_message(
+            0x2001
+        )  # 0x2001 = Get Device Property: SerialNumber
         if serial_number_bytes[-1] == 0:
-            serial_number_bytes = serial_number_bytes[:-1]  # strip trailing null terminator
+            serial_number_bytes = serial_number_bytes[
+                :-1
+            ]  # strip trailing null terminator
         self.serial = str(serial_number_bytes, "utf-8")
 
-        pixel_count_bytes = self.ziolink.send_receive_message(0x2007)  # 0x2007 = Get Device Property: PixelCount
-        pixel_count = int.from_bytes(pixel_count_bytes, 'little')
-        self.pixels = int.from_bytes(pixel_count_bytes, 'little')
+        pixel_count_bytes = self.ziolink.send_receive_message(
+            0x2007
+        )  # 0x2007 = Get Device Property: PixelCount
+        pixel_count = int.from_bytes(pixel_count_bytes, "little")
+        self.pixels = int.from_bytes(pixel_count_bytes, "little")
 
-        self.logger.info(f"Model: {self.model}, Serial: {self.serial}, CCD size: {self.pixels}")
+        self.logger.info(
+            f"Model: {self.model}, Serial: {self.serial}, CCD size: {self.pixels}"
+        )
 
         # Get wavelength calibration
-        c = [0]*4
+        c = [0] * 4
         for i in range(0, 4):
-            wavelengths_bytes = self.ziolink.send_receive_message(0x201C + i)  # 0x201C = Get Device Property: WavelengthCoeff0
-            c[i] = struct.unpack('<f', wavelengths_bytes[0:4])[0]
+            wavelengths_bytes = self.ziolink.send_receive_message(
+                0x201C + i
+            )  # 0x201C = Get Device Property: WavelengthCoeff0
+            c[i] = struct.unpack("<f", wavelengths_bytes[0:4])[0]
 
-        self.wavelengths = [c[0] + c[1]*p + c[2]*(p**2) + c[3]*(p**3) for p in range(0, self.pixels)]
-        self.logger.info("Wavelength range: " + "{:.2f}".format(self.wavelengths[0]) + " to " +
-          "{:.2f}".format(self.wavelengths[-1]) + " nm")
+        self.wavelengths = [
+            c[0] + c[1] * p + c[2] * (p**2) + c[3] * (p**3)
+            for p in range(0, self.pixels)
+        ]
+        self.logger.info(
+            "Wavelength range: "
+            + "{:.2f}".format(self.wavelengths[0])
+            + " to "
+            + "{:.2f}".format(self.wavelengths[-1])
+            + " nm"
+        )
 
     def __del__(self):
         """
@@ -175,7 +201,7 @@ class ARIS():
         if self.ziolink is not None:
             self.ziolink.close()
 
-    def setExposure(self, exposure_us = 1000, average = 1):
+    def setExposure(self, exposure_us=1000, average=1):
         """
         Sets the exposure time and number of averages for spectral capture.
 
@@ -186,11 +212,17 @@ class ARIS():
         average: int, default: 1
             Number of spectra to average.
         """
-        self.ziolink.send_receive_message(0x1109, 0)                # 0x1109 = Set Parameter: AutoExposureEnabled
-        self.ziolink.send_receive_message(0x1100, int(exposure_us)) # 0x1100 = Set Parameter: ExposureTime (in microseconds)
-        self.ziolink.send_receive_message(0x1101, int(average))     # 0x1101 = Set Parameter: Averaging
+        self.ziolink.send_receive_message(
+            0x1109, 0
+        )  # 0x1109 = Set Parameter: AutoExposureEnabled
+        self.ziolink.send_receive_message(
+            0x1100, int(exposure_us)
+        )  # 0x1100 = Set Parameter: ExposureTime (in microseconds)
+        self.ziolink.send_receive_message(
+            0x1101, int(average)
+        )  # 0x1101 = Set Parameter: Averaging
 
-    def setAutoExposure(self, target_us = 200000):
+    def setAutoExposure(self, target_us=200000):
         """
         Enables automatic exposure and specifies target integration time.
 
@@ -199,8 +231,12 @@ class ARIS():
         exposure_us: int, default: 200000
             Target integration time in microseconds.
         """
-        self.ziolink.send_receive_message(0x1109, 1)              # 0x1109 = Set Parameter: AutoExposureEnabled
-        self.ziolink.send_receive_message(0x110A, int(target_us)) # 0x110A = Set Parameter: AutoExposureTime
+        self.ziolink.send_receive_message(
+            0x1109, 1
+        )  # 0x1109 = Set Parameter: AutoExposureEnabled
+        self.ziolink.send_receive_message(
+            0x110A, int(target_us)
+        )  # 0x110A = Set Parameter: AutoExposureTime
 
     def capture(self):
         """
@@ -213,16 +249,25 @@ class ARIS():
             exposure settings, device temperature, and other capture metadata.
             Returns None if the received data stream is invalid.
         """
-        self.ziolink.send_receive_message(0x0004, 1) # Start capture with a single spectrum
+        self.ziolink.send_receive_message(
+            0x0004, 1
+        )  # Start capture with a single spectrum
         # TODO: implement multiple spectrum capture
 
         # Wait for completion
         status = _SpectrStatus.TakingSpectrum
         available_spectra = 0
-        while status == _SpectrStatus.TakingSpectrum or status == _SpectrStatus.WaitingForTrigger:
-            st_bytes = self.ziolink.send_receive_message(0x3000)  # 0x3000 = Get Measured Value: Status
+        while (
+            status == _SpectrStatus.TakingSpectrum
+            or status == _SpectrStatus.WaitingForTrigger
+        ):
+            st_bytes = self.ziolink.send_receive_message(
+                0x3000
+            )  # 0x3000 = Get Measured Value: Status
             status = st_bytes[0]  # byte 0 of returned value
-            available_spectra = st_bytes[1] + 256 * st_bytes[2]  # //byte 1 and 2 of returned value
+            available_spectra = (
+                st_bytes[1] + 256 * st_bytes[2]
+            )  # //byte 1 and 2 of returned value
 
         rawdata = self.ziolink.send_receive_message(0x4000)
         if len(rawdata) != 64 + self.pixels * 4:
@@ -237,19 +282,24 @@ class ARIS():
         temperature_c = struct.unpack("<f", rawdata[20:24])[0]
         exposure_settings = struct.unpack("<H", rawdata[28:30])[0]
         applied_processing = struct.unpack("<H", rawdata[30:32])[0]
-        spectrum = [struct.unpack("<f", rawdata[p * 4 + 64:p * 4 + 68])[0] for p in range(self.pixels)]
+        spectrum = [
+            struct.unpack("<f", rawdata[p * 4 + 64 : p * 4 + 68])[0]
+            for p in range(self.pixels)
+        ]
         dark_avg = struct.unpack("<f", rawdata[56:60])[0]
         readout_noise = struct.unpack("<f", rawdata[60:64])[0]
 
         if load_level >= 0.95:
-            self.logger.warning(f'High spectrometer load ({"{:.2f}".format(100*load_level)}%)')
+            self.logger.warning(
+                f"High spectrometer load ({'{:.2f}'.format(100 * load_level)}%)"
+            )
 
         return {
             "wavelengths": self.wavelengths,
             "spectrum": spectrum,
             "exposure_us": exposure_us,
             "averaging": averaging,
-            "uptime_s": date_days * 24 * 3600 + time_ms/1000,
+            "uptime_s": date_days * 24 * 3600 + time_ms / 1000,
             "load_level": load_level,
             "temperature_c": temperature_c,
             "exposure_settings": exposure_settings,
