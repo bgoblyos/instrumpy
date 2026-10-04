@@ -122,13 +122,21 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+
 <div class="viewcode-block" id="SourceMeter2400">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SourceMeter2400</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SourceMeter2400</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Driver class for Keithley 2400 SourceMeter series devices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">sn</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">addressOverride</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;SourceMeter.json&quot;</span><span class="p">)):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rm</span><span class="p">,</span>
+        <span class="n">sn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">addressOverride</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;SourceMeter.json&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -143,7 +151,7 @@
 <span class="sd">        config: pathlib.Path, default: &quot;Config/SourceMeter.json&quot;</span>
 <span class="sd">            Config file path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.SourceMeter2400&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.SourceMeter2400&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
@@ -155,10 +163,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">addressOverride</span>
         <span class="k">elif</span> <span class="n">sn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># try USB</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">list_resources</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;?*</span><span class="si">{</span><span class="n">sn</span><span class="si">}</span><span class="s1">?*::INSTR&#39;</span><span class="p">)</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">list_resources</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;?*</span><span class="si">{</span><span class="n">sn</span><span class="si">}</span><span class="s2">?*::INSTR&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Multiple instruments found (</span><span class="si">{</span><span class="n">candidates</span><span class="si">}</span><span class="s1">), picking first option.&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Multiple instruments found (</span><span class="si">{</span><span class="n">candidates</span><span class="si">}</span><span class="s2">), picking first option.&quot;</span>
+                    <span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -166,26 +176,32 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                         <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-                        <span class="n">hostname</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;devices&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sn</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">hostname</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;devices&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sn</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hostname&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="p">)</span>
                         <span class="k">if</span> <span class="n">hostname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;TCPIP::</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">::INSTR&#39;</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;TCPIP::</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">::INSTR&quot;</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Key devices.</span><span class="si">{</span><span class="n">sn</span><span class="si">}</span><span class="s1">.hostname is not present in the config.&#39;</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Key devices.</span><span class="si">{</span><span class="n">sn</span><span class="si">}</span><span class="s2">.hostname is not present in the config.&quot;</span>
+                            <span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration could not be loaded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Either sn or addressOverride needs to be set.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Either sn or addressOverride needs to be set.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No valid address could be found, device will not be opened.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No valid address could be found, device will not be opened.&quot;</span>
+            <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="SourceMeter2400.beep">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.beep">[docs]</a>
@@ -203,7 +219,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SYST:BEEP </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SYST:BEEP </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># wait however long it takes to play the note</span>
         <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">:</span>
@@ -223,28 +239,29 @@
 <span class="sd">            Name of chime in the config file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Config file is not defined, cannot find predefined chimes&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Config file is not defined, cannot find predefined chimes&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">chime</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-                <span class="n">chime</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chimes&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="n">chime</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chimes&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration could not be loaded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration could not be loaded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chime</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chime could not be loaded, check that the chimes.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> key exists.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Chime could not be loaded, check that the chimes.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> key exists.&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span>
 
         <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">chime</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">(</span>
-                <span class="n">note</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="n">note</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">note</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
 
 
     <span class="c1"># Output toggle</span>
@@ -260,7 +277,7 @@
 <span class="sd">            If True, the outputs are enabled.</span>
 <span class="sd">            If False, the outputs are disabled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;OUTP:STAT?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;OUTP:STAT?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
 
 
@@ -276,7 +293,7 @@
 <span class="sd">            If True, the outputs are enabled.</span>
 <span class="sd">            If False, the outputs are disabled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;OUTP:STAT </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OUTP:STAT </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
 
 
@@ -314,13 +331,13 @@
 <span class="sd">            If True, the front panel ports are active.</span>
 <span class="sd">            If False, the back panel ports are active.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;ROUT:TERM?&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">resp</span> <span class="o">==</span> <span class="s1">&#39;FRON&#39;</span></div>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;ROUT:TERM?&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span> <span class="o">==</span> <span class="s2">&quot;FRON&quot;</span></div>
 
 
 <div class="viewcode-block" id="SourceMeter2400.setFront">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.setFront">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setFront</span><span class="p">(</span><span class="n">front</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setFront</span><span class="p">(</span><span class="n">front</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the front panel ports as active.</span>
 
@@ -330,7 +347,7 @@
 <span class="sd">            If True, the front panel ports are active.</span>
 <span class="sd">            If False, the back panel ports are active.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ROUT:TERM </span><span class="si">{</span><span class="s1">&#39;FRON&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">front</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;REAR&#39;</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ROUT:TERM </span><span class="si">{</span><span class="s1">&#39;FRON&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">front</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;REAR&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
 
 
@@ -340,7 +357,7 @@
     <span class="c1"># CV and CC modes</span>
 <div class="viewcode-block" id="SourceMeter2400.setCV">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.setCV">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setCV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">I_lim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">I_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the device to constant voltage mode.</span>
 
@@ -351,15 +368,15 @@
 <span class="sd">        I_lim: float, optional</span>
 <span class="sd">            Current limit in amperes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SOUR:FUNC VOLT&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SOUR:VOLT </span><span class="si">{</span><span class="n">V</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SOUR:FUNC VOLT&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SOUR:VOLT </span><span class="si">{</span><span class="n">V</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">I_lim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SOUR:VOLT:ILIM </span><span class="si">{</span><span class="n">I_lim</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SOUR:VOLT:ILIM </span><span class="si">{</span><span class="n">I_lim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SourceMeter2400.setCC">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.setCC">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setCC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">V_lim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">V_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the device to constant current mode.</span>
 
@@ -370,16 +387,16 @@
 <span class="sd">        V_lim: float, optional</span>
 <span class="sd">            Voltage limit in volts.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SOUR:FUNC CURR&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SOUR:CURR </span><span class="si">{</span><span class="n">I</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SOUR:FUNC CURR&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SOUR:CURR </span><span class="si">{</span><span class="n">I</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">V_lim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SOUR:CURR:VLIM </span><span class="si">{</span><span class="n">V_lim</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SOUR:CURR:VLIM </span><span class="si">{</span><span class="n">V_lim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SourceMeter2400.getV">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.getV">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getV</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;MEAS:VOLT?&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:VOLT?&quot;</span><span class="p">))</span></div>
 
 
     <span class="c1">#: float: Measure voltage in volts on the force or sense pins depending on mode.</span>
@@ -388,7 +405,7 @@
 <div class="viewcode-block" id="SourceMeter2400.getI">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.getI">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;MEAS:CURR?&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:CURR?&quot;</span><span class="p">))</span></div>
 
 
     <span class="c1">#: float: Measure current in amperes on the force or sense pins depending on mode.</span>
@@ -397,7 +414,7 @@
 <div class="viewcode-block" id="SourceMeter2400.getR">
 <a class="viewcode-back" href="../source/Keithley.html#Keithley.SourceMeter2400.getR">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getR</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;MEAS:RES?&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;MEAS:RES?&quot;</span><span class="p">))</span></div>
 
 
     <span class="c1">#: float: Measure resistance in Ohms in 2 or 4-point configuration depending on mode.</span>

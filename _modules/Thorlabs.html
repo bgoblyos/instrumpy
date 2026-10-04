@@ -119,9 +119,10 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+
 <div class="viewcode-block" id="PM100">
 <a class="viewcode-back" href="../source/Thorlabs.html#Thorlabs.PM100">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PM100</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PM100</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Driver class for ThorLabs PM100x power meter head units.</span>
 
@@ -129,7 +130,14 @@
 <span class="sd">    polynomial wavelength-dependent attenuation calibration. Provides explicit</span>
 <span class="sd">    getters and property accessors for core SCPI functionality.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">attName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attConfig</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;PM100.json&quot;</span><span class="p">)):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rm</span><span class="p">,</span>
+        <span class="n">address</span><span class="p">,</span>
+        <span class="n">attName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">attConfig</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;PM100.json&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the power meter connection and loads optional calibration data.</span>
 
@@ -147,7 +155,7 @@
 <span class="sd">            for external attenuation/gain adjustments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set up logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.PM100&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.PM100&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
@@ -155,7 +163,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setUnits</span><span class="p">(</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setUnits</span><span class="p">(</span><span class="s2">&quot;W&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span>
@@ -167,7 +175,7 @@
 
                 <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-                    <span class="n">k</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
                         <span class="n">coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
@@ -257,10 +265,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is below the calibrated minimum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is below the calibrated minimum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span>
+                <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is above the calibrated maximum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span><span class="p">)</span>
-        
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The set wavelength (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> nm) is above the calibrated maximum (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2"> nm). Attenuation calculations may be erroneous.&quot;</span>
+                <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS:CORR:WAV </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
@@ -354,7 +366,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INP:THER:ACC:STAT </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-    <span class="n">thermopileAccelerator</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">getThermopileAccelerator</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setThermopileAccelerator</span><span class="p">)</span>
+    <span class="n">thermopileAccelerator</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">fget</span><span class="o">=</span><span class="n">getThermopileAccelerator</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">setThermopileAccelerator</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="PM100.setUnits">
 <a class="viewcode-back" href="../source/Thorlabs.html#Thorlabs.PM100.setUnits">[docs]</a>

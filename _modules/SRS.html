@@ -97,9 +97,10 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
+
 <div class="viewcode-block" id="SR8x0">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR8x0">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SR8x0</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SR8x0</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setSamplerateHz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the sample rate for automatic acquisition.</span>
@@ -134,7 +135,7 @@
 <span class="sd">            Sampling frequency in Hz.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SRAT?&quot;</span><span class="p">))</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">resp</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">resp</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">resp</span><span class="p">,</span> <span class="n">f</span></div>
 
@@ -144,94 +145,94 @@
         <span class="k">return</span> <span class="n">f</span>
 
     <span class="c1">#: float: Gets or sets the sample rate in Hz.</span>
-    <span class="n">sampleRate</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSamplerateHz</span><span class="p">,</span><span class="n">fset</span><span class="o">=</span><span class="n">_setSamplerateHz</span><span class="p">)</span>
+    <span class="n">sampleRate</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSamplerateHz</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setSamplerateHz</span><span class="p">)</span>
 
     <span class="c1">#: pandas.DataFrame: translation table for sensitivity settings</span>
     <span class="n">_sensDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;Vstr&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;Istr&quot;</span><span class="p">],</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mf">2.0e-09</span><span class="p">,</span> <span class="s2">&quot;2 nV&quot;</span><span class="p">,</span>   <span class="mf">2.0e-15</span><span class="p">,</span> <span class="s2">&quot;2 fA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mf">5.0e-09</span><span class="p">,</span> <span class="s2">&quot;5 nV&quot;</span><span class="p">,</span>   <span class="mf">5.0e-15</span><span class="p">,</span> <span class="s2">&quot;5 fA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">2</span><span class="p">,</span>  <span class="mf">1.0e-08</span><span class="p">,</span> <span class="s2">&quot;10 nV&quot;</span><span class="p">,</span>  <span class="mf">1.0e-14</span><span class="p">,</span> <span class="s2">&quot;10 fA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">3</span><span class="p">,</span>  <span class="mf">2.0e-08</span><span class="p">,</span> <span class="s2">&quot;20 nV&quot;</span><span class="p">,</span>  <span class="mf">2.0e-14</span><span class="p">,</span> <span class="s2">&quot;20 fA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">4</span><span class="p">,</span>  <span class="mf">5.0e-08</span><span class="p">,</span> <span class="s2">&quot;50 nV&quot;</span><span class="p">,</span>  <span class="mf">5.0e-14</span><span class="p">,</span> <span class="s2">&quot;50 fA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">5</span><span class="p">,</span>  <span class="mf">1.0e-07</span><span class="p">,</span> <span class="s2">&quot;100 nV&quot;</span><span class="p">,</span> <span class="mf">1.0e-13</span><span class="p">,</span> <span class="s2">&quot;100 fA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">6</span><span class="p">,</span>  <span class="mf">2.0e-07</span><span class="p">,</span> <span class="s2">&quot;200 nV&quot;</span><span class="p">,</span> <span class="mf">2.0e-13</span><span class="p">,</span> <span class="s2">&quot;200 fA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">7</span><span class="p">,</span>  <span class="mf">5.0e-07</span><span class="p">,</span> <span class="s2">&quot;500 nV&quot;</span><span class="p">,</span> <span class="mf">5.0e-13</span><span class="p">,</span> <span class="s2">&quot;500 fA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">8</span><span class="p">,</span>  <span class="mf">1.0e-06</span><span class="p">,</span> <span class="s2">&quot;1 uV&quot;</span><span class="p">,</span>   <span class="mf">1.0e-12</span><span class="p">,</span> <span class="s2">&quot;1 pA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">9</span><span class="p">,</span>  <span class="mf">2.0e-06</span><span class="p">,</span> <span class="s2">&quot;2 uV&quot;</span><span class="p">,</span>   <span class="mf">2.0e-12</span><span class="p">,</span> <span class="s2">&quot;2 pA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mf">5.0e-06</span><span class="p">,</span> <span class="s2">&quot;5 uV&quot;</span><span class="p">,</span>   <span class="mf">5.0e-12</span><span class="p">,</span> <span class="s2">&quot;5 pA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">1.0e-05</span><span class="p">,</span> <span class="s2">&quot;10 uV&quot;</span><span class="p">,</span>  <span class="mf">1.0e-11</span><span class="p">,</span> <span class="s2">&quot;10 pA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">2.0e-05</span><span class="p">,</span> <span class="s2">&quot;20 uV&quot;</span><span class="p">,</span>  <span class="mf">2.0e-11</span><span class="p">,</span> <span class="s2">&quot;20 pA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.0e-05</span><span class="p">,</span> <span class="s2">&quot;50 uV&quot;</span><span class="p">,</span>  <span class="mf">5.0e-11</span><span class="p">,</span> <span class="s2">&quot;50 pA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mf">1.0e-04</span><span class="p">,</span> <span class="s2">&quot;100 uV&quot;</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">,</span> <span class="s2">&quot;100 pA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mf">2.0e-04</span><span class="p">,</span> <span class="s2">&quot;200 uV&quot;</span><span class="p">,</span> <span class="mf">2.0e-10</span><span class="p">,</span> <span class="s2">&quot;200 pA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mf">5.0e-04</span><span class="p">,</span> <span class="s2">&quot;500 uV&quot;</span><span class="p">,</span> <span class="mf">5.0e-10</span><span class="p">,</span> <span class="s2">&quot;500 pA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mf">1.0e-03</span><span class="p">,</span> <span class="s2">&quot;1 mV&quot;</span><span class="p">,</span>   <span class="mf">1.0e-09</span><span class="p">,</span> <span class="s2">&quot;1 nA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mf">2.0e-03</span><span class="p">,</span> <span class="s2">&quot;2 mV&quot;</span><span class="p">,</span>   <span class="mf">2.0e-09</span><span class="p">,</span> <span class="s2">&quot;2 nA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mf">5.0e-03</span><span class="p">,</span> <span class="s2">&quot;5 mV&quot;</span><span class="p">,</span>   <span class="mf">5.0e-09</span><span class="p">,</span> <span class="s2">&quot;5 nA&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mf">1.0e-02</span><span class="p">,</span> <span class="s2">&quot;10 mV&quot;</span><span class="p">,</span>  <span class="mf">1.0e-08</span><span class="p">,</span> <span class="s2">&quot;10 nA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mf">2.0e-02</span><span class="p">,</span> <span class="s2">&quot;20 mV&quot;</span><span class="p">,</span>  <span class="mf">2.0e-08</span><span class="p">,</span> <span class="s2">&quot;20 nA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">22</span><span class="p">,</span> <span class="mf">5.0e-02</span><span class="p">,</span> <span class="s2">&quot;50 mV&quot;</span><span class="p">,</span>  <span class="mf">5.0e-08</span><span class="p">,</span> <span class="s2">&quot;50 nA&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">23</span><span class="p">,</span> <span class="mf">1.0e-01</span><span class="p">,</span> <span class="s2">&quot;100 mV&quot;</span><span class="p">,</span> <span class="mf">1.0e-07</span><span class="p">,</span> <span class="s2">&quot;100 nA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mf">2.0e-01</span><span class="p">,</span> <span class="s2">&quot;200 mV&quot;</span><span class="p">,</span> <span class="mf">2.0e-07</span><span class="p">,</span> <span class="s2">&quot;200 nA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mf">5.0e-01</span><span class="p">,</span> <span class="s2">&quot;500 mV&quot;</span><span class="p">,</span> <span class="mf">5.0e-07</span><span class="p">,</span> <span class="s2">&quot;500 nA&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">26</span><span class="p">,</span> <span class="mf">1.0e+00</span><span class="p">,</span> <span class="s2">&quot;1 V&quot;</span><span class="p">,</span>    <span class="mf">1.0e-06</span><span class="p">,</span> <span class="s2">&quot;1 uA&quot;</span>   <span class="p">]</span>
-        <span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;Vstr&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;Istr&quot;</span><span class="p">],</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.0e-09</span><span class="p">,</span> <span class="s2">&quot;2 nV&quot;</span><span class="p">,</span> <span class="mf">2.0e-15</span><span class="p">,</span> <span class="s2">&quot;2 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.0e-09</span><span class="p">,</span> <span class="s2">&quot;5 nV&quot;</span><span class="p">,</span> <span class="mf">5.0e-15</span><span class="p">,</span> <span class="s2">&quot;5 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0e-08</span><span class="p">,</span> <span class="s2">&quot;10 nV&quot;</span><span class="p">,</span> <span class="mf">1.0e-14</span><span class="p">,</span> <span class="s2">&quot;10 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.0e-08</span><span class="p">,</span> <span class="s2">&quot;20 nV&quot;</span><span class="p">,</span> <span class="mf">2.0e-14</span><span class="p">,</span> <span class="s2">&quot;20 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mf">5.0e-08</span><span class="p">,</span> <span class="s2">&quot;50 nV&quot;</span><span class="p">,</span> <span class="mf">5.0e-14</span><span class="p">,</span> <span class="s2">&quot;50 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0e-07</span><span class="p">,</span> <span class="s2">&quot;100 nV&quot;</span><span class="p">,</span> <span class="mf">1.0e-13</span><span class="p">,</span> <span class="s2">&quot;100 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mf">2.0e-07</span><span class="p">,</span> <span class="s2">&quot;200 nV&quot;</span><span class="p">,</span> <span class="mf">2.0e-13</span><span class="p">,</span> <span class="s2">&quot;200 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mf">5.0e-07</span><span class="p">,</span> <span class="s2">&quot;500 nV&quot;</span><span class="p">,</span> <span class="mf">5.0e-13</span><span class="p">,</span> <span class="s2">&quot;500 fA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.0e-06</span><span class="p">,</span> <span class="s2">&quot;1 uV&quot;</span><span class="p">,</span> <span class="mf">1.0e-12</span><span class="p">,</span> <span class="s2">&quot;1 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mf">2.0e-06</span><span class="p">,</span> <span class="s2">&quot;2 uV&quot;</span><span class="p">,</span> <span class="mf">2.0e-12</span><span class="p">,</span> <span class="s2">&quot;2 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mf">5.0e-06</span><span class="p">,</span> <span class="s2">&quot;5 uV&quot;</span><span class="p">,</span> <span class="mf">5.0e-12</span><span class="p">,</span> <span class="s2">&quot;5 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">1.0e-05</span><span class="p">,</span> <span class="s2">&quot;10 uV&quot;</span><span class="p">,</span> <span class="mf">1.0e-11</span><span class="p">,</span> <span class="s2">&quot;10 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">2.0e-05</span><span class="p">,</span> <span class="s2">&quot;20 uV&quot;</span><span class="p">,</span> <span class="mf">2.0e-11</span><span class="p">,</span> <span class="s2">&quot;20 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.0e-05</span><span class="p">,</span> <span class="s2">&quot;50 uV&quot;</span><span class="p">,</span> <span class="mf">5.0e-11</span><span class="p">,</span> <span class="s2">&quot;50 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mf">1.0e-04</span><span class="p">,</span> <span class="s2">&quot;100 uV&quot;</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">,</span> <span class="s2">&quot;100 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mf">2.0e-04</span><span class="p">,</span> <span class="s2">&quot;200 uV&quot;</span><span class="p">,</span> <span class="mf">2.0e-10</span><span class="p">,</span> <span class="s2">&quot;200 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mf">5.0e-04</span><span class="p">,</span> <span class="s2">&quot;500 uV&quot;</span><span class="p">,</span> <span class="mf">5.0e-10</span><span class="p">,</span> <span class="s2">&quot;500 pA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mf">1.0e-03</span><span class="p">,</span> <span class="s2">&quot;1 mV&quot;</span><span class="p">,</span> <span class="mf">1.0e-09</span><span class="p">,</span> <span class="s2">&quot;1 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mf">2.0e-03</span><span class="p">,</span> <span class="s2">&quot;2 mV&quot;</span><span class="p">,</span> <span class="mf">2.0e-09</span><span class="p">,</span> <span class="s2">&quot;2 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mf">5.0e-03</span><span class="p">,</span> <span class="s2">&quot;5 mV&quot;</span><span class="p">,</span> <span class="mf">5.0e-09</span><span class="p">,</span> <span class="s2">&quot;5 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mf">1.0e-02</span><span class="p">,</span> <span class="s2">&quot;10 mV&quot;</span><span class="p">,</span> <span class="mf">1.0e-08</span><span class="p">,</span> <span class="s2">&quot;10 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mf">2.0e-02</span><span class="p">,</span> <span class="s2">&quot;20 mV&quot;</span><span class="p">,</span> <span class="mf">2.0e-08</span><span class="p">,</span> <span class="s2">&quot;20 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22</span><span class="p">,</span> <span class="mf">5.0e-02</span><span class="p">,</span> <span class="s2">&quot;50 mV&quot;</span><span class="p">,</span> <span class="mf">5.0e-08</span><span class="p">,</span> <span class="s2">&quot;50 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23</span><span class="p">,</span> <span class="mf">1.0e-01</span><span class="p">,</span> <span class="s2">&quot;100 mV&quot;</span><span class="p">,</span> <span class="mf">1.0e-07</span><span class="p">,</span> <span class="s2">&quot;100 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mf">2.0e-01</span><span class="p">,</span> <span class="s2">&quot;200 mV&quot;</span><span class="p">,</span> <span class="mf">2.0e-07</span><span class="p">,</span> <span class="s2">&quot;200 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mf">5.0e-01</span><span class="p">,</span> <span class="s2">&quot;500 mV&quot;</span><span class="p">,</span> <span class="mf">5.0e-07</span><span class="p">,</span> <span class="s2">&quot;500 nA&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26</span><span class="p">,</span> <span class="mf">1.0e00</span><span class="p">,</span> <span class="s2">&quot;1 V&quot;</span><span class="p">,</span> <span class="mf">1.0e-06</span><span class="p">,</span> <span class="s2">&quot;1 uA&quot;</span><span class="p">],</span>
+        <span class="p">],</span>
     <span class="p">)</span>
 
     <span class="c1">#: pandas.DataFrame: translation table for time constant settings</span>
     <span class="n">_tauDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;tstr&quot;</span><span class="p">],</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mf">1.0e-05</span><span class="p">,</span> <span class="s2">&quot;10 us&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mf">3.0e-05</span><span class="p">,</span> <span class="s2">&quot;30 us&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">2</span><span class="p">,</span>  <span class="mf">1.0e-04</span><span class="p">,</span> <span class="s2">&quot;100 us&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">3</span><span class="p">,</span>  <span class="mf">3.0e-04</span><span class="p">,</span> <span class="s2">&quot;300 us&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">4</span><span class="p">,</span>  <span class="mf">1.0e-03</span><span class="p">,</span> <span class="s2">&quot;1 ms&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">5</span><span class="p">,</span>  <span class="mf">3.0e-03</span><span class="p">,</span> <span class="s2">&quot;3 ms&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">6</span><span class="p">,</span>  <span class="mf">1.0e-02</span><span class="p">,</span> <span class="s2">&quot;10 ms&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">7</span><span class="p">,</span>  <span class="mf">3.0e-02</span><span class="p">,</span> <span class="s2">&quot;30 ms&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">8</span><span class="p">,</span>  <span class="mf">1.0e-01</span><span class="p">,</span> <span class="s2">&quot;100 ms&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">9</span><span class="p">,</span>  <span class="mf">3.0e-01</span><span class="p">,</span> <span class="s2">&quot;300 ms&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.0e+00</span><span class="p">,</span> <span class="s2">&quot;1 s&quot;</span>    <span class="p">],</span>
-            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.0e+00</span><span class="p">,</span> <span class="s2">&quot;3 s&quot;</span>    <span class="p">],</span>
-            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">1.0e+01</span><span class="p">,</span> <span class="s2">&quot;10 s&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">3.0e+01</span><span class="p">,</span> <span class="s2">&quot;30 s&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mf">1.0e+02</span><span class="p">,</span> <span class="s2">&quot;100 s&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mf">3.0e+02</span><span class="p">,</span> <span class="s2">&quot;300 s&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mf">1.0e+03</span><span class="p">,</span> <span class="s2">&quot;1 ks&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mf">3.0e+03</span><span class="p">,</span> <span class="s2">&quot;3 ks&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mf">1.0e+04</span><span class="p">,</span> <span class="s2">&quot;10 ks&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mf">3.0e+04</span><span class="p">,</span> <span class="s2">&quot;30 ks&quot;</span>  <span class="p">]</span>
-        <span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;tstr&quot;</span><span class="p">],</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0e-05</span><span class="p">,</span> <span class="s2">&quot;10 us&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.0e-05</span><span class="p">,</span> <span class="s2">&quot;30 us&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0e-04</span><span class="p">,</span> <span class="s2">&quot;100 us&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.0e-04</span><span class="p">,</span> <span class="s2">&quot;300 us&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mf">1.0e-03</span><span class="p">,</span> <span class="s2">&quot;1 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">3.0e-03</span><span class="p">,</span> <span class="s2">&quot;3 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mf">1.0e-02</span><span class="p">,</span> <span class="s2">&quot;10 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mf">3.0e-02</span><span class="p">,</span> <span class="s2">&quot;30 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.0e-01</span><span class="p">,</span> <span class="s2">&quot;100 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mf">3.0e-01</span><span class="p">,</span> <span class="s2">&quot;300 ms&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.0e00</span><span class="p">,</span> <span class="s2">&quot;1 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.0e00</span><span class="p">,</span> <span class="s2">&quot;3 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">1.0e01</span><span class="p">,</span> <span class="s2">&quot;10 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">3.0e01</span><span class="p">,</span> <span class="s2">&quot;30 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mf">1.0e02</span><span class="p">,</span> <span class="s2">&quot;100 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mf">3.0e02</span><span class="p">,</span> <span class="s2">&quot;300 s&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mf">1.0e03</span><span class="p">,</span> <span class="s2">&quot;1 ks&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mf">3.0e03</span><span class="p">,</span> <span class="s2">&quot;3 ks&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mf">1.0e04</span><span class="p">,</span> <span class="s2">&quot;10 ks&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mf">3.0e04</span><span class="p">,</span> <span class="s2">&quot;30 ks&quot;</span><span class="p">],</span>
+        <span class="p">],</span>
     <span class="p">)</span>
 
     <span class="c1">#: pandas.DataFrame: translation table for sample rate settings</span>
     <span class="n">_srateDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;srate&quot;</span><span class="p">,</span> <span class="s2">&quot;sratestr&quot;</span><span class="p">],</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mf">6.25e-02</span><span class="p">,</span> <span class="s2">&quot;62.5 mHz&quot;</span> <span class="p">],</span>
-            <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mf">1.25e-01</span><span class="p">,</span> <span class="s2">&quot;125 mHz&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">2</span><span class="p">,</span>   <span class="mf">2.5e-01</span><span class="p">,</span> <span class="s2">&quot;250 mHz&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">3</span><span class="p">,</span>   <span class="mf">5.0e-01</span><span class="p">,</span> <span class="s2">&quot;500 mHz&quot;</span>  <span class="p">],</span>
-            <span class="p">[</span><span class="mi">4</span><span class="p">,</span>   <span class="mf">1.0e+00</span><span class="p">,</span> <span class="s2">&quot;1 Hz&quot;</span>     <span class="p">],</span>
-            <span class="p">[</span><span class="mi">5</span><span class="p">,</span>   <span class="mf">2.0e+00</span><span class="p">,</span> <span class="s2">&quot;2 Hz&quot;</span>     <span class="p">],</span>
-            <span class="p">[</span><span class="mi">6</span><span class="p">,</span>   <span class="mf">4.0e+00</span><span class="p">,</span> <span class="s2">&quot;4 Hz&quot;</span>     <span class="p">],</span>
-            <span class="p">[</span><span class="mi">7</span><span class="p">,</span>   <span class="mf">8.0e+00</span><span class="p">,</span> <span class="s2">&quot;8 Hz&quot;</span>     <span class="p">],</span>
-            <span class="p">[</span><span class="mi">8</span><span class="p">,</span>   <span class="mf">1.6e+01</span><span class="p">,</span> <span class="s2">&quot;16 Hz&quot;</span>    <span class="p">],</span>
-            <span class="p">[</span><span class="mi">9</span><span class="p">,</span>   <span class="mf">3.2e+01</span><span class="p">,</span> <span class="s2">&quot;32 Hz&quot;</span>    <span class="p">],</span>
-            <span class="p">[</span><span class="mi">10</span><span class="p">,</span>  <span class="mf">6.4e+01</span><span class="p">,</span> <span class="s2">&quot;64 Hz&quot;</span>    <span class="p">],</span>
-            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">1.28e+02</span><span class="p">,</span> <span class="s2">&quot;128 Hz&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">2.56e+02</span><span class="p">,</span> <span class="s2">&quot;256 Hz&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.12e+02</span><span class="p">,</span> <span class="s2">&quot;512 Hz&quot;</span>   <span class="p">],</span>
-            <span class="p">[</span><span class="mi">14</span><span class="p">,</span>        <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Trigger&quot;</span>  <span class="p">]</span>
-        <span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;srate&quot;</span><span class="p">,</span> <span class="s2">&quot;sratestr&quot;</span><span class="p">],</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">6.25e-02</span><span class="p">,</span> <span class="s2">&quot;62.5 mHz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.25e-01</span><span class="p">,</span> <span class="s2">&quot;125 mHz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.5e-01</span><span class="p">,</span> <span class="s2">&quot;250 mHz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">5.0e-01</span><span class="p">,</span> <span class="s2">&quot;500 mHz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mf">1.0e00</span><span class="p">,</span> <span class="s2">&quot;1 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">2.0e00</span><span class="p">,</span> <span class="s2">&quot;2 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.0e00</span><span class="p">,</span> <span class="s2">&quot;4 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mf">8.0e00</span><span class="p">,</span> <span class="s2">&quot;8 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.6e01</span><span class="p">,</span> <span class="s2">&quot;16 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mf">3.2e01</span><span class="p">,</span> <span class="s2">&quot;32 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mf">6.4e01</span><span class="p">,</span> <span class="s2">&quot;64 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mf">1.28e02</span><span class="p">,</span> <span class="s2">&quot;128 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mf">2.56e02</span><span class="p">,</span> <span class="s2">&quot;256 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.12e02</span><span class="p">,</span> <span class="s2">&quot;512 Hz&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Trigger&quot;</span><span class="p">],</span>
+        <span class="p">],</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="SR8x0.setSensitivity">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR8x0.setSensitivity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setSensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">setMode</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">setMode</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets a specified sensitivity.</span>
 
@@ -257,10 +258,10 @@
 
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Vstr</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
-                <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Vstr</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Vstr</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Istr</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
-                <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Istr</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">Istr</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
                 <span class="n">current</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
@@ -290,9 +291,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SENS </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">current</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span></div>
 
 
 <div class="viewcode-block" id="SR8x0.setSensitivityV">
@@ -360,7 +361,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getInputMode</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span>
         <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SENS?&quot;</span><span class="p">))</span>
-        <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">current</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">_sensDF</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
@@ -370,7 +371,7 @@
 
 <div class="viewcode-block" id="SR8x0.setSampleRate">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR8x0.setSampleRate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setSampleRate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSampleRate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets a specified sample rate for automatic acquisition.</span>
 
@@ -388,10 +389,10 @@
         <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Attempt to set automatically based on time constant</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTau</span><span class="p">()</span>
-            <span class="n">maxfreq</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">t</span>
+            <span class="n">maxfreq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">t</span>
             <span class="n">candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span> <span class="o">&lt;=</span> <span class="n">maxfreq</span><span class="p">]</span>
             <span class="n">maxvalid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span> <span class="o">==</span> <span class="n">maxvalid</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span> <span class="o">==</span> <span class="n">maxvalid</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
             <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SRAT </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">maxvalid</span>
@@ -402,14 +403,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Requested sample rate string is invalid.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SRAT </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
 
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SRAT </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">srate</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_srateDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Requested sample rate index is invalid.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
@@ -441,14 +442,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Requested time constant string is invalid.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OFLT </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
 
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OFLT </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Requested time constant index is invalid.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
@@ -491,7 +492,7 @@
 <span class="sd">            Time constant in seconds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;OFLT?&quot;</span><span class="p">))</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">resp</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">i</span> <span class="o">==</span> <span class="n">resp</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tauDF</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">resp</span><span class="p">,</span> <span class="n">t</span></div>
 
@@ -564,7 +565,7 @@
 <span class="sd">        phase: float</span>
 <span class="sd">            Oscillator phase in degrees.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">phase</span> <span class="o">%</span> <span class="mi">360</span> <span class="c1"># It&#39;s easier to just wrap it here</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">phase</span> <span class="o">%</span> <span class="mi">360</span>  <span class="c1"># It&#39;s easier to just wrap it here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PHAS </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getPhase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -600,7 +601,7 @@
 
         <span class="c1"># Increse timeout, otherwise the transfer takes too long</span>
         <span class="n">oldTimeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># 10 seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># 10 seconds</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_raw</span><span class="p">()</span>
@@ -631,11 +632,11 @@
 
         <span class="c1"># Increse timeout, otherwise the transfer takes too long</span>
         <span class="n">oldTimeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">60000</span> <span class="c1"># 1 minute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">60000</span>  <span class="c1"># 1 minute</span>
 
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
-        <span class="n">decoded</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)))</span>
 
         <span class="c1"># Reset the timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">oldTimeout</span>
@@ -704,7 +705,7 @@
 
 <div class="viewcode-block" id="SR8x0.enableTrigger">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR8x0.enableTrigger">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">enableTrigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enableTrigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enable back panel trigger for automatic acquisition</span>
 
@@ -719,7 +720,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;TSTR 0&quot;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setGrounding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grounded</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setGrounding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grounded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set grounded coupling</span>
 
@@ -729,7 +730,7 @@
 <span class="sd">            Whether or not the input&#39;s outer conductor is grounded.</span>
 <span class="sd">            False means floating.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IGND </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">grounded</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;IGND </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">grounded</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getGrounding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -741,13 +742,13 @@
 <span class="sd">            Whether or not the input&#39;s outer conductor is grounded.</span>
 <span class="sd">            False means floating.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;IGND?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;IGND?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
     <span class="c1">#: bool: Gets or sets grounded coupling. True is grounded, False is floating.</span>
     <span class="n">grounding</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getGrounding</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setGrounding</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setDC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DC</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setDC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DC</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set DC coupling</span>
 
@@ -757,7 +758,7 @@
 <span class="sd">            Whether the device is in DC coupling mode.</span>
 <span class="sd">            True is DC, Flase is AC.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ICPL </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DC</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ICPL </span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DC</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getDC</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -769,13 +770,13 @@
 <span class="sd">            Whether the device is in DC coupling mode.</span>
 <span class="sd">            True is DC, Flase is AC.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;ICPL?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;ICPL?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
     <span class="c1">#: bool: Gets or sets DC coupling. True is DC, False is AC.</span>
     <span class="n">DC</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getDC</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setDC</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setNotchFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setting</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setNotchFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setting</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set noth filter</span>
 
@@ -784,7 +785,7 @@
 <span class="sd">        setting: int, default : 0</span>
 <span class="sd">            0 is neither, 1 is line, 2 is 2line, 3 is both</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ILIN </span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ILIN </span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getNotchFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -795,20 +796,23 @@
 <span class="sd">        setting: int</span>
 <span class="sd">            0 is neither, 1 is line, 2 is 2line, 3 is both</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;ILIN?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;ILIN?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
     <span class="c1">#: int: Gets or sets noth filter. 0 is neither, 1 is line, 2 is 2line, 3 is both.</span>
     <span class="n">notchFilter</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getNotchFilter</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setNotchFilter</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setSlope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;OFSL </span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setSlope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OFSL </span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getSlope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;OFSL?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;OFSL?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
-    <span class="n">slope</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSlope</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setSlope</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">fget</span><span class="o">=</span><span class="n">_getSlope</span><span class="p">,</span>
+        <span class="n">fset</span><span class="o">=</span><span class="n">_setSlope</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    int: Gets or sets the low pass filter slope. Possible values:</span>
 
 <span class="s2">    ===== =========</span>
@@ -819,7 +823,9 @@
 <span class="s2">    2     18 dB/oct</span>
 <span class="s2">    3     24 dB/oct</span>
 <span class="s2">    ===== =========</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span></div>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="SR830">
@@ -829,6 +835,7 @@
 <span class="sd">    Driver class for SR830 and SR830M devices. Supports both GPIB and serial connections.</span>
 <span class="sd">    For the latter, the device must be set to RS-323 mode at 19200 baud.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -840,25 +847,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Set up logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.SR830M&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.SR830M&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;ASRL&quot;</span> <span class="ow">in</span> <span class="n">address</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Serial connection detected&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="mi">19200</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">serial</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">serial</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">100000</span>
 
-    <span class="c1">#bufferSize = 16383 Not actually used anywhere</span>
+    <span class="c1"># bufferSize = 16383 Not actually used anywhere</span>
 
     <span class="n">_disp1Dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -884,27 +891,27 @@
     <span class="p">}</span>
 
     <span class="n">_snapDict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">&quot;THETA&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;Θ&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;AUX1&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-            <span class="s2">&quot;AUX2&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-            <span class="s2">&quot;A3&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-            <span class="s2">&quot;AUX3&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-            <span class="s2">&quot;A4&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">&quot;AUX4&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">&quot;REF&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-            <span class="s2">&quot;FREQ&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-            <span class="s2">&quot;DISP1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;CH1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;DISP2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
-            <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
-            <span class="s2">&quot;CH2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;THETA&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;Θ&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;AUX1&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;AUX2&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;A3&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;AUX3&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;A4&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;AUX4&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;REF&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s2">&quot;FREQ&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s2">&quot;DISP1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;CH1&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;DISP2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;CH2&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># Oscillator settings</span>
@@ -938,7 +945,7 @@
         <span class="k">return</span> <span class="n">resp</span> <span class="o">==</span> <span class="mi">1</span>
 
     <span class="c1">#: bool: Gets or sets which frequency source is used. True is internal, False is external.</span>
-    <span class="n">source</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fset</span><span class="o">=</span><span class="n">_setSource</span><span class="p">,</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSource</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fset</span><span class="o">=</span><span class="n">_setSource</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="n">_getSource</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SR830.snapshot">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR830.snapshot">[docs]</a>
@@ -974,7 +981,9 @@
                 <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snapDict</span><span class="p">[</span><span class="n">P</span><span class="p">]))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snapDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A requested value is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;A requested value is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -983,14 +992,14 @@
             <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;SNAP ? &quot;</span> <span class="o">+</span> <span class="n">joined</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">joined</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;SNAP? &quot;</span> <span class="o">+</span> <span class="n">joined</span>
-            <span class="c1">#self.logger.info(cmd)</span>
+            <span class="c1"># self.logger.info(cmd)</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span></div>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)))</span></div>
 
 
     <span class="c1"># Input configuration</span>
@@ -1011,7 +1020,7 @@
 <span class="sd">            2     I (1 MΩ)</span>
 <span class="sd">            3     I (100 MΩ)</span>
 <span class="sd">            ===== ==========================</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        success: Bool</span>
@@ -1027,7 +1036,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_getInputMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the input mode of the device.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        mode: int</span>
@@ -1044,7 +1053,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;ISRC?&quot;</span><span class="p">))</span>
 
-    <span class="n">inputMode</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fset</span><span class="o">=</span><span class="n">_setInputMode</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="n">_getInputMode</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">inputMode</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">fset</span><span class="o">=</span><span class="n">_setInputMode</span><span class="p">,</span>
+        <span class="n">fget</span><span class="o">=</span><span class="n">_getInputMode</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    int: Gets or sets the input mode of the device. Possible values:</span>
 
 <span class="s2">    ===== ==========================</span>
@@ -1055,12 +1067,13 @@
 <span class="s2">    2     I (1 MΩ)</span>
 <span class="s2">    3     I (100 MΩ)</span>
 <span class="s2">    ===== ==========================</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># Display settings</span>
 <div class="viewcode-block" id="SR830.setDisplay">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR830.setDisplay">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">ratio</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets a specified display on the lock-in to a given value.</span>
 <span class="sd">        Required for automated data collection.</span>
@@ -1080,13 +1093,13 @@
 <span class="sd">        success: bool</span>
 <span class="sd">            True on success, False on failure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">disp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please select display 1 or 2.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
-        
+
         <span class="n">dispDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disp1Dict</span> <span class="k">if</span> <span class="n">disp</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disp2Dict</span>
-        
+
         <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dispDict</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">dispDict</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
@@ -1095,12 +1108,14 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dispDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The requested value is invalid. Request: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The requested value is invalid. Request: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#TODO: implement</span>
+        <span class="c1"># TODO: implement</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SR830.getBinNum">
@@ -1114,7 +1129,7 @@
 <span class="sd">        num: int</span>
 <span class="sd">            Number of elements in buffer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;SPTS?&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SPTS?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
 
 
@@ -1141,14 +1156,16 @@
         <span class="n">bufferSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBinNum</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">bufferSize</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1">#logging.warning(&quot;The lock-in buffer is empty, nothing could be retrieved.&quot;)</span>
+            <span class="c1"># logging.warning(&quot;The lock-in buffer is empty, nothing could be retrieved.&quot;)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">start</span> <span class="o">=</span> <span class="n">bufferSize</span> <span class="o">-</span> <span class="n">start</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">start</span> <span class="o">&gt;=</span> <span class="n">bufferSize</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting index is out of bounds (requested index </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">bufferSize</span><span class="si">}</span><span class="s2"> elements)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Starting index is out of bounds (requested index </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">bufferSize</span><span class="si">}</span><span class="s2"> elements)&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">bufferSize</span><span class="p">:</span>
@@ -1162,10 +1179,10 @@
             <span class="n">queryStr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;TRCB ? </span><span class="si">{</span><span class="n">buffer</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryBinaryFloat</span><span class="p">(</span><span class="n">queryStr</span><span class="p">)</span></div>
 
-   
+
 <div class="viewcode-block" id="SR830.multiRead">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR830.multiRead">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">multiRead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ch1</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ch2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">srate</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wait</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiRead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ch1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ch2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">srate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Capture the given data on each channel for an amount of time and return the results.</span>
 
@@ -1199,61 +1216,61 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">readCh1</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">readCh2</span> <span class="o">=</span> <span class="kc">False</span>
-        
+
         <span class="k">if</span> <span class="n">ch1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">readCh1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setDisplay</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ch1</span><span class="p">)</span>
+            <span class="n">readCh1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setDisplay</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ch1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ch2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">readCh2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setDisplay</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ch2</span><span class="p">)</span>
-           
+            <span class="n">readCh2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setDisplay</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ch2</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">readCh1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">readCh2</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-        
+
         <span class="k">if</span> <span class="n">srate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">srate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setSampleRate</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">srate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setSamplerateHz</span><span class="p">(</span><span class="n">srate</span><span class="p">)</span>
-            
+
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample rate is </span><span class="si">{</span><span class="n">srate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
         <span class="k">if</span> <span class="n">srate</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to set sample rate for acqusition.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-        
-        <span class="k">if</span> <span class="mi">1</span><span class="o">/</span><span class="n">srate</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">srate</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Sampling is too slow for the selected time period.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-        
+
         <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">srate</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pauseBuffer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resetBuffer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startBuffer</span><span class="p">()</span>
-        
+
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">wait</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBinNum</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
                     <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-            
+
         <span class="n">dataCh1</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">dataCh2</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">pauseBuffer</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="n">readCh1</span><span class="p">:</span>
             <span class="n">dataCh1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readBuffer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">readCh2</span><span class="p">:</span>
             <span class="n">dataCh2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readBuffer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-            
+
         <span class="k">return</span> <span class="n">dataCh1</span><span class="p">,</span> <span class="n">dataCh2</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reserve</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reserve</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set reserve mode.</span>
 
@@ -1262,7 +1279,7 @@
 <span class="sd">        reserve: int, default: 1</span>
 <span class="sd">            Reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMOD </span><span class="si">{</span><span class="n">reserve</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMOD </span><span class="si">{</span><span class="n">reserve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1273,11 +1290,12 @@
 <span class="sd">        reserve: int</span>
 <span class="sd">            Reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;RMOD?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;RMOD?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
     <span class="c1">#: int: Gets or sets reserve mode. 0 is high reserve, 1 is normal and 2 is low noise.</span>
     <span class="n">reserve</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getReserve</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setReserve</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="SR850">
@@ -1293,34 +1311,34 @@
 <span class="sd">            VISA address of the SR850 device.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set up logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.SR850&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.SR850&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OUTX 1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OUTX 1&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_setDate</span><span class="p">()</span>
 
-        <span class="c1">#self.device.timeout = 100000</span>
+        <span class="c1"># self.device.timeout = 100000</span>
 
     <span class="n">_snapDict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">&quot;THETA&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;Θ&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;REF&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;FREQ&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;THETA&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;Θ&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;REF&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;FREQ&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">_traceDict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
         <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
@@ -1337,12 +1355,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;THRS </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">hour</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TMIN </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">minute</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TSEC </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">second</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DMTH </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">month</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DDAY </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DYRS </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">year</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;THRS </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">hour</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TMIN </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">minute</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TSEC </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">second</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DMTH </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">month</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DDAY </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DYRS </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">year</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SR850.snapshot">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR850.snapshot">[docs]</a>
@@ -1372,7 +1390,9 @@
                 <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snapDict</span><span class="p">[</span><span class="n">P</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snapDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A requested value is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;A requested value is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">resp</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1454,7 +1474,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">igan</span>
 
-    <span class="n">inputMode</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fset</span><span class="o">=</span><span class="n">_setInputMode</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="n">_getInputMode</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">inputMode</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">fset</span><span class="o">=</span><span class="n">_setInputMode</span><span class="p">,</span>
+        <span class="n">fget</span><span class="o">=</span><span class="n">_getInputMode</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    int: Gets or sets the input mode of the device. Possible values:</span>
 
 <span class="s2">    ===== ==========================</span>
@@ -1465,11 +1488,12 @@
 <span class="s2">    2     I (1 MΩ)</span>
 <span class="s2">    3     I (100 MΩ)</span>
 <span class="s2">    ===== ==========================</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="SR850.setTraceSource">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR850.setTraceSource">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setTraceSource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">multiply</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">divide</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">store</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setTraceSource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">multiply</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the trace source.</span>
 
@@ -1495,7 +1519,9 @@
             <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The requested target is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The requested target is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">multiply</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
@@ -1504,7 +1530,9 @@
             <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The requested multiplier is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The requested multiplier is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">divide</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
@@ -1513,10 +1541,12 @@
             <span class="n">l</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traceDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The requested divider is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The requested divider is invalid. Request: </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">. Available values: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TRCD </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TRCD </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SR850.getTraceSource">
@@ -1536,8 +1566,8 @@
 <span class="sd">            A list of 3 int values representing the source values.</span>
 <span class="sd">            See SR850._traceDict for a conversion table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TRCD? </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span></div>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TRCD? </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="SR850.startTrace">
@@ -1547,7 +1577,7 @@
 <span class="sd">        Start a trace.</span>
 <span class="sd">        Alias of startBuffer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;STRT&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;STRT&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SR850.pauseTrace">
@@ -1557,7 +1587,7 @@
 <span class="sd">        Pause a trace.</span>
 <span class="sd">        Alias of pauseBuffer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;PAUS&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;PAUS&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SR850.resetTrace">
@@ -1567,7 +1597,7 @@
 <span class="sd">        Reset a trace.</span>
 <span class="sd">        Alias of resetBuffer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;REST&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;REST&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SR850.readTrace">
@@ -1593,13 +1623,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pauseTrace</span><span class="p">()</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTraceLength</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Start of readout (</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s1">) must be less than the number of points in the trace (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getTraceLength</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryASCIIFloat</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TRCA? </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Start of readout (</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">) must be less than the number of points in the trace (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getTraceLength</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryASCIIFloat</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TRCA? </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SR850.multiRead">
 <a class="viewcode-back" href="../source/SRS.html#SRS.SR850.multiRead">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">multiRead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr1</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tr2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tr3</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tr4</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">srate</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wait</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiRead</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tr1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tr2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tr3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tr4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">srate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Record a trace on up to 4 channels at a time.</span>
 
@@ -1650,7 +1684,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to set sample rate for acqusition.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">data</span>
 
-        <span class="k">if</span> <span class="mi">1</span><span class="o">/</span><span class="n">srate</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">srate</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Sampling is too slow for the selected time period.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">data</span>
 
@@ -1661,9 +1695,9 @@
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">tr1</span><span class="p">,</span> <span class="n">tr2</span><span class="p">,</span> <span class="n">tr3</span><span class="p">,</span> <span class="n">tr4</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">tr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setTraceSource</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">store</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setTraceSource</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setTraceSource</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">tr</span><span class="p">,</span> <span class="n">store</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setTraceSource</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">tr</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">startTrace</span><span class="p">()</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1676,8 +1710,8 @@
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">readTraces</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reading trace for </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readTrace</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading trace for </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readTrace</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -1707,9 +1741,9 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;FMOD?&quot;</span><span class="p">))</span>
 
     <span class="c1">#: int: Gets or sets the reference frequency source. 0 is internal, 1 is internal sweep and 2 is external.</span>
-    <span class="n">source</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSource</span><span class="p">,</span><span class="n">fset</span><span class="o">=</span><span class="n">_setSource</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="o">=</span><span class="n">_getSource</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="n">_setSource</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reserve</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reserve</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set reserve mode.</span>
 
@@ -1719,8 +1753,8 @@
 <span class="sd">            Reserve mode between 0 and 5 inclusive. 0 is minimum reserve, 5 is maximum.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># int between 0 and 5 inclusive, 0 is minimum reserve, 5 is maximum</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RMOD 1&#39;</span><span class="p">)</span> <span class="c1"># set manual reserve</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RSRV </span><span class="si">{</span><span class="n">reserve</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;RMOD 1&quot;</span><span class="p">)</span>  <span class="c1"># set manual reserve</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RSRV </span><span class="si">{</span><span class="n">reserve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getReserve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1731,7 +1765,7 @@
 <span class="sd">        reserve: int</span>
 <span class="sd">            Reserve mode between 0 and 5 inclusive. 0 is minimum reserve, 5 is maximum.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;RSRV?&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;RSRV?&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
     <span class="c1">#: int: Gets or sets reserve mode. 0 is minimum reserve, 5 is maximum.</span>

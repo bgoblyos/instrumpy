@@ -118,20 +118,21 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Utilities.SetupLogging</span><span class="w"> </span><span class="kn">import</span> <span class="n">fixLogger</span>
 
-<span class="n">_mu0</span> <span class="o">=</span> <span class="mf">1.25663706127e-6</span> <span class="c1"># in N/A^2</span>
+<span class="n">_mu0</span> <span class="o">=</span> <span class="mf">1.25663706127e-6</span>  <span class="c1"># in N/A^2</span>
 
 <span class="n">_oeConversion</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;oe&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-    <span class="s1">&#39;oersted&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-    <span class="s1">&#39;apm&#39;</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
-    <span class="s1">&#39;a/m&#39;</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
-    <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">_mu0</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
-    <span class="s1">&#39;tesla&#39;</span><span class="p">:</span> <span class="n">_mu0</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+    <span class="s2">&quot;oe&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;oersted&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;apm&quot;</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+    <span class="s2">&quot;a/m&quot;</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">_mu0</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+    <span class="s2">&quot;tesla&quot;</span><span class="p">:</span> <span class="n">_mu0</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
 <span class="p">}</span>
+
 
 <div class="viewcode-block" id="PPMS">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PPMS</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PPMS</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Driver class for Quantum Design PPMS systems.</span>
 
@@ -152,7 +153,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Set up logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.PPMS&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.PPMS&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
@@ -173,7 +174,7 @@
 <span class="sd">            Unit in which the value is specified. One of &quot;Oe&quot;, &quot;A/m&quot; or &quot;T&quot;.</span>
 <span class="sd">        targetUnit: str</span>
 <span class="sd">            Unit to which the value should be converted. One of &quot;Oe&quot;, &quot;A/m&quot; or &quot;T&quot;.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        converted: float</span>
@@ -183,18 +184,24 @@
         <span class="n">targetUnit</span> <span class="o">=</span> <span class="n">targetUnit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">startingUnit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_oeConversion</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Starting unit </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">startingUnit</span><span class="si">}</span><span class="se">\&quot;</span><span class="s1"> is not recognized, result may be NaN. Please use </span><span class="se">\&quot;</span><span class="s1">Oe</span><span class="se">\&quot;</span><span class="s1">, </span><span class="se">\&quot;</span><span class="s1">A/m</span><span class="se">\&quot;</span><span class="s1"> or </span><span class="se">\&quot;</span><span class="s1">T</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">targetUnit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_oeConversion</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Target unit </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">targetUnit</span><span class="si">}</span><span class="se">\&quot;</span><span class="s1"> is not recognized, result may be NaN. Please use </span><span class="se">\&quot;</span><span class="s1">Oe</span><span class="se">\&quot;</span><span class="s1">, </span><span class="se">\&quot;</span><span class="s1">A/m</span><span class="se">\&quot;</span><span class="s1"> or </span><span class="se">\&quot;</span><span class="s1">T</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Starting unit &quot;</span><span class="si">{</span><span class="n">startingUnit</span><span class="si">}</span><span class="s1">&quot; is not recognized, result may be NaN. Please use &quot;Oe&quot;, &quot;A/m&quot; or &quot;T&quot;&#39;</span>
+            <span class="p">)</span>
 
-        <span class="n">factor</span> <span class="o">=</span> <span class="n">_oeConversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">targetUnit</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="n">_oeConversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">startingUnit</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">targetUnit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_oeConversion</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Target unit &quot;</span><span class="si">{</span><span class="n">targetUnit</span><span class="si">}</span><span class="s1">&quot; is not recognized, result may be NaN. Please use &quot;Oe&quot;, &quot;A/m&quot; or &quot;T&quot;&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">_oeConversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">targetUnit</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="n">_oeConversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">startingUnit</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span> <span class="o">*</span> <span class="n">factor</span></div>
 
 
 <div class="viewcode-block" id="PPMS.setTemperature">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.setTemperature">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setTemperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setpoint</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setTemperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setpoint</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">fast</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the temperature of the cryostat.</span>
 
@@ -207,7 +214,11 @@
 <span class="sd">        fast: bool, default: False</span>
 <span class="sd">            Whether to enable fast settle mode. If false, the no overshoot approach mode will be used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mode</span> <span class="o">=</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">approach_mode</span><span class="o">.</span><span class="n">fast_settle</span> <span class="k">if</span> <span class="n">fast</span> <span class="k">else</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">approach_mode</span><span class="o">.</span><span class="n">no_overshoot</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">approach_mode</span><span class="o">.</span><span class="n">fast_settle</span>
+            <span class="k">if</span> <span class="n">fast</span>
+            <span class="k">else</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">approach_mode</span><span class="o">.</span><span class="n">no_overshoot</span>
+        <span class="p">)</span>
         <span class="k">with</span> <span class="n">capture_output</span><span class="p">():</span>
             <span class="k">with</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">set_temperature</span><span class="p">(</span><span class="n">setpoint</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
@@ -231,7 +242,7 @@
         <span class="k">with</span> <span class="n">capture_output</span><span class="p">():</span>
             <span class="k">with</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
                 <span class="n">temp</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
-        
+
         <span class="n">fixLogger</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">temp</span><span class="p">,</span> <span class="n">status</span></div>
 
@@ -263,7 +274,7 @@
 
 <div class="viewcode-block" id="PPMS.setField">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.setField">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setpoint</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="n">driven</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setpoint</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="n">driven</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets magnetic field inside the PPMS.</span>
 
@@ -282,13 +293,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">approachMode</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">approach_mode</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">approachMode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The entered mode </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> is not valid. Please use one of: </span><span class="se">\&quot;</span><span class="s2">linear</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">no_overshoot</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">oscillate</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;The entered mode &quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">&quot; is not valid. Please use one of: &quot;linear&quot;, &quot;no_overshoot&quot; or &quot;oscillate&quot;&#39;</span>
+            <span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">driveMode</span> <span class="o">=</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">driven_mode</span><span class="o">.</span><span class="n">driven</span> <span class="k">if</span> <span class="n">driven</span> <span class="k">else</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">driven_mode</span><span class="o">.</span><span class="n">persistent</span>
-        <span class="n">setpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">setpoint</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="s1">&#39;Oe&#39;</span><span class="p">)</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="s1">&#39;Oe&#39;</span><span class="p">)</span>
-                    
+        <span class="n">driveMode</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">driven_mode</span><span class="o">.</span><span class="n">driven</span>
+            <span class="k">if</span> <span class="n">driven</span>
+            <span class="k">else</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">driven_mode</span><span class="o">.</span><span class="n">persistent</span>
+        <span class="p">)</span>
+        <span class="n">setpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">setpoint</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="s2">&quot;Oe&quot;</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="s2">&quot;Oe&quot;</span><span class="p">)</span>
+
         <span class="k">with</span> <span class="n">capture_output</span><span class="p">():</span>
             <span class="k">with</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">set_field</span><span class="p">(</span><span class="n">setpoint</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">approachMode</span><span class="p">,</span> <span class="n">driveMode</span><span class="p">)</span>
@@ -298,7 +315,7 @@
 
 <div class="viewcode-block" id="PPMS.getField">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.getField">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads back the magnetic field from the PPMS.</span>
 
@@ -319,13 +336,13 @@
                 <span class="n">field</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_field</span><span class="p">()</span>
 
         <span class="n">fixLogger</span><span class="p">()</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s1">&#39;Oe&#39;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s2">&quot;Oe&quot;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">field</span><span class="p">,</span> <span class="n">status</span></div>
 
 
 <div class="viewcode-block" id="PPMS.getFieldSetpoint">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.getFieldSetpoint">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getFieldSetpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFieldSetpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads back magnetic field setpoint from PPMS.</span>
 
@@ -350,10 +367,10 @@
                 <span class="n">field</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">approach</span><span class="p">,</span> <span class="n">driven</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_field_setpoints</span><span class="p">()</span>
 
         <span class="n">fixLogger</span><span class="p">()</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s1">&#39;Oe&#39;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s1">&#39;Oe&#39;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s2">&quot;Oe&quot;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertMagUnits</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">startingUnit</span><span class="o">=</span><span class="s2">&quot;Oe&quot;</span><span class="p">,</span> <span class="n">targetUnit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
         <span class="n">driven</span> <span class="o">=</span> <span class="n">driven</span> <span class="o">==</span> <span class="s2">&quot;driven&quot;</span>
-        
+
         <span class="k">return</span> <span class="n">field</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">approach</span><span class="p">,</span> <span class="n">driven</span></div>
 
 
@@ -370,7 +387,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The entered state </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> is not valid. Please use one of: </span><span class="se">\&quot;</span><span class="s2">seal</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">purge_seal</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">vent_seal</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">pump_continuous</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">vent_continous</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">high_vacuum</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;The entered state &quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">&quot; is not valid. Please use one of: &quot;seal&quot;, &quot;purge_seal&quot;, &quot;vent_seal&quot;, &quot;pump_continuous&quot;, &quot;vent_continous&quot; or &quot;high_vacuum&quot;&#39;</span>
+            <span class="p">)</span>
             <span class="k">return</span>
 
         <span class="k">with</span> <span class="n">capture_output</span><span class="p">():</span>
@@ -402,7 +421,7 @@
 
 <div class="viewcode-block" id="PPMS.waitFor">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.waitFor">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">waitFor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">temp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">chamber</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">waitFor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">chamber</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wait for setpoints to be reached.</span>
 
@@ -426,7 +445,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">temp</span> <span class="ow">or</span> <span class="n">field</span> <span class="ow">or</span> <span class="n">chamber</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;At least one of temp, field or chamber must be enabled.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;At least one of temp, field or chamber must be enabled.&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">tempWait</span> <span class="o">=</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">waitfor</span> <span class="k">if</span> <span class="n">temp</span> <span class="k">else</span> <span class="mi">0</span>
@@ -438,12 +459,12 @@
                 <span class="n">client</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">tempWait</span> <span class="o">|</span> <span class="n">fieldWait</span> <span class="o">|</span> <span class="n">chamberWait</span><span class="p">)</span>
 
         <span class="n">fixLogger</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSteady</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="p">,</span> <span class="n">chamber</span> <span class="o">=</span> <span class="n">chamber</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSteady</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">chamber</span><span class="o">=</span><span class="n">chamber</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PPMS.isSteady">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.isSteady">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSteady</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">chamber</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isSteady</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">chamber</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether the setpoits have been reached.</span>
 
@@ -461,9 +482,11 @@
 <span class="sd">        result: bool</span>
 <span class="sd">            Whether or not the system is in a steady state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">temp</span> <span class="ow">or</span> <span class="n">field</span> <span class="ow">or</span> <span class="n">chamber</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;At least one of temp, field or chamber must be enabled.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;At least one of temp, field or chamber must be enabled.&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">tempWait</span> <span class="o">=</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">waitfor</span> <span class="k">if</span> <span class="n">temp</span> <span class="k">else</span> <span class="mi">0</span>
@@ -475,7 +498,7 @@
                 <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">is_steady</span><span class="p">(</span><span class="n">tempWait</span> <span class="o">|</span> <span class="n">fieldWait</span> <span class="o">|</span> <span class="n">chamberWait</span><span class="p">)</span>
 
         <span class="n">fixLogger</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
@@ -484,7 +507,9 @@
 
 <div class="viewcode-block" id="PPMS.setupBridge">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.setupBridge">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setupBridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">,</span> <span class="n">channelOn</span><span class="p">,</span> <span class="n">currentLimit</span><span class="p">,</span> <span class="n">powerLimit</span><span class="p">,</span> <span class="n">voltageLimit</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setupBridge</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">,</span> <span class="n">channelOn</span><span class="p">,</span> <span class="n">currentLimit</span><span class="p">,</span> <span class="n">powerLimit</span><span class="p">,</span> <span class="n">voltageLimit</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">5.0</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up bridge for resistivity measurement</span>
 
@@ -507,11 +532,11 @@
         <span class="k">with</span> <span class="n">capture_output</span><span class="p">():</span>
             <span class="k">with</span> <span class="n">MultiPyVu</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">resistivity</span><span class="o">.</span><span class="n">bridge_setup</span><span class="p">(</span>
-                    <span class="n">bridge_number</span> <span class="o">=</span> <span class="n">bridge</span><span class="p">,</span>
-                    <span class="n">channel_on</span> <span class="o">=</span> <span class="n">channelOn</span><span class="p">,</span>
-                    <span class="n">current_limit_uA</span> <span class="o">=</span> <span class="n">currentLimit</span><span class="p">,</span>
-                    <span class="n">power_limit_uW</span> <span class="o">=</span> <span class="n">powerLimit</span><span class="p">,</span>
-                    <span class="n">voltage_limit_mV</span> <span class="o">=</span> <span class="n">voltageLimit</span>
+                    <span class="n">bridge_number</span><span class="o">=</span><span class="n">bridge</span><span class="p">,</span>
+                    <span class="n">channel_on</span><span class="o">=</span><span class="n">channelOn</span><span class="p">,</span>
+                    <span class="n">current_limit_uA</span><span class="o">=</span><span class="n">currentLimit</span><span class="p">,</span>
+                    <span class="n">power_limit_uW</span><span class="o">=</span><span class="n">powerLimit</span><span class="p">,</span>
+                    <span class="n">voltage_limit_mV</span><span class="o">=</span><span class="n">voltageLimit</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="n">fixLogger</span><span class="p">()</span>
@@ -540,7 +565,7 @@
 
 <div class="viewcode-block" id="PPMS.getResistance">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.getResistance">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getResistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getResistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure resistance with the given bridge.</span>
 
@@ -566,7 +591,7 @@
 
 <div class="viewcode-block" id="PPMS.getCurrent">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.getCurrent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getCurrent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCurrent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure current on the given bridge.</span>
 
@@ -592,7 +617,7 @@
 
 <div class="viewcode-block" id="PPMS.setRotatorPosition">
 <a class="viewcode-back" href="../source/QD.html#QD.PPMS.setRotatorPosition">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setRotatorPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setRotatorPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">100.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the horizontal rotator&#39;s position.</span>
 

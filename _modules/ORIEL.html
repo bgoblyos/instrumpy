@@ -111,7 +111,6 @@
 <span class="sd">    device.wavelength = 10000</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -124,16 +123,20 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+
 <div class="viewcode-block" id="Luminator">
 <a class="viewcode-back" href="../source/ORIEL.html#ORIEL.Luminator">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Luminator</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Luminator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Driver class for the ORIEL Luminator monochromated light source.</span>
 
 <span class="sd">    Handles instrument communication via PyVISA and applies an optional</span>
 <span class="sd">    linear wavelength calibration based on a provided configuration file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;Luminator.json&quot;</span><span class="p">)):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">(</span><span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;Config&quot;</span> <span class="o">/</span> <span class="s2">&quot;Luminator.json&quot;</span><span class="p">)</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -148,7 +151,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Set up logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;instrumpy.Luminator&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;instrumpy.Luminator&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Logger initialized.&quot;</span><span class="p">)</span>
@@ -167,11 +170,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration could not be loaded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;speed&#39;</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;c1&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;c0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed&quot;</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Luminator.internal2actual">
 <a class="viewcode-back" href="../source/ORIEL.html#ORIEL.Luminator.internal2actual">[docs]</a>
@@ -189,7 +192,7 @@
 <span class="sd">        actual: float</span>
 <span class="sd">            The calibrated actual output wavelength in nm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">internal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">internal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Luminator.actual2internal">
@@ -208,12 +211,12 @@
 <span class="sd">        internal: float</span>
 <span class="sd">            The necessary internal setpoint in nm to achieve the actual wavelength.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">actual</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">actual</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Luminator.setWavelength">
 <a class="viewcode-back" href="../source/ORIEL.html#ORIEL.Luminator.setWavelength">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">convert</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the operating wavelength of the monochromator.</span>
 
@@ -224,19 +227,23 @@
 <span class="sd">        convert: bool, default: True</span>
 <span class="sd">            If True, applies the linear calibration to the target before sending.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWavelength</span><span class="p">(</span><span class="n">convert</span> <span class="o">=</span> <span class="n">convert</span><span class="p">)</span>
+        <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWavelength</span><span class="p">(</span><span class="n">convert</span><span class="o">=</span><span class="n">convert</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">:</span>
             <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wavelength below minimum level. It has been increased to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2"> nm.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Wavelength below minimum level. It has been increased to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2"> nm.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">:</span>
             <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wavelength above maximum level. It has been decreased to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2"> nm.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Wavelength above maximum level. It has been decreased to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2"> nm.&quot;</span>
+            <span class="p">)</span>
 
         <span class="n">wait</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">old</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.05</span>
         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual2internal</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="k">if</span> <span class="n">convert</span> <span class="k">else</span> <span class="n">target</span>
-        
+
         <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;GOWAVE &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span></div>
@@ -244,7 +251,7 @@
 
 <div class="viewcode-block" id="Luminator.getWavelength">
 <a class="viewcode-back" href="../source/ORIEL.html#ORIEL.Luminator.getWavelength">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">convert</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getWavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the current operating wavelength of the monochromator.</span>
 

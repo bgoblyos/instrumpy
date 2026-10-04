@@ -90,9 +90,11 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Phase Matrix 25B frequency counter</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="PM25B">
 <a class="viewcode-back" href="../source/PhaseMatrix.html#PhaseMatrix.PM25B">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PM25B</span><span class="p">():</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PM25B</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the frequency counter.</span>
@@ -105,7 +107,7 @@
 <span class="sd">            The VISA resource address for the counter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">open_resource</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_termination</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;PA&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;BR&quot;</span><span class="p">)</span>
 
@@ -114,7 +116,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Take a frequency and power reading and return them in Hz and dBm respectively&quot;</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">freq</span><span class="p">,</span> <span class="n">power</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+        <span class="n">freq</span><span class="p">,</span> <span class="n">power</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">freq</span><span class="p">,</span> <span class="n">power</span></div>
 </div>
 
