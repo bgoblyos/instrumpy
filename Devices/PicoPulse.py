@@ -55,6 +55,9 @@ class PicoPulse:
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
 
+        self._limitSet = False
+        self._monitorSet = False
+
         # Try to read in pin assignments
         self.assignments = None
 
@@ -190,6 +193,10 @@ class PicoPulse:
         achieved : float
             Current limit achived in amperes
         """
+
+        # Indicate that the limit has been set by the user
+        self._limitSet = True
+
         resp = self.device.query(f"LIM {target}")
         return float(resp)
 
@@ -222,6 +229,10 @@ class PicoPulse:
         achieved : float
             Monitor diode current achived in amperes
         """
+
+        # Indicate that the monitor has been set by the user
+        self._minotorSet = True
+
         resp = self.device.query(f"MON {target}")
         return float(resp)
 
@@ -240,7 +251,7 @@ class PicoPulse:
     #: float: Get or set the monitor diode target current in amperes
     monitorTarget = property(fget=getMonitorTarget, fset=setMonitorTarget)
 
-    def setLaser(self, target: bool):
+    def setLaser(self, target: bool, force: bool = False):
         """
         Enables or disables the laser driver.
 
@@ -248,16 +259,37 @@ class PicoPulse:
         ----------
         target : bool
             Whether the laser driver should be enabled
+        force : bool, default: False
+            Whether to override the limit and monitor safety interlocks.
+            Leaving it `False` is strongly recommended, especially if the external
+            power was applied before the microcontroller was plugged in.
 
         Returns
         -------
         success : bool
             Indicate success
         """
+
+        # Safety interlock to prevent turning on the laser with an inconsistent setpoint
+        if target and (not force):
+            if not self._limitSet:
+                self.logger.warning(
+                    "Laser turnon was prevented by safety interlocks because the current limit is not set. Set the limit with `setCurrentLimit` or override the interlock by passing `force = True`."
+                )
+                return False
+
+            if not self._monitorSet:
+                self.logger.warning(
+                    "Laser turnon was prevented by safety interlocks because the monitor target is not set. Set the target with `setMonitorTarget` or override the interlock by passing `force = True`."
+                )
+                return False
+
         resp = self.device.query(f"LASER {'1' if target else '0'}")
 
         if resp.strip() != "ACK":
-            # TODO: Add proper error logging or raise an exception instead
+            self.logger.error(
+                "Device did not acknowledge the command to change laser state."
+            )
             return false
 
         feedback = self.device.query("LASER?")
@@ -265,6 +297,9 @@ class PicoPulse:
         if int(feedback) == target:
             return True
         else:
+            self.logger.error(
+                "The request to change laser state was acknowledged, but the state change did not occur."
+            )
             return False
 
     def getLaser(self):
