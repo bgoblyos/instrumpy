@@ -24,11 +24,19 @@ if "sphinx" in sys.modules:
 else:
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-class PicoPulse():
+
+class PicoPulse:
     """
     Driver for the pico-pulse sequence synthesizer.
     """
-    def __init__(self, rm , addr, pinoutName = None, configFile = (PROJECT_ROOT / "Config" / "PicoPulse.json")):
+
+    def __init__(
+        self,
+        rm,
+        addr,
+        pinoutName=None,
+        configFile=(PROJECT_ROOT / "Config" / "PicoPulse.json"),
+    ):
         """
         Parameters
         ----------
@@ -42,7 +50,7 @@ class PicoPulse():
         """
 
         # Set up logger
-        self.logger = logging.getLogger('instrumpy.PicoPulse')
+        self.logger = logging.getLogger("instrumpy.PicoPulse")
         self.logger.propagate = True
         self.logger.setLevel(logging.NOTSET)
         self.logger.debug("Logger initialized.")
@@ -57,7 +65,9 @@ class PicoPulse():
                     conf = json.load(file)
 
             except Exception:
-                self.logger.warning("Could not open config file. Pin mapping is disabled.")
+                self.logger.warning(
+                    "Could not open config file. Pin mapping is disabled."
+                )
                 conf = None
 
             if conf is not None:
@@ -66,15 +76,18 @@ class PicoPulse():
                 if entry is not None:
                     self.assignments = entry.get("mapping", None)
                     if self.assignments is None:
-                        self.logger.warning("Config entry does not contain a mapping key. Pin mapping is disabled.")
+                        self.logger.warning(
+                            "Config entry does not contain a mapping key. Pin mapping is disabled."
+                        )
 
                 else:
-                    self.logger.warning("Config does not contain the given entry. Pin mapping is disabled.")
+                    self.logger.warning(
+                        "Config does not contain the given entry. Pin mapping is disabled."
+                    )
 
-        
         self.device = rm.open_resource(addr)
 
-    def _encodeSequence(self, seq, cycle = False, innerLoop = 0, outerLoop = None):
+    def _encodeSequence(self, seq, cycle=False, innerLoop=0, outerLoop=None):
         """
         Encode a sequence for transmission.
 
@@ -119,10 +132,7 @@ class PicoPulse():
         cmd += f" {n} "
 
         if self.assignments is not None:
-            seq.rename(
-                columns = self.assignments,
-                inplace = True
-            )
+            seq.rename(columns=self.assignments, inplace=True)
 
         for i in range(len(seq)):
             t = round(seq.time[i])
@@ -139,7 +149,6 @@ class PicoPulse():
                 out += 8
             if "ch5" in seq and seq.ch5[i] > 0:
                 out += 16
-
 
             cmd += f"{t},{out},"
 
@@ -166,3 +175,124 @@ class PicoPulse():
         cmd = self._encodeSequence(seq, **kwargs)
         res = self.device.query(cmd)
         return res
+
+    def setCurrentLimit(self, target: float):
+        """
+        Set the laser diode current limit.
+
+        Parameters
+        ----------
+        target : float
+            Current limit in amperes
+
+        Returns
+        -------
+        achieved : float
+            Current limit achived in amperes
+        """
+        resp = self.device.query(f"LIM {target}")
+        return float(resp)
+
+    def getCurrentLimit(self):
+        """
+        Get the laser diode current limit.
+
+        Returns
+        -------
+        limit : float
+            Current limit in amperes
+        """
+        resp = self.device.query("LIM?")
+        return float(resp)
+
+    #: float: Get or set the laser diode current limit in amperes
+    currentLimit = property(fget=getCurrentLimit, fset=setCurrentLimit)
+
+    def setMonitorTarget(self, target: float):
+        """
+        Set the monitor diode target current.
+
+        Parameters
+        ----------
+        target : float
+            Monitor current target in amperes
+
+        Returns
+        -------
+        achieved : float
+            Monitor diode current achived in amperes
+        """
+        resp = self.device.query(f"MON {target}")
+        return float(resp)
+
+    def getMonitorTarget(self):
+        """
+        Set the monitor diode target current.
+
+        Returns
+        -------
+        limit : float
+            Monitor diode current achived in amperes
+        """
+        resp = self.device.query("MON?")
+        return float(resp)
+
+    #: float: Get or set the monitor diode target current in amperes
+    monitorTarget = property(fget=getMonitorTarget, fset=setMonitorTarget)
+
+    def setLaser(self, target: bool):
+        """
+        Enables or disables the laser driver.
+
+        Parameters
+        ----------
+        target : bool
+            Whether the laser driver should be enabled
+
+        Returns
+        -------
+        success : bool
+            Indicate success
+        """
+        resp = self.device.query(f"LASER {'1' if target else '0'}")
+
+        if resp.strip() != "ACK":
+            # TODO: Add proper error logging or raise an exception instead
+            return false
+
+        feedback = self.device.query("LASER?")
+
+        if int(feedback) == target:
+            return True
+        else:
+            return False
+
+    def getLaser(self):
+        """
+        Gets whether or not the laser driver is enabled.
+
+        Returns
+        -------
+        state : bool
+            Whether the laser driver is enabled
+        """
+        resp = self.device.query("LASER?")
+        return bool(int(resp))
+
+    #: bool: Get or set the state of the laser driver
+    laser = property(fget=getLaser, fset=setLaser)
+
+    def getLaserError(self):
+        """
+        Gets whether or not the laser driver is in an error state.
+
+        Returns
+        -------
+        state : bool
+            Whether the laser driver is in an error state (true is error)
+        """
+        resp = self.device.query("LERR?")
+        return bool(int(resp))
+
+    #: bool: Get the laser driver's error state
+    laserError = property(fget=getLaserError)

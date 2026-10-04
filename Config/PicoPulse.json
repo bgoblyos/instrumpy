@@ -1,17 +1,32 @@
 {
-	"studentlab-v1": {
-		"description": "ODMR student lab setup, first generation",
-		"mapping": {
-			"lockin": "ch1",
-			"ref": "ch1",
-			"Q": "ch2",
-			"q": "ch2",
-			"I": "ch3",
-			"i": "ch3",
-			"mw": "ch3",
-			"L": "ch4",
-			"l": "ch4",
-			"laser": "ch4"
-		}
-	}
+    "studentlab-v1": {
+        "description": "ODMR student lab setup, first generation",
+        "mapping": {
+            "lockin": "ch1",
+            "ref": "ch1",
+            "Q": "ch2",
+            "q": "ch2",
+            "I": "ch3",
+            "i": "ch3",
+            "mw": "ch3",
+            "L": "ch4",
+            "l": "ch4",
+            "laser": "ch4"
+        }
+    },
+    "pico-pulse-integrated-v0.2": {
+        "description": "Integrated board with laser diode driver",
+        "mapping": {
+            "I": "ch1",
+            "i": "ch1",
+            "mw": "ch1",
+            "Q": "ch2",
+            "q": "ch2",
+            "ref": "ch4",
+            "lockin": "ch4",
+            "L": "ch5",
+            "l": "ch5",
+            "laser": "ch5"
+        }
+    }
 }
