@@ -56,7 +56,18 @@
 <li class="toctree-l2"><a class="reference internal" href="PhaseMatrix.html">PhaseMatrix module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PicoPulse module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#PicoPulse.PicoPulse"><code class="docutils literal notranslate"><span class="pre">PicoPulse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.currentLimit"><code class="docutils literal notranslate"><span class="pre">PicoPulse.currentLimit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.getCurrentLimit"><code class="docutils literal notranslate"><span class="pre">PicoPulse.getCurrentLimit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.getLaser"><code class="docutils literal notranslate"><span class="pre">PicoPulse.getLaser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.getLaserError"><code class="docutils literal notranslate"><span class="pre">PicoPulse.getLaserError()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.getMonitorTarget"><code class="docutils literal notranslate"><span class="pre">PicoPulse.getMonitorTarget()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.laser"><code class="docutils literal notranslate"><span class="pre">PicoPulse.laser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.laserError"><code class="docutils literal notranslate"><span class="pre">PicoPulse.laserError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.monitorTarget"><code class="docutils literal notranslate"><span class="pre">PicoPulse.monitorTarget</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.sendSequence"><code class="docutils literal notranslate"><span class="pre">PicoPulse.sendSequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.setCurrentLimit"><code class="docutils literal notranslate"><span class="pre">PicoPulse.setCurrentLimit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.setLaser"><code class="docutils literal notranslate"><span class="pre">PicoPulse.setLaser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PicoPulse.PicoPulse.setMonitorTarget"><code class="docutils literal notranslate"><span class="pre">PicoPulse.setMonitorTarget()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -111,6 +122,106 @@
 </ul>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.currentLimit">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">currentLimit</span></span><a class="headerlink" href="#PicoPulse.PicoPulse.currentLimit" title="Link to this definition"></a></dt>
+<dd><p>Get or set the laser diode current limit in amperes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.getCurrentLimit">
+<span class="sig-name descname"><span class="pre">getCurrentLimit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.getCurrentLimit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.getCurrentLimit" title="Link to this definition"></a></dt>
+<dd><p>Get the laser diode current limit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – Current limit in amperes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.getLaser">
+<span class="sig-name descname"><span class="pre">getLaser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.getLaser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.getLaser" title="Link to this definition"></a></dt>
+<dd><p>Gets whether or not the laser driver is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Whether the laser driver is enabled</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.getLaserError">
+<span class="sig-name descname"><span class="pre">getLaserError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.getLaserError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.getLaserError" title="Link to this definition"></a></dt>
+<dd><p>Gets whether or not the laser driver is in an error state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Whether the laser driver is in an error state (true is error)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.getMonitorTarget">
+<span class="sig-name descname"><span class="pre">getMonitorTarget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.getMonitorTarget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.getMonitorTarget" title="Link to this definition"></a></dt>
+<dd><p>Set the monitor diode target current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – Monitor diode current achived in amperes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.laser">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">laser</span></span><a class="headerlink" href="#PicoPulse.PicoPulse.laser" title="Link to this definition"></a></dt>
+<dd><p>Get or set the state of the laser driver</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.laserError">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">laserError</span></span><a class="headerlink" href="#PicoPulse.PicoPulse.laserError" title="Link to this definition"></a></dt>
+<dd><p>Get the laser driver’s error state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.monitorTarget">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">monitorTarget</span></span><a class="headerlink" href="#PicoPulse.PicoPulse.monitorTarget" title="Link to this definition"></a></dt>
+<dd><p>Get or set the monitor diode target current in amperes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="PicoPulse.PicoPulse.sendSequence">
 <span class="sig-name descname"><span class="pre">sendSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.sendSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.sendSequence" title="Link to this definition"></a></dt>
@@ -126,6 +237,62 @@ A value of 0 will instruct the pico-pulse device to fill the entire buffer with 
 <li><p><strong>outerLoop</strong> (<em>int</em><em>, </em><em>default: None</em>) – Numer of times the pico-pulse should repeat the sequence.
 A value of None will instruct it to repeat the sequence indefinitely.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.setCurrentLimit">
+<span class="sig-name descname"><span class="pre">setCurrentLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.setCurrentLimit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.setCurrentLimit" title="Link to this definition"></a></dt>
+<dd><p>Set the laser diode current limit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>float</em>) – Current limit in amperes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>achieved</strong> – Current limit achived in amperes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.setLaser">
+<span class="sig-name descname"><span class="pre">setLaser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.setLaser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.setLaser" title="Link to this definition"></a></dt>
+<dd><p>Enables or disables the laser driver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>bool</em>) – Whether the laser driver should be enabled</p></li>
+<li><p><strong>force</strong> (<em>bool</em><em>, </em><em>default: False</em>) – Whether to override the limit and monitor safety interlocks.
+Leaving it <cite>False</cite> is strongly recommended, especially if the external
+power was applied before the microcontroller was plugged in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>success</strong> – Indicate success</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PicoPulse.PicoPulse.setMonitorTarget">
+<span class="sig-name descname"><span class="pre">setMonitorTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PicoPulse.html#PicoPulse.setMonitorTarget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PicoPulse.PicoPulse.setMonitorTarget" title="Link to this definition"></a></dt>
+<dd><p>Set the monitor diode target current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>float</em>) – Monitor current target in amperes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>achieved</strong> – Monitor diode current achived in amperes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
